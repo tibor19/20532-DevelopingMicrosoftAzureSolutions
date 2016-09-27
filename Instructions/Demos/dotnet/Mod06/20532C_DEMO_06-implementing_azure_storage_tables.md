@@ -1,4 +1,4 @@
-# Module 6: Storing NoSQL Data in Azure
+# Module 6: Storing Tabular Data in Azure
 
 # Demo: Implementing Azure Storage Tables
 
@@ -10,7 +10,7 @@
 
 1.  In the **New Project** dialog box, perform the following steps:
 
-1.  Expand **Templates**, **Visual C\#**, and then click **Classic Desktop**.
+1.  Expand **Templates**, **Visual C#**, **Windows** and then click **Classic Desktop**.
 
 1.  Click the **Console Application** template.
 
