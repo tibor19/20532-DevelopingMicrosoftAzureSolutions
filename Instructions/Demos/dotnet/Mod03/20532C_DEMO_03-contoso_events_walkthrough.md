@@ -12,35 +12,63 @@
 
 1.  In the **Solution Explorer** pane, expand the **Contoso.Events.Data.Generation** project.
 
-1.  On the Start screen, click the **Internet Explorer** tile.
+1. On the Start screen, click the **Internet Explorer** tile.
 
-1.	In the *Address bar* navigate to the following address:
+2. Go to https://portal.azure.com
 
-	<https://go.microsoft.com/fwlink/?LinkId=717179&clcid=0x409>
+3. Enter the email address of your Microsoft account. Click **Continue**.
 
-16. In the **Internet Explorer** download dialog box, click **Save**.
+4. Enter the password for your Microsoft account.
 
-  > **Note:** The download of the *Azure Storage Emulator* executable typically takes around five minutes.
+5. Click **Sign In**.
 
-17. Click the **Windows File Explorer** icon in your Taskbar.
+1.  In the navigation pane on the left side of the Azure Portal, scroll down, and then click **More Services**.
 
-18. On the left navigation bar, expand the **This PC** node and click the **Downloads** node:
+2. In the **Browse** blade that displays, click **Storage accounts**.
 
-19. Double-click the **MicrosoftAzureStorageEmulator.msi** file to start the emulator.
+3. In the **Storage accounts** blade that displays, view your list of storage account instances.
 
-20. In the **Microsoft Azure Storage Emulator Setup** wizard, select the *checkbox* to **accept the terms in the License Agreement**.
+4. At the top of the **Storage accounts** blade, click the **Add** button.
 
-21. Click the **Install** button to install the emulator.
+5. In the **Create storage account** blade that displays, perform the following steps:
 
-22. Wait for the installer to complete.
+    a. In the **Name** box, provide a globally unique value.
 
-	> **Note:** The installer can take between two to five minutes.
+    b. In the **Deployment model** section, ensure that the *Resource manager* option is selected.
 
-23. Click the **Finish** button to close the installer wizard.
+    c. In the **Account kind** list, ensure that the *General purpose* option is selected.
 
-1.  On the Start screen, type **Azure Storage Emulator**.
+    d. In the **Performance** section, ensure that the *Standard* option is selected.
 
-1.  Click the **Microsoft Azure Storage Emulator** tile.
+    e. Click on the **Replication** list and select the **Locally-Redundant Storage (LRS)** option.
+
+    f. In the **Location** list, select the region closest to your current location.
+
+    g. In the **Resource group** section, select the **Use existing** option.
+
+    h. In the **Resource group** section, locate the dialog box and provide the value **20532**.
+
+    i. Ensure that the **Pin to dashboard** option is selected.
+
+    j. Click **Create**.
+
+6. Once the **Storage account** instance is created, the blade for the new instance will open automatically.
+
+7. In the **Storage account** blade, record the name of your *storage account*.
+
+8. In the **Settings** section, select the **Access keys** option.
+
+9. In the **Access keys** blade, locate a key that you wish to use.
+
+    > **Note:** you can use any of the keys listed for this lab.
+
+10. For the access key you selected, click the three ellipsis (...) button to the right of the key. Once clicked, select the **View connection string** option.
+
+10. In the **View connection string** dialog, record your connection string for the access key you selected.
+
+    > **Note:** This connection string will be used in various parts of this lab.
+
+11. Close the **View connection string** dialog.
 
 1.  Switch back to the **Contoso.Events – Microsoft Visual Studio** window.
 
@@ -62,33 +90,101 @@
 
 	c.  Click **Open**.
 
-1.  In the **Solution Explorer** pane, right-click the **Contoso.Events** solution, and then click **Properties**.
+1. In the **Solution Explorer** pane, expand the **Shared** solution folder.
 
-1.  In the **Solution ‘Contoso.Events’** **Property Pages** dialog box, perform the following steps:
+2. In the **Solution Explorer** pane, expand the **Contoso.Events.Data.Generation** project.
 
-	a.  Make sure that **CommonProperties - Startup Project** is selected in the navigation menu on the left side of the screen.
+3. Locate and open the **app.config** file in the project.
 
-	b.  Click **Multiple startup projects**.
+4. Within the **app.config** file, locate the following configuration setting:
 
-	c.  For **Contoso.Events.Web**, set the **Action** to **Start**.
+    ```
+    <add key="StorageConnectionString" value="UseDevelopmentStorage=true" />
+    ```
 
-	d.  For **Contoso.Events.Management.Old**, set the **Action** to **Start**.
+5. Update the setting by replacing the value of the **value** attribute (currently *UseDevelopmentStorage=true*) with your *Storage Account*'s connection string.
 
-	e.  For **Contoso.Events.Worker**, set the **Action** to **Start**.
+3. In the **Solution Explorer** pane, right-click the **Contoso.Events.Data.Generation** project, point to **Debug**, and then click **Start New Instance**.
 
-	f.  Ensure that for all the remaining projects, the **Action** is set to **None**.
+4. Wait for debugging to complete (when the console window closes).
 
-	g.  To close the dialog box, click **OK**.
+#### Task 3: Download generated sign-in sheets from the blob storage
+
+1. In the **Solution Explorer** pane, right-click the **Contoso.Events** solution, and then click **Properties**.
+
+1. Navigate to the **Startup Project** section located under the **Common Properties** header.
+
+1. In the **Startup Project** section, locate and select the **Multiple startup projects** option.
+
+1. Within the **Multiple startup projects** table, perform the following actions:
+
+    a. Locate the **Contoso.Events.Web** entry and change it's *Action* from **None** to **Start**.
+
+    b. Locate the **Contoso.Events.Management.Old** entry and change it's *Action* from **None** to **Start**.
+
+    c. Locate the **Contoso.Events.Worker** entry and change it's *Action* from **None** to **Start**.
+
+1. Click the **OK** button to close the *Property* dialog.
+
+1. In the **Solution Explorer** pane, expand the **Administration** solution folder.
+
+2. In the **Solution Explorer** pane, expand the **Contoso.Events.Management.Old** project.
+
+3. Locate and open the **web.config** file in the project.
+
+4. Within the **web.config** file, locate the following configuration setting:
+
+    ```
+    <add key="Microsoft.WindowsAzure.Storage.ConnectionString" value="UseDevelopmentStorage=true" />
+    ```
+
+5. Update the setting by replacing the value of the **value** attribute (currently *UseDevelopmentStorage=true*) with your *Storage Account*'s connection string.
+
+1. In the **Solution Explorer** pane, expand the **Roles** solution folder.
+
+2. In the **Solution Explorer** pane, expand the **Contoso.Events.Web** project.
+
+3. Locate and open the **web.config** file in the project.
+
+4. Within the **web.config** file, locate the following configuration setting:
+
+    ```
+    <add key="Microsoft.WindowsAzure.Storage.ConnectionString" value="UseDevelopmentStorage=true" />
+    ```
+
+5. Update the setting by replacing the value of the **value** attribute (currently *UseDevelopmentStorage=true*) with your *Storage Account*'s connection string.
+
+2.  In the **Solution Explorer** pane, expand the **Contoso.Events.Worker** project.
+
+3. Locate and open the **app.config** file in the project.
+
+4. Within the **app.config** file, locate the following configuration setting:
+
+    ```
+    <add name="AzureWebJobsStorage" connectionString="UseDevelopmentStorage=true" />
+    ```
+
+5. Update the setting by replacing the value of the **connectionString** attribute (currently *UseDevelopmentStorage=true*) with your *Storage Account*'s connection string.
+
+4. Within the **app.config** file, locate the following configuration setting:
+
+    ```
+    <add name="AzureWebJobsDashboard" connectionString="UseDevelopmentStorage=true" />
+    ```
+
+5. Update the setting by replacing the value of the **connectionString** attribute (currently *UseDevelopmentStorage=true*) with your *Storage Account*'s connection string.
+
+4. Within the **app.config** file, locate the following configuration setting:
+
+    ```
+    <add key="StorageConnectionString" value="UseDevelopmentStorage=true" />
+    ```
+
+5. Update the setting by replacing the value of the **value** attribute (currently *UseDevelopmentStorage=true*) with your *Storage Account*'s connection string.
 
 1.  On the **Debug** menu, click **Start Debugging**.
 
-	> If Visual Studio prompts you to restart the Azure emulator in an elevated context, click **OK**.
-
-1.  In the notification area, locate and right-click the **IIS Express** icon.
-
-1.  Point to **Contoso.Events.Management** under the **View Sites** header, and then click the URL under the **Browse Applications** header.
-
-1.  In Internet Explorer, locate and click the **Home – Contoso Events** tab.
+1.  In Internet Explorer, locate and click the **Home – Contoso Events** window.
 
 1.  Click any one of the sales conference events to go to the event details webpage.
 
@@ -106,7 +202,7 @@
 
 1.  Click **Submit**.
 
-1.  In Internet Explorer, locate and click the **Home – Contoso Events Administration** tab.
+1.  In Internet Explorer, locate and click the **Home – Contoso Events Administration** window.
 
 1.  Click **Go to Events List**.
 
