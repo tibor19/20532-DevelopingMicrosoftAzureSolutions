@@ -1,0 +1,221 @@
+<h1 id="module-3-hosting-web-applications-on-the-azure-platform">Module 3: Hosting Web Applications on the Azure Platform</h1>
+<h1 id="lab-creating-an-asp-net-web-app-using-an-azure-web-app">Lab: Creating an ASP.NET Web App Using an Azure Web App</h1>
+<h3 id="scenario">Scenario</h3>
+<p>You have an events administration application that is currently used by a static set of users. The application must be upgraded to handle all the users in your organization in the future. You need a hosting option that provides the least amount of friction so that you can immediately deploy the web application for immediate use. You also need the hosting option to be flexible enough so that it allows you to configure and scale the web application, thereby ensuring that it can handle an increase in the number of administrative users. For these reasons, you have chosen to deploy the application to Web Apps. Web Apps will also give you the flexibility to integrate your application with Azure Active Directory in the future so that all of your organization’s users can access the application. In this lab, you will create a Web App, deploy your existing application, and then configure the Web App after deployment.</p>
+<h3 id="objectives">Objectives</h3>
+<p>After you complete this lab, you will be able to:</p>
+<ul>
+<li><p>Create a Web App.</p>
+</li>
+<li><p>Create a linked resource for a Web App.</p>
+</li>
+<li><p>Publish an ASP.NET web application to a Web App.</p>
+</li>
+<li><p>Modify the configuration of the Web App in the Portal.</p>
+</li>
+</ul>
+<h3 id="lab-setup">Lab Setup</h3>
+<p><strong>Estimated Time: 60 minutes</strong></p>
+<p>Before starting this lab, you must complete the lab in Module 2. For the lab in this module, you will use the available host machine. Also, you must complete the following steps:</p>
+<ol>
+<li><p>On the host computer, click <strong>Start</strong>, type <strong>Remote</strong>, and then click <strong>Remote Desktop Connection</strong>.</p>
+</li>
+<li><p>In Remote Desktop Connection, provide the name of your virtual machine in the <strong>Computer</strong> box by using the following format:</p>
+<ul>
+<li><strong>[Your VM IP Address]:[<em>Your VM RDP Port</em>]</strong></li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> The name and port for your virtual machine might be saved in the Computer drop-down list. If this is the case, use this value instead of typing it in manually. If you are unsure about your virtual machine’s RDP port, use either of the Azure portals to find your virtual machine’s endpoints. The endpoint with the name <strong>Remote Desktop</strong> is the correct port for RDP. This port is randomized to protect your virtual machine from unauthorized access.</p>
+</blockquote>
+</li>
+<li><p>In Remote Desktop Connection, click <strong>Connect</strong>. Wait until the RDP client accesses the virtual machine.</p>
+</li>
+<li><p>If necessary, sign in by using the following credentials:</p>
+<ul>
+<li><p>User name: <strong>Student</strong></p>
+</li>
+<li><p>Password: <strong>AzurePa$$w0rd</strong></p>
+</li>
+</ul>
+</li>
+<li><p>Verify that you received the credentials to sign in to the Azure portal from your training provider. You will use these credentials and the Azure account throughout the labs in this course.</p>
+</li>
+</ol>
+<h2 id="exercise-1-creating-an-azure-web-app">Exercise 1:    Creating an Azure Web App</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li><p>Create a Web App instance in the Portal.</p>
+</li>
+<li><p>Go to the URL for the new Web App.</p>
+</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Create a Web App instance using the Azure Portal.</p>
+</li>
+<li><p>Go to the newly created Web App&#39;s placeholder page.</p>
+</li>
+</ol>
+<h4 id="task-1-create-a-web-app-instance-by-using-the-portal">Task 1: Create a Web App instance by using the Portal</h4>
+<ol>
+<li><p>Sign in to the Azure Portal (<a href="https://portal.azure.com">https://portal.azure.com</a>).</p>
+</li>
+<li><p>Create a new <strong>Web App + SQL</strong> instance by using a unique name and the following details:</p>
+<blockquote>
+<p><strong>Note:</strong> Be sure to note down your SQL administrator user name and password. If you lose the information, it will be very difficult and time consuming to recover that information.</p>
+</blockquote>
+<ul>
+<li><p>Url: <strong>Pick a unique name for the website</strong></p>
+</li>
+<li><p>Resource Group: <strong>20532</strong></p>
+</li>
+<li><p>App Service Plan Name: <strong>SamplePlan</strong></p>
+</li>
+<li><p>Pricing Tier: <strong>Free</strong></p>
+</li>
+<li><p>Database Tier: <strong>Free</strong></p>
+</li>
+<li><p>Region: <strong>Select the region that is closest to your location</strong></p>
+</li>
+<li><p>Database Name: <strong>EventsContextDB</strong></p>
+</li>
+<li><p>Server Admin Login/Password: <strong>Supply your own values</strong></p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="task-2-go-to-the-newly-created-web-app-s-placeholder-page">Task 2: Go to the newly created Web App&#39;s placeholder page</h4>
+<ol>
+<li><p>View the blade for your Web App.</p>
+</li>
+<li><p>Go to your new Web App.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used the Portal to create a Web App instance.</p>
+</blockquote>
+<h2 id="exercise-2-deploying-an-asp-net-web-application-to-an-azure-web-app">Exercise 2:    Deploying an ASP.NET Web Application to an Azure Web App</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li><p>Download the publish profile for an existing Web App.</p>
+</li>
+<li><p>Publish a web application by using the publish wizard in Visual Studio 2015.</p>
+</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Open an existing ASP.NET web application project with Visual Studio 2015.</p>
+</li>
+<li><p>Download the publish profile for the Azure Web App.</p>
+</li>
+<li><p>Publish the ASP.NET web application to the Azure Web App.</p>
+</li>
+<li><p>Verify that the web application is successfully published.</p>
+</li>
+</ol>
+<h4 id="task-1-open-an-existing-asp-net-web-application-project-with-visual-studio-2015">Task 1: Open an existing ASP.NET web application project with Visual Studio 2015</h4>
+<ol>
+<li><p>Open the <strong>Contoso.Events</strong> solution from the following location:</p>
+<ul>
+<li>File location: <strong>Allfiles (F):\Mod03\Labfiles\Starter\Contoso.Events</strong></li>
+</ul>
+</li>
+<li><p>Debug the web application to verify that it works.</p>
+</li>
+</ol>
+<h4 id="task-2-download-the-publish-profile-for-the-azure-web-app">Task 2: Download the publish profile for the Azure Web App</h4>
+<ol>
+<li><p>Sign in to the Azure Portal (<a href="https://portal.azure.com">https://portal.azure.com</a>).</p>
+</li>
+<li><p>Go to your previously created Web App’s blade.</p>
+</li>
+<li><p>Download the publish profile for your Web App to the following location:</p>
+<ul>
+<li>Save location: <strong>Allfiles (F):\Mod03\Labfiles</strong></li>
+</ul>
+</li>
+</ol>
+<h4 id="task-3-publish-the-asp-net-web-application-to-the-azure-web-app">Task 3: Publish the ASP.NET web application to the Azure Web App</h4>
+<ol>
+<li>Publish the ASP.NET web application by using the publish profile.</li>
+</ol>
+<h4 id="task-4-verify-that-the-web-application-is-successfully-published">Task 4: Verify that the web application is successfully published</h4>
+<ol>
+<li>Verify that the Web App is working correctly in Azure.</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used a publish profile to publish web applications directly to a Web App.</p>
+</blockquote>
+<h2 id="exercise-3-configuring-an-azure-web-app">Exercise 3:    Configuring an Azure Web App</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li><p>Use the <strong>ConfigurationManager</strong> class to read custom app settings from a web configuration file.</p>
+</li>
+<li><p>Modify custom app settings by using the Portal.</p>
+</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Implement logic to read a configuration setting from app settings.</p>
+</li>
+<li><p>Publish web application to the Azure Web App.</p>
+</li>
+<li><p>Modify the app settings in the Portal.</p>
+</li>
+<li><p>Verify that the app settings are successfully updated.</p>
+</li>
+</ol>
+<h4 id="task-1-implement-logic-to-read-a-configuration-setting-from-app-settings">Task 1: Implement logic to read a configuration setting from app settings</h4>
+<ol>
+<li><p>View the <strong>EventsListViewModel</strong> class in the <strong>Contoso.Events.ViewModels</strong> project.</p>
+</li>
+<li><p>Update the <strong>EventsListViewModel</strong> class to use an app setting that sets the <strong>EventCount</strong> property in <strong>EventsListViewModel</strong> constructor:</p>
+<ul>
+<li>App Setting Key: <strong>EventsListViewModel.EventCount</strong></li>
+</ul>
+</li>
+<li><p>Add an app setting to the root of the <strong>Web.config</strong> for the
+<strong>Contoso.Events.Management</strong> project:</p>
+<ul>
+<li><p>App Setting Key: <strong>EventsListViewModel.EventCount</strong></p>
+</li>
+<li><p>App Setting Value: <strong>5</strong></p>
+</li>
+</ul>
+</li>
+<li><p>Verify that the local web application is now using the app setting.</p>
+</li>
+</ol>
+<h4 id="task-2-publish-web-application-to-the-azure-web-app">Task 2: Publish web application to the Azure Web App</h4>
+<ol>
+<li><p>Publish the ASP.NET web application by using the most recent publish profile.</p>
+</li>
+<li><p>Verify that the cloud-based web application is now using the app setting.</p>
+</li>
+</ol>
+<h4 id="task-3-modify-the-app-settings-in-the-portal">Task 3: Modify the app settings in the Portal</h4>
+<ol>
+<li><p>Sign in to the Azure Portal (<em><a href="https://portal.azure.com">https://portal.azure.com</a></em>).</p>
+</li>
+<li><p>Go to your previously created Web App’s <strong>Application Settings</strong> blade.</p>
+</li>
+<li><p>Add an <strong>App Settings</strong> entry to the Web App configuration to override the app setting in the Web.config file.</p>
+<ul>
+<li><p>App Setting Key: <strong>EventsListViewModel.EventCount</strong></p>
+</li>
+<li><p>App Setting Value: <strong>2</strong></p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="task-4-verify-that-the-app-settings-are-successfully-updated">Task 4: Verify that the app settings are successfully updated</h4>
+<ol>
+<li>Verify that the web application in the cloud is now using the updated App Settings entry.</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have configured custom app settings by using a Web.config file and the Azure Portal.</p>
+</blockquote>
+<p>©2016 Microsoft Corporation. All rights reserved.  The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode" title="Creative Commons Attribution 3.0 License">Creative Commons Attribution 3.0 License</a>, additional terms may apply.  All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong>not</strong> included within the Creative Commons license grant.  This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.<br>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.  </p>

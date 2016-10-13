@@ -1,0 +1,342 @@
+<h1 id="module-6-storing-tabular-data-in-azure">Module 6: Storing Tabular Data in Azure</h1>
+<h1 id="lab-storing-event-registration-data-in-azure-storage-tables">Lab: Storing Event Registration Data in Azure Storage Tables</h1>
+<h2 id="exercise-1-populating-the-sign-in-form-with-registrant-names">Exercise 1: Populating the Sign-In Form with Registrant Names</h2>
+<h4 id="task-1-create-an-instance-of-the-cloudtable-class">Task 1: Create an instance of the CloudTable class</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Desktop</strong> tile.</p>
+</li>
+<li><p>On the taskbar, click the <strong>File Explorer</strong> icon.</p>
+</li>
+<li><p>In the <strong>This PC</strong> window, go to <strong>Allfiles (F):\Mod06\Labfiles\Starter\Contoso.Events</strong>, and then double-click <strong>Contoso.Events.sln.</strong></p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Roles</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>TableStorageHelper.cs</strong> file.</p>
+</li>
+<li><p>In the <strong>TableStorageHelper</strong> class, find the method with the following signature:</p>
+<pre><code>IEnumerable&lt;string&gt; GetRegistrantNames(string eventKey);
+</code></pre></li>
+<li><p>Remove the following single line of code in the class:</p>
+<pre><code>return Enumerable.Empty&lt;string&gt;();
+</code></pre></li>
+<li><p>At the end of the <strong>GetRegistrantNames</strong> method and before the closing curly braket, create a <strong>CloudTable</strong> instance:</p>
+<pre><code>CloudTable table = _tableClient.GetTableReference(&quot;EventRegistrations&quot;);
+</code></pre></li>
+</ol>
+<h4 id="task-2-retrieve-strongly-typed-registration-records-by-partition-key">Task 2: Retrieve strongly-typed registration records by partition key</h4>
+<ol>
+<li><p>At the end of the <strong>GetRegistrantsNames</strong> method and before the closing curly braket, store the <strong>eventKey</strong> in a <strong>string</strong> variable named <strong>partitionKey</strong>:</p>
+<pre><code>string partitionKey = eventKey;
+</code></pre></li>
+<li><p>Create a <strong>string</strong> filter by using the <strong>TableQuery.GenerateFilterCondition</strong>, as shown below:</p>
+<pre><code>string filter = TableQuery.GenerateFilterCondition(&quot;PartitionKey&quot;, QueryComparisons.Equal, partitionKey);
+</code></pre></li>
+<li><p>At the end of the <strong>GetRegistrantsNames</strong> method and before the closing curly bracket, create a new instance of the <strong>TableQuery</strong> class and use the fluent <strong>Where</strong> method with your filter to generate a query:</p>
+<pre><code>TableQuery&lt;Registration&gt; query = new TableQuery&lt;Registration&gt;().Where(filter);
+</code></pre></li>
+<li><p>Pass the generated query into the <strong>ExecuteQuery</strong> method of the table variable by using the <strong>Registration</strong> model class as the generic parameter:</p>
+<pre><code>IEnumerable&lt;Registration&gt; registrations = table.ExecuteQuery&lt;Registration&gt;(query);
+</code></pre></li>
+</ol>
+<h4 id="task-3-use-linq-to-objects-to-project-a-list-of-registrant-names">Task 3: Use LINQ-to-Objects to project a list of registrant names</h4>
+<ol>
+<li><p>At the end of the <strong>GetRegistrantsNames</strong> method and before the closing curly bracket, add a statement without the closing semi-colon to store the registrations in a variable of the same type named <strong>names</strong>:</p>
+<pre><code>IEnumerable&lt;string&gt; names = registrations
+</code></pre></li>
+<li><p>Append the lambda-syntax query with a fluent method to order the result by <strong>LastName</strong>:</p>
+<pre><code>.OrderBy(r =&gt; r.LastName)
+</code></pre></li>
+<li><p>Append the query further with a fluent method to order the result by <strong>FirstName</strong>:</p>
+<pre><code>.ThenBy(r =&gt; r.FirstName)
+</code></pre></li>
+<li><p>Finalize the query with a projection method that uses the <strong>String.Format</strong> static method to format the string with <strong>LastName</strong>, followed by a command, then a space, and then the <strong>FirstName</strong>:</p>
+<pre><code>.Select(r =&gt; String.Format(&quot;{1}, {0}&quot;, r.FirstName, r.LastName));
+</code></pre></li>
+<li><p>At the end of the <strong>GetRegistrantsNames</strong> method and before the closing curly bracket, add the following statement:</p>
+<pre><code>return names;
+</code></pre></li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have queried entities by row key or partition key from Table storage.</p>
+</blockquote>
+<h2 id="exercise-2-updating-the-events-website-to-use-storage-tables">Exercise 2: Updating the Events Website to use Storage Tables</h2>
+<h4 id="task-1-update-the-register-controller-action-to-store-the-registration-record">Task 1: Update the register controller action to store the registration record</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Roles</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Web</strong> project.</p>
+</li>
+<li><p>In the <strong>Contoso.Events.Web</strong> project, expand the <strong>Controllers</strong> folder.</p>
+</li>
+<li><p>Double-click the <strong>RegisterController.cs</strong> file.</p>
+</li>
+<li><p>In the <strong>RegisterController</strong> class, find the method with the following signature:</p>
+<pre><code>private Guid StoreRegistration(dynamic registration)
+</code></pre></li>
+<li><p>Remove the single line of code in the class:</p>
+<pre><code>return Guid.Empty;
+</code></pre></li>
+<li><p>At the end of the <strong>StoreRegistration</strong> method and before the closing curly bracket, get the connection string by using the <strong>ConfigurationManager.AppSettings</strong> property and the <strong>Microsoft.WindowsAzure.Storage.ConnectionString</strong> value as the parameter:</p>
+<pre><code>string connectionString = ConfigurationManager.AppSettings[&quot;Microsoft.WindowsAzure.Storage.ConnectionString&quot;];
+</code></pre></li>
+<li><p>Use the <strong>CloudStorageAccount.Parse</strong> static method with the connection string as the parameter to get the storage account:</p>
+<pre><code>var storageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(connectionString);
+</code></pre></li>
+<li><p>At the end of the <strong>StoreRegistration</strong> method and before the closing curly bracket, create a <em>CloudTableClient</em> variable by using the <strong>CreateCloudTableClient</strong> method of the storage account:</p>
+<pre><code>var tableClient = storageAccount.CreateCloudTableClient();
+</code></pre></li>
+<li><p>By using the <strong>GetTableReference</strong> method of the <em>CloudTableClient</em> variable and <strong>“EventRegistrations”</strong> as the parameter, create a <em>CloudTable</em> variable:</p>
+<pre><code>var table = tableClient.GetTableReference(&quot;EventRegistrations&quot;);
+</code></pre></li>
+<li><p>At the end of the <strong>StoreRegistration</strong> method and before the closing curly bracket, create a new <strong>TableOperation</strong> by using the <strong>TableOperation.Insert</strong> static method and the dynamic registration as the parameter:</p>
+<pre><code>var operation = TableOperation.Insert(registration);
+</code></pre></li>
+<li><p>By using the <em>CloudTable</em> variable, invoke the <strong>Execute</strong> method by passing the <strong>TableOperation</strong> as the parameter:</p>
+<pre><code>table.Execute(operation);
+</code></pre></li>
+<li><p>At the end of the <strong>StoreRegistration</strong> method and before the closing curly bracket, parse the <strong>registration.RowKey</strong> string as a <strong>System.Guid</strong> by using the <strong>Guid.Parse</strong> static method :</p>
+<pre><code>Guid rowKey = Guid.Parse(registration.RowKey);
+</code></pre></li>
+<li><p>Return the <em>rowKey</em> variable as the result of the <strong>StoreRegistration</strong> method.</p>
+<pre><code>return rowKey;
+</code></pre></li>
+</ol>
+<h4 id="task-2-update-the-register-viewmodel-to-retrieve-the-dynamic-stub-registration-from-the-table">Task 2: Update the register ViewModel to retrieve the dynamic stub registration from the table</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Shared</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.ViewModels</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>RegisterViewModel.cs</strong> file.</p>
+</li>
+<li><p>In the <strong>RegisterViewModel</strong> class, locate the method with the following signature:</p>
+<pre><code>RegisterViewModel(string eventKey)
+</code></pre></li>
+<li><p>At the end of the <strong>RegisterViewModel</strong> constructor and before the closing curly bracket, get the connection string using the <strong>ConfigurationManager.AppSettings</strong> property and the <strong>Microsoft.WindowsAzure.Storage.ConnectionString</strong> value as the parameter:</p>
+<pre><code>string connectionString = ConfigurationManager.AppSettings[&quot;Microsoft.WindowsAzure.Storage.ConnectionString&quot;];
+</code></pre></li>
+<li><p>Use the <strong>CloudStorageAccount.Parse</strong> static method with the connection string as the parameter to get the storage account:</p>
+<pre><code>var storageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(connectionString);
+</code></pre></li>
+<li><p>At the end of the <strong>RegisterViewModel</strong> constructor and before the closing curly bracket, create a <em>CloudTableClient</em> variable by using the <strong>CreateCloudTableClient</strong> method of the storage account:</p>
+<pre><code>var tableClient = storageAccount.CreateCloudTableClient();
+</code></pre></li>
+<li><p>Create a <em>CloudTable</em> variable by using the <strong>GetTableReference</strong> method of the <em>CloudTableClient</em> variable and <strong>“EventRegistrations”</strong> as the parameter:</p>
+<pre><code>var table = tableClient.GetTableReference(&quot;EventRegistrations&quot;);
+</code></pre></li>
+<li><p>At the end of the <strong>RegisterViewModel</strong> constructor and before the closing curly bracket, store the <strong>eventKey</strong> in a <em>string</em> variable named <strong>partitionKey</strong>:</p>
+<pre><code>string partitionKey = String.Format(&quot;Stub_{0}&quot;, this.Event.EventKey);
+</code></pre></li>
+<li><p>Create a <strong>string</strong> filter by using the <strong>TableQuery.GenerateFilterCondition</strong></p>
+<pre><code>string filter = TableQuery.GenerateFilterCondition(&quot;PartitionKey&quot;, QueryComparisons.Equal, partitionKey);
+</code></pre></li>
+<li><p>At the end of the <strong>RegisterViewModel</strong> constructor and before the closing curly bracket, create a new instance of the <strong>TableQuery</strong> class and generate a query by using the fluent <strong>Where</strong> method with your filter :</p>
+<pre><code>TableQuery query = new TableQuery().Where(filter);
+</code></pre></li>
+<li><p>Pass the generated query into the <strong>ExecuteQuery</strong> method of the table variable:</p>
+<pre><code>IEnumerable&lt;DynamicTableEntity&gt; tableEntities = table.ExecuteQuery(query);
+</code></pre></li>
+<li><p>At the end of the <strong>RegisterViewModel</strong> constructor and before the closing curly bracket, select the single element in the enumerable of <strong>DynamicTableEntity</strong> objects:</p>
+<pre><code>DynamicTableEntity tableEntity = tableEntities.SingleOrDefault();
+</code></pre></li>
+<li><p>Set the <strong>RegistrationStub</strong> property to the <em>DyanmicTableEntity</em> variable:</p>
+<pre><code>this.RegistrationStub = DynamicEntity.GenerateDynamicItem(tableEntity);
+</code></pre></li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used the Azure Storage SDK to retrieve and create entities.</p>
+</blockquote>
+<h2 id="exercise-3-verifying-that-the-events-website-is-using-azure-storage-tables-for-registrations">Exercise 3: Verifying that the Events Website is Using Azure Storage Tables for Registrations</h2>
+<h4 id="task-1-create-a-storage-account-instance">Task 1: Create a Storage Account Instance</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+</li>
+<li><p>Go to <a href="https://portal.azure.com">https://portal.azure.com</a></p>
+</li>
+<li><p>Enter the email address of your Microsoft account. Click <strong>Continue</strong>.</p>
+</li>
+<li><p>Enter the password for your Microsoft account.</p>
+</li>
+<li><p>Click <strong>Sign In</strong>.</p>
+</li>
+<li><p>In the navigation pane on the left side of the Azure Portal, scroll down, and then click <strong>More Services</strong>.</p>
+</li>
+<li><p>In the <strong>Browse</strong> blade that displays, click <strong>Storage accounts</strong>.</p>
+</li>
+<li><p>In the <strong>Storage accounts</strong> blade that displays, view your list of storage account instances.</p>
+</li>
+<li><p>At the top of the <strong>Storage accounts</strong> blade, click the <strong>Add</strong> button.</p>
+</li>
+<li><p>In the <strong>Create storage account</strong> blade that displays, perform the following steps:</p>
+<p> a. In the <strong>Name</strong> box, provide a globally unique value.</p>
+<p> b. In the <strong>Deployment model</strong> section, ensure that the <em>Resource manager</em> option is selected.</p>
+<p> c. In the <strong>Account kind</strong> list, ensure that the <em>General purpose</em> option is selected.</p>
+<p> d. In the <strong>Performance</strong> section, ensure that the <em>Standard</em> option is selected.</p>
+<p> e. Click on the <strong>Replication</strong> list and select the <strong>Locally-Redundant Storage (LRS)</strong> option.</p>
+<p> f. In the <strong>Location</strong> list, select the region closest to your current location.</p>
+<p> g. In the <strong>Resource group</strong> section, select the <strong>Use existing</strong> option.</p>
+<p> h. In the <strong>Resource group</strong> section, locate the dialog box and provide the value <strong>20532</strong>.</p>
+<p> i. Ensure that the <strong>Pin to dashboard</strong> option is selected.</p>
+<p> j. Click <strong>Create</strong>.</p>
+</li>
+<li><p>Once the <strong>Storage account</strong> instance is created, the blade for the new instance will open automatically.</p>
+</li>
+<li><p>In the <strong>Storage account</strong> blade, record the name of your <em>storage account</em>.</p>
+</li>
+<li><p>In the <strong>Settings</strong> section, select the <strong>Access keys</strong> option.</p>
+</li>
+<li><p>In the <strong>Access keys</strong> blade, locate a key that you wish to use.</p>
+<blockquote>
+<p><strong>Note:</strong> you can use any of the keys listed for this lab.</p>
+</blockquote>
+</li>
+<li><p>For the access key you selected, click the three ellipsis (...) button to the right of the key. Once clicked, select the <strong>View connection string</strong> option.</p>
+</li>
+<li><p>In the <strong>View connection string</strong> dialog, record your connection string for the access key you selected.</p>
+<blockquote>
+<p><strong>Note:</strong> This connection string will be used in various parts of this lab.</p>
+<p><strong>Example:</strong> DefaultEndpointsProtocol=https;AccountName={your name here}; AccountKey=ODQYiL8AJuqxDYnwA54u88KRHN3JayY/ns+hfjAiBqHXjDd4xQRfIzAYG2SQ9ZJryDLFUD5hSc6Yk8m3L02D2w==;</p>
+</blockquote>
+</li>
+<li><p>Close the <strong>View connection string</strong> dialog.</p>
+</li>
+</ol>
+<h4 id="task-2-run-the-data-generation-console-project-to-populate-the-azure-storage-table-with-data">Task 2: Run the data generation console project to populate the Azure storage table with data</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Shared</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Data.Generation</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>app.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add key=&quot;StorageConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events.Data.Generation</strong> project, point to <strong>Debug</strong>, and then click <strong>Start New Instance</strong>.</p>
+</li>
+<li><p>Wait for debugging to complete (when the console window closes).</p>
+</li>
+</ol>
+<h4 id="task-3-use-cloud-explorer-in-visual-studio-2015-to-view-table-storage-registrations">Task 3: Use Cloud Explorer in Visual Studio 2015 to view table storage registrations</h4>
+<ol>
+<li><p>On the <strong>View</strong> menu, click <strong>Cloud Explorer</strong>.</p>
+</li>
+<li><p>In the <strong>Cloud Explorer</strong> pane, locate the <strong>Storage Accounts</strong> node and click the arrow at the left side to expand the node.</p>
+</li>
+<li><p>If prompted for your account credentials, sign in by using your <strong>Microsoft Account</strong>.</p>
+</li>
+<li><p>Expand the node for your newly created <em>Storage Account</em> under the <strong>Storage Accounts</strong> node.</p>
+</li>
+<li><p>Expand the <strong>Tables</strong> node immediately under your <em>Storage Account</em>&#39;s node.</p>
+</li>
+<li><p>Double-click the <strong>EventRegistrations</strong> table.</p>
+</li>
+<li><p>In the <strong>EventRegistrations [Table]</strong> tab, scroll through the entities.</p>
+</li>
+<li><p>Drill-down into the properties of a single entity by double-clicking on a row.</p>
+</li>
+<li><p>Exit out of the <strong>Edit Entity</strong> dialog box by clicking the <strong>Cancel</strong> button.</p>
+</li>
+<li><p>Close the <strong>EventRegistrations [Table]</strong> tab in Visual Studio.</p>
+</li>
+</ol>
+<h4 id="task-4-debug-the-web-and-worker-projects-to-register-for-the-event">Task 4: Debug the web and worker projects to register for the event</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events</strong> solution, and then click <strong>Properties</strong>.</p>
+</li>
+<li><p>Navigate to the <strong>Startup Project</strong> section located under the <strong>Common Properties</strong> header.</p>
+</li>
+<li><p>In the <strong>Startup Project</strong> section, locate and select the <strong>Multiple startup projects</strong> option.</p>
+</li>
+<li><p>Within the <strong>Multiple startup projects</strong> table, perform the following actions:</p>
+<p> a. Locate the <strong>Contoso.Events.Web</strong> entry and change it&#39;s <em>Action</em> from <strong>None</strong> to <strong>Start</strong>.</p>
+<p> b. Locate the <strong>Contoso.Events.Worker</strong> entry and change it&#39;s <em>Action</em> from <strong>None</strong> to <strong>Start</strong>.</p>
+</li>
+<li><p>Click the <strong>OK</strong> button to close the <em>Property</em> dialog.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Roles</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Web</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>web.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>web.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add key=&quot;Microsoft.WindowsAzure.Storage.ConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>app.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add name=&quot;AzureWebJobsStorage&quot; connectionString=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>connectionString</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add name=&quot;AzureWebJobsDashboard&quot; connectionString=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>connectionString</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add key=&quot;StorageConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>On the <strong>Debug</strong> menu, click <strong>Start Debugging</strong>.</p>
+</li>
+<li><p>On the home page of the web application, verify that it displays a list of events.</p>
+</li>
+<li><p>Click any of the events in the list.</p>
+</li>
+<li><p>On the event web page, click <strong>Register Now</strong>.</p>
+</li>
+<li><p>Fill out all of the fields in the registration form and click <strong>Submit</strong>.</p>
+</li>
+<li><p>Close the tab displaying the website.</p>
+</li>
+</ol>
+<h4 id="task-5-use-cloud-explorer-in-visual-studio-2015-to-view-the-new-table-storage-registration">Task 5: Use Cloud Explorer in Visual Studio 2015 to view the new table storage registration</h4>
+<ol>
+<li><p>Switch to the <strong>Contoso.Events – Microsoft Visual Studio</strong> window.</p>
+</li>
+<li><p>On the <strong>View</strong> menu, click <strong>Cloud Explorer</strong>.</p>
+</li>
+<li><p>Locate the <strong>Storage Accounts</strong> node and click the arrow at the left side.</p>
+</li>
+<li><p>If prompted for your account credentials, sign in by using your <strong>Microsoft Account</strong>.</p>
+</li>
+<li><p>Expand the node for your newly created <em>Storage Account</em> under the <strong>Storage Accounts</strong> node.</p>
+</li>
+<li><p>Expand the <strong>Tables</strong> node immediately under your <em>Storage Account</em>&#39;s node.</p>
+</li>
+<li><p>Double-click the <strong>EventRegistrations</strong> table.</p>
+</li>
+<li><p>In the <strong>EventRegistrations [Table]</strong> tab, scroll through the entities.</p>
+</li>
+<li><p>In the yellow prompt asking if you would like to download the remaining entities, click <strong>click here</strong>.</p>
+</li>
+<li><p>Drill-down into the properties of a single entity by double-clicking on a row.</p>
+</li>
+<li><p>Exit out of the <strong>Edit Entity</strong> dialog box by clicking the <strong>Cancel</strong> button.</p>
+</li>
+<li><p>Click <strong>Timestamp</strong> header twice to sort entities in a descending order by their Timestamp.</p>
+</li>
+<li><p>Locate your new entity at the top of the table.</p>
+</li>
+<li><p>Switch to the <strong>Contoso.Events – Microsoft Visual Studio</strong> window.</p>
+</li>
+<li><p>Close <strong>Contoso.Events – Microsoft Visual Studio</strong>.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used Visual Studio and the Azure to create a comprehensive development environment for Azure Storage.</p>
+</blockquote>
+<hr>
+<p>©2016 Microsoft Corporation. All rights reserved. The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode">Creative Commons Attribution 3.0 License</a>, additional terms may apply. All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong><em>not</em></strong> included within the Creative Commons license grant. This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.</p>
+<p>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.</p>

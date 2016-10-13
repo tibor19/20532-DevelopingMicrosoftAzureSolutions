@@ -1,0 +1,476 @@
+<h1 id="module-8-designing-a-communication-strategy-by-using-queues-and-service-bus">Module 8: Designing a Communication Strategy by Using Queues and Service Bus</h1>
+<h1 id="lab-using-queues-and-service-bus-to-manage-communication-between-web-applications-in-azure">Lab: Using Queues and Service Bus to Manage Communication Between Web Applications in Azure</h1>
+<h2 id="exercise-1-creating-an-azure-service-bus-namespace">Exercise 1: Creating an Azure Service Bus Namespace</h2>
+<h4 id="task-1-create-the-service-bus-namespace-by-using-the-portal">Task 1: Create the Service Bus namespace by using the Portal</h4>
+<blockquote>
+<p><strong>Note:</strong> Service Bus functionality is not available yet in the new Portal. Because of this, the Classic Portal will be used for this lab.</p>
+</blockquote>
+<ol>
+<li><p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+</li>
+<li><p>Go to <a href="https://portal.azure.com"><em>https://portal.azure.com</em></a></p>
+</li>
+<li><p>In the email address box, type the email address of your Microsoft account.</p>
+</li>
+<li><p>In the password box, type the password for your Microsoft account.</p>
+</li>
+<li><p>Click <strong>Sign In</strong> In the navigation pane on the left side</p>
+</li>
+<li><p>In the navigation pane on the left side of the screen, scroll down, and then click <strong>Service Bus</strong>.</p>
+</li>
+<li><p>At the bottom of the screen, click the <strong>Create</strong> button.</p>
+</li>
+<li><p>In the <strong>Create a Namespace</strong> dialog box, perform the following steps:</p>
+<p>a. In the <strong>Namespace Name</strong> box, type <strong>sb20532[<em>Your Name</em>]</strong>.</p>
+<p>b. In the <strong>Region</strong> list, select the region that is closest to your location.</p>
+<p>c. In the <strong>Type</strong> list, select the <strong>Messaging</strong> option.</p>
+<p>d. In the <strong>Messaging Tier</strong> list, select the <strong>Standard</strong> option.</p>
+<p>e. Click the check mark button to create your namespace.</p>
+<blockquote>
+<p><strong>Note:</strong> It takes approximately 1-2 minutes to create your Service Bus namespace instance.</p>
+</blockquote>
+</li>
+<li><p>In the list of <strong>Service Bus</strong> namespaces, click the namespace that you just created.</p>
+</li>
+<li><p>At the bottom of the screen, click <strong>Connection Information</strong>.</p>
+</li>
+<li><p>Record the <em>RootManageSharedAccessKey</em> connection string from the <strong>Access connection information</strong> dialog box.</p>
+<blockquote>
+<p><strong>Note:</strong> You must record a connection string from the list of SAS items.</p>
+</blockquote>
+</li>
+<li><p>Close the <strong>Access connection information</strong> dialog box.</p>
+</li>
+<li><p>At the top of the screen, click the <strong>Queues</strong> tab.</p>
+</li>
+<li><p>At the bottom-left corner of the screen, click <strong>New</strong>.</p>
+</li>
+<li><p>If it is not automatically selected, select <strong>App Services &gt; Service Bus &gt; Queue &gt; Custom Create</strong>.</p>
+</li>
+<li><p>In the <strong>Create a Queue</strong> dialog box, perform the following steps:</p>
+<p>a. In the <strong>Queue</strong> <strong>Name</strong> box, type <strong>signin</strong>.</p>
+<p>b. In the <strong>Region</strong> list, select the same region that you selected for the namespace.</p>
+<p>c. In the <strong>Namespace</strong> box, provide the value <strong>sb20532[Your Name]</strong>.</p>
+<p>d. Click next arrow to move to the next step in the wizard.</p>
+<p>e. Leave all fields as their default values.</p>
+<p>f. Click the check mark button to create the new queue.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have created a Service Bus namespace and queue by using the Portal.</p>
+</blockquote>
+<h2 id="exercise-2-using-azure-queue-storage-for-document-generation">Exercise 2: Using Azure Queue Storage for Document Generation</h2>
+<h4 id="task-1-update-worker-role-to-consume-requests-from-the-queue">Task 1: Update worker role to consume requests from the queue</h4>
+<ol>
+<li><p>On the Start screen, click <strong>Desktop</strong>.</p>
+</li>
+<li><p>On the taskbar, click the <strong>File Explorer</strong> icon.</p>
+</li>
+<li><p>In the Libraries window, go to <strong>Allfiles (F):\Mod08\Labfiles\Starter\Contoso.Events</strong>, and then double-click <strong>Contoso.Events.sln.</strong></p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Roles</strong> folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>TableStorageQueueHelper.cs</strong> file.</p>
+</li>
+<li><p>Add a using statement for the <strong>System.Configuration</strong> namespace to the top of the file:</p>
+<pre><code>using System.Configuration;
+</code></pre></li>
+<li><p>At the end of the <strong>TableStorageQueueHelper</strong> constructor and before the closing curly bracket, store the <strong>StorageAccount</strong> property from the base class in a <em>CloudStorageAccount</em> variable:</p>
+<pre><code>CloudStorageAccount storageAccount = base.StorageAccount;
+</code></pre></li>
+<li><p>Invoke the <strong>CreateCloudQueueClient</strong> method and assign the result to the <em>_queueClient</em> variable:</p>
+<pre><code>_queueClient = storageAccount.CreateCloudQueueClient();
+</code></pre></li>
+<li><p>Invoke the static <strong>ConfigurationManager.AppSettings</strong> property and assign the result to the <em>_signInQueueName</em> variable:</p>
+<pre><code>_signInQueueName = ConfigurationManager.AppSettings[&quot;SignInQueueName&quot;];
+</code></pre></li>
+<li><p>In the <strong>TableStorageQueueHelper</strong> class, find the method with the following signature:</p>
+<pre><code>IQueueMessage&lt;CloudQueueMessage&gt; Receive()
+</code></pre></li>
+<li><p>Remove the single line of code in the class:</p>
+<pre><code>return new TableStorageQueueMessage(null);
+</code></pre></li>
+<li><p>At the end of the <strong>Receive</strong> method and before the closing curly bracket, create a new instance of the <strong>CloudQueue</strong> class by calling the <strong>GetQueueReference</strong> method of the <em>CloudQueueClient</em> variable by using the <strong>string</strong> name of the queue, as shown in the following code:</p>
+<pre><code>CloudQueue queue = _queueClient.GetQueueReference(_signInQueueName);
+</code></pre></li>
+<li><p>Invoke the <strong>CreateIfNotExists</strong> method to ensure that the queue exists.</p>
+<pre><code>queue.CreateIfNotExists();
+</code></pre></li>
+<li><p>At the end of the <strong>Receive</strong> method and before the closing curly bracket, invoke the <strong>GetMessage</strong> method of the <strong>CloudQueue</strong> class and store the result in a <em>CloudQueueMessage</em> variable, as shown in the following code:</p>
+<pre><code>CloudQueueMessage message = queue.GetMessage();
+</code></pre></li>
+<li><p>Pass the <em>CloudQueueMessage</em> variable into the constructor of the <strong>TableStorageQueueMessage</strong> class and return the result:</p>
+<pre><code>return new TableStorageQueueMessage(message);
+</code></pre></li>
+<li><p>At the end of the <strong>CompleteMessage</strong> method and before the closing curly bracket, create a new instance of the <strong>CloudQueue</strong> class by calling the <strong>GetQueueReference</strong> method of the <em>CloudQueueClient</em> variable by using the <strong>string</strong> name of the queue, as shown in the following code:</p>
+<pre><code>CloudQueue queue = _queueClient.GetQueueReference(_signInQueueName);
+</code></pre></li>
+<li><p>Invoke the <strong>CreateIfNotExists</strong> method to ensure that the queue exists:</p>
+<pre><code>queue.CreateIfNotExists();
+</code></pre></li>
+<li><p>At the end of the <strong>CompleteMessage</strong> method and before the closing curly bracket, invoke the <strong>DeleteMessage</strong> method by using the <em>CloudQueueMessage</em> variable as the parameter, as shown in the following code:</p>
+<pre><code>queue.DeleteMessage(message);
+</code></pre></li>
+</ol>
+<h4 id="task-2-update-administration-application-to-add-requests-to-the-queue">Task 2: Update administration application to add requests to the queue</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Shared</strong> folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.ViewModels</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>SignInSheetViewModel.cs</strong> file.</p>
+</li>
+<li><p>At the beginning of the <strong>GenerateSignInSheetTableStorage</strong> method and after the opening curly bracket, create a <strong>CloudStorageAccount</strong> instance by using the static <strong>CloudStorageAccount. Parse</strong> method and the table storage connection string, as shown in the following code:</p>
+<pre><code>CloudStorageAccount storageAccount = CloudStorageAccount.Parse(tableStorageConnectionString);
+</code></pre></li>
+<li><p>Create a new instance of the <strong>CloudQueueClient</strong> class by using the <strong>CreateCloudQueueClient</strong> method of the <em>CloudStorageAccount</em> variable:</p>
+<pre><code>CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+</code></pre></li>
+<li><p>After the above mentioned code, create a new instance of the <strong>CloudQueue</strong> class by invoking the <strong>GetQueueReference</strong> method of the <em>CloudQueueClient</em> variable by using the queue name string variable, as shown in the following code.:</p>
+<pre><code>CloudQueue queue = queueClient.GetQueueReference(signInQueueName);
+</code></pre></li>
+<li><p>Invoke the <strong>CreateIfNotExists</strong> method of the <strong>CloudQueue</strong> class to ensure that the queue exists:</p>
+<pre><code>queue.CreateIfNotExists();
+</code></pre></li>
+<li><p>After the above mentioned code, create a new instance of the <strong>CloudQueueMessage</strong> class by passing in the string <strong>message</strong> into the constructor:</p>
+<pre><code>CloudQueueMessage queueMessage = new CloudQueueMessage(message);
+</code></pre></li>
+<li><p>Invoke the <strong>AddMessage</strong> method of the <em>CloudQueue</em> variable by using the <strong>CloudQueueMessage</strong> as the parameter:</p>
+<pre><code>queue.AddMessage(queueMessage);
+</code></pre></li>
+</ol>
+<h4 id="task-3-create-a-storage-account-instance">Task 3: Create a Storage Account Instance</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+</li>
+<li><p>Go to <a href="https://portal.azure.com">https://portal.azure.com</a></p>
+</li>
+<li><p>Enter the email address of your Microsoft account. Click <strong>Continue</strong>.</p>
+</li>
+<li><p>Enter the password for your Microsoft account.</p>
+</li>
+<li><p>Click <strong>Sign In</strong>.</p>
+</li>
+<li><p>In the navigation pane on the left side of the Azure Portal, scroll down, and then click <strong>More Services</strong>.</p>
+</li>
+<li><p>In the <strong>Browse</strong> blade that displays, click <strong>Storage accounts</strong>.</p>
+</li>
+<li><p>In the <strong>Storage accounts</strong> blade that displays, view your list of storage account instances.</p>
+</li>
+<li><p>At the top of the <strong>Storage accounts</strong> blade, click the <strong>Add</strong> button.</p>
+</li>
+<li><p>In the <strong>Create storage account</strong> blade that displays, perform the following steps:</p>
+<p> a. In the <strong>Name</strong> box, provide a globally unique value.</p>
+<p> b. In the <strong>Deployment model</strong> section, ensure that the <em>Resource manager</em> option is selected.</p>
+<p> c. In the <strong>Account kind</strong> list, ensure that the <em>General purpose</em> option is selected.</p>
+<p> d. In the <strong>Performance</strong> section, ensure that the <em>Standard</em> option is selected.</p>
+<p> e. Click on the <strong>Replication</strong> list and select the <strong>Locally Redundant (LRS)</strong> option.</p>
+<p> f. In the <strong>Location</strong> list, select the region closest to your current location.</p>
+<p> g. In the <strong>Resource group</strong> section, select the <strong>Use existing</strong> option.</p>
+<p> h. In the <strong>Resource group</strong> section, locate the dialog box and provide the value <strong>20532</strong>.</p>
+<p> i. Ensure that the <strong>Pin to dashboard</strong> option is selected.</p>
+<p> j. Click <strong>Create</strong>.</p>
+</li>
+<li><p>Once the <strong>Storage account</strong> instance is created, the blade for the new instance will open automatically.</p>
+</li>
+<li><p>In the <strong>Storage account</strong> blade, record the name of your <em>storage account</em>.</p>
+</li>
+<li><p>Click the <strong>Settings</strong> button at the top of the blade.</p>
+</li>
+<li><p>In the <strong>Settings</strong> section, select the <strong>Access keys</strong> option.</p>
+</li>
+<li><p>In the <strong>Access keys</strong> blade, locate a key that you wish to use.</p>
+<blockquote>
+<p><strong>Note:</strong> you can use any of the keys listed for this lab.</p>
+</blockquote>
+</li>
+<li><p>For the access key you selected, click the three ellipsis (...) button to the right of the key. Once clicked, select the <strong>View connection string</strong> option.</p>
+</li>
+<li><p>In the <strong>View connection string</strong> dialog, record your connection string for the access key you selected.</p>
+<blockquote>
+<p><strong>Note:</strong> This connection string will be used in various parts of this lab.</p>
+</blockquote>
+</li>
+<li><p>Close the <strong>View connection string</strong> dialog.</p>
+</li>
+</ol>
+<h4 id="task-4-generate-the-test-data">Task 4: Generate the test data</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Shared</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Data.Generation</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>app.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add key=&quot;StorageConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events.Data.Generation</strong> project, point to <strong>Debug</strong>, and then click <strong>Start New Instance</strong>.</p>
+</li>
+<li><p>Wait for debugging to complete (when the console window closes).</p>
+</li>
+</ol>
+<h4 id="task-5-debug-and-verify-the-application">Task 5: Debug and verify the application</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events</strong> solution, and then click <strong>Properties</strong>.</p>
+</li>
+<li><p>Navigate to the <strong>Startup Project</strong> section located under the <strong>Common Properties</strong> header.</p>
+</li>
+<li><p>In the <strong>Startup Project</strong> section, locate and select the <strong>Multiple startup projects</strong> option.</p>
+</li>
+<li><p>Within the <strong>Multiple startup projects</strong> table, perform the following actions:</p>
+<p> a. Locate the <strong>Contoso.Events.Web</strong> entry and change it&#39;s <em>Action</em> from <strong>None</strong> to <strong>Start</strong>.</p>
+<p> b. Locate the <strong>Contoso.Events.Management</strong> entry and change it&#39;s <em>Action</em> from <strong>None</strong> to <strong>Start</strong>.</p>
+<p> c. Locate the <strong>Contoso.Events.Worker</strong> entry and change it&#39;s <em>Action</em> from <strong>None</strong> to <strong>Start</strong>.</p>
+<p> d. Ensure that all the remaining projects have their <strong>Action</strong> set to <strong>None</strong>.</p>
+</li>
+<li><p>Click the <strong>OK</strong> button to close the <em>Property</em> dialog.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Administration</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Management</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>web.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>web.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add key=&quot;Microsoft.WindowsAzure.Storage.ConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Roles</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Web</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>web.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>web.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add key=&quot;Microsoft.WindowsAzure.Storage.ConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>app.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add name=&quot;AzureWebJobsStorage&quot; connectionString=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>connectionString</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add name=&quot;AzureWebJobsDashboard&quot; connectionString=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>connectionString</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add key=&quot;StorageConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add name=&quot;AzureWebJobsServiceBus&quot; connectionString=&quot;Endpoint=sb://[yourServiceNamespace].servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=[yourKey]&quot;/&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>connectionString</strong> attribute (currently <em>Endpoint=sb://[yourServiceNamespace].servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=[yourKey]</em>) with your <em>Service Bus</em>&#39;s connection string.</p>
+</li>
+<li><p>On the <strong>Debug</strong> menu, click <strong>Start Debugging</strong>.</p>
+</li>
+<li><p>On the desktop, click the <strong>Contoso.Events – Microsoft Visual Studio</strong> window.</p>
+</li>
+<li><p>Click the <strong>View</strong> menu and select the <strong>Solution Explorer</strong> option.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Roles</strong> folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>Functions.cs</strong> file.</p>
+</li>
+<li><p>Locate the <strong>ProcessQueueMessage</strong> method.</p>
+</li>
+<li><p>Locate the target line of code within the try-catch block:</p>
+<pre><code>HandleMessage(message);
+</code></pre></li>
+<li><p>Right-click the target line of code, point to <strong>Breakpoint</strong>, and click <strong>Insert Breakpoint</strong>.</p>
+</li>
+<li><p>On the desktop, click the <strong>Home - Contoso.Events.Administration</strong> browser window.</p>
+</li>
+<li><p>On the home page of the <strong>Contoso Events Administration</strong> web application, click the <strong>Events</strong> button to go to the list of events.</p>
+</li>
+<li><p>Click <strong>Sign-In Sheet</strong> for any event in the list.</p>
+</li>
+<li><p>View the sign-in page which notifies you that the sign-in sheet is being generated with the following message: <strong>Sign-In Document Generation in Progress</strong>.</p>
+</li>
+<li><p>Wait for one minute for the worker role to receive the queue message.</p>
+</li>
+<li><p>Verify that the application temporarily pauses execution at the breakpoint.</p>
+</li>
+<li><p>Press <em>F5</em> to resume execution of the application.</p>
+</li>
+<li><p>Wait for one minute, and then refresh the sign-in sheet page.</p>
+</li>
+<li><p>Click <strong>Sign-In Sheet</strong> to download the sign-in sheet from the server.</p>
+</li>
+<li><p>Close the <strong>Internet Explorer</strong> application.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have created and consumed messages from Storage queues.</p>
+</blockquote>
+<h2 id="exercise-3-using-service-bus-queues-for-document-generation">Exercise 3: Using Service Bus Queues for Document Generation</h2>
+<h4 id="task-1-update-worker-role-to-consume-requests-from-the-queue">Task 1: Update worker role to consume requests from the queue</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>app.config</strong> file.</p>
+</li>
+<li><p>Locate the <strong>Setting</strong> element with the name <strong>Microsoft.ServiceBus.ConnectionString</strong>.</p>
+</li>
+<li><p>Replace the value with your previously recorded connection string.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Roles</strong> folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>ServiceBusQueueHelper.cs</strong> file.</p>
+</li>
+<li><p>Add a using statement for the <strong>System.Configuration</strong> namespace to the top of the file:</p>
+<pre><code>using System.Configuration;
+</code></pre></li>
+<li><p>At the end of the <strong>ServiceBusQueueHelper</strong> constructor and before the closing curly bracket, store the <strong>Microsoft</strong>.<strong>ServiceBus.ConnectionString</strong> setting value from your configuration in a string variable, as shown in the following code:</p>
+<pre><code>string serviceBusConnectionString = ConfigurationManager.AppSettings[&quot;Microsoft.ServiceBus.ConnectionString&quot;];
+</code></pre></li>
+<li><p>Store the queue name in a string variable.</p>
+<pre><code>string signInQueueName = ConfigurationManager.AppSettings[&quot;SignInQueueName&quot;];
+</code></pre></li>
+<li><p>Invoke the static <strong>QueueClient.CreateFromConnectionString</strong> method using the queue name and connection string as parameters, and assign the result to the <em>_client</em> variable, as shown in the following code:</p>
+<pre><code>_client = QueueClient.CreateFromConnectionString(serviceBusConnectionString, signInQueueName);
+</code></pre></li>
+<li><p>In the <strong>ServiceBusQueueHelper</strong> class, find the method with the following signature:</p>
+<pre><code>IQueueMessage&lt;BrokeredMessage&gt; Receive()
+</code></pre></li>
+<li><p>Remove the single line of code in the class:</p>
+<pre><code>return new ServiceBusQueueMessage(null);
+</code></pre></li>
+<li><p>At the end of the <strong>Receive</strong> method and before the closing curly bracket, create a new instance of the <strong>CloudQueue</strong> class by calling the <strong>GetQueueReference</strong> method of the <em>CloudQueueClient</em> variable using the <strong>string</strong> name of the queue, as shown in the following code:</p>
+<pre><code>BrokeredMessage message = _client.Receive();
+</code></pre></li>
+<li><p>Invoke the <strong>CreateIfNotExists</strong> method to ensure that the queue exists</p>
+<pre><code>return new ServiceBusQueueMessage(message);
+</code></pre></li>
+<li><p>At the end of the <strong>CompleteMessage</strong> method and before the closing curly bracket, invoke the <strong>Complete</strong> method on the <strong>message</strong> parameter, as shown in the following code:</p>
+<pre><code>message.Complete();
+</code></pre></li>
+<li><p>At the end of the <strong>AbandonMessage</strong> method and before the closing curly bracket, invoke the <strong>Abandon</strong> method on the <strong>message</strong> parameter, as shown below:</p>
+<pre><code>message.Abandon();
+</code></pre></li>
+<li><p>On the <strong>View</strong> menu, point to <strong>Other Windows</strong>, and then click <strong>Package Manager Console</strong>.</p>
+<p>a. In the <strong>Package Manager Console</strong> pane, in the <em>Default Project</em> list, select <strong>Contoso.Events.Worker</strong>.</p>
+<p>b. In the <strong>Package Manager Console</strong> text area, place the cursor after the text <strong>PM</strong>, and then type the following command:</p>
+<pre><code>```
+Install-Package Microsoft.Azure.WebJobs.ServiceBus -Version 1.1.2
+```
+</code></pre><p>c. Press Enter.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Roles</strong> folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>Functions.cs</strong> file.</p>
+</li>
+<li><p>Locate the <strong>ProcessQueueMessage</strong> method.</p>
+<pre><code> public static void ProcessQueueMessage([QueueTrigger(&quot;signin&quot;)] QueueMessage message, TextWriter log)
+</code></pre></li>
+<li><p>Update the <strong>ProcessQueueMessage</strong> method by changing the parameter attribute of type <strong>QueueTrigger</strong> to type <strong>ServiceBusTrigger</strong>.</p>
+<pre><code> public static void ProcessQueueMessage([ServiceBusTrigger(&quot;signin&quot;)] QueueMessage message, TextWriter log)
+</code></pre></li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Roles</strong> folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>Program.cs</strong> file.</p>
+</li>
+<li><p>At the beginning of the <strong>Main</strong> method and after the opening curly bracket, create a new instance of the <strong>JobHostConfiguration</strong> class as shown below:</p>
+<pre><code> JobHostConfiguration config = new JobHostConfiguration();
+</code></pre></li>
+<li><p>At the beginning of the <strong>Main</strong> method and after the opening curly bracket, enable the <strong>Service Bus</strong> extension as shown below:</p>
+<pre><code> config.UseServiceBus();
+</code></pre></li>
+<li><p>At the beginning of the <strong>Main</strong> method and after the opening curly bracket, locate the initialization of the <strong>JobHost</strong> instance as shown below:</p>
+<pre><code> var host = new JobHost();
+</code></pre></li>
+<li><p>Replace the line of code with the following line of code that updates the initialization of the <strong>JobHost</strong> instance by passing in the <strong>JobHostConfiguration</strong> as a constructor parameter:</p>
+<pre><code> var host = new JobHost(config);
+</code></pre></li>
+</ol>
+<h4 id="task-2-update-administration-application-to-add-requests-to-the-queue">Task 2: Update administration application to add requests to the queue</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Administration</strong> folder and then expand the <strong>Contoso.Events.Management</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>Web.config</strong> file.</p>
+</li>
+<li><p>Locate the <strong>appSettings</strong> element.</p>
+</li>
+<li><p>Locate the <strong>add</strong> element with the key <strong>Microsoft.ServiceBus.ConnectionString</strong>.</p>
+</li>
+<li><p>Replace the value with your previously recorded connection string.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Shared</strong> folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.ViewModels</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>SignInSheetViewModel.cs</strong> file.</p>
+</li>
+<li><p>In the constructor, locate the following line of code:</p>
+<pre><code>GenerateSignInSheetTableStorage(context, eventItem, messageString);
+</code></pre></li>
+<li><p>Replace the above line of code with the following line of code:</p>
+<pre><code>GenerateSignInSheetServiceBus(context, eventItem, message);
+</code></pre></li>
+<li><p>At the beginning of the <strong>GenerateSignInSheetServiceBus</strong> method and after the opening curly bracket, create a <strong>QueueClient</strong> instance by using the connection string, as shown in the following code:</p>
+<pre><code> QueueClient client = QueueClient.CreateFromConnectionString(serviceBusConnectionString, signInQueueName);
+</code></pre></li>
+<li><p>After the above code, create a new instance of the <strong>BrokeredMessage</strong> class by passing in the <strong>QueueMessage</strong> message into the constructor, as shown in the following code:</p>
+<pre><code> BrokeredMessage queueMessage = new BrokeredMessage(message);
+</code></pre></li>
+<li><p>Invoke the <strong>Send</strong> method of the <em>QueueClient</em> variable by using the <strong>BrokeredMessage</strong> as the parameter:</p>
+<pre><code> client.Send(queueMessage);
+</code></pre></li>
+</ol>
+<h4 id="task-3-debug-and-verify-the-application">Task 3: Debug and verify the application</h4>
+<ol>
+<li><p>On the <strong>Debug</strong> menu, click <strong>Start Debugging</strong>.</p>
+</li>
+<li><p>On the home page for the <strong>Contoso Events Administration</strong> web application, click the <strong>Events</strong> button to view the list of events.</p>
+</li>
+<li><p>Click the <strong>Sign-In Sheet</strong> button for any event in the list.</p>
+</li>
+<li><p>View the sign-in page which notifies you that the sign-in sheet is being generated with the message:</p>
+</li>
+</ol>
+<p><strong>Sign-In Document Generation in Progress</strong>.</p>
+<ol>
+<li><p>Wait for one minute for the worker role to receive the queue message.</p>
+</li>
+<li><p>Verify that the application temporarily pauses execution at the breakpoint.</p>
+</li>
+<li><p>Press F5 to resume execution of the application</p>
+</li>
+<li><p>Wait for one minute, and then refresh the sign-in sheet page.</p>
+</li>
+<li><p>Click <strong>Sign-In Sheet</strong> to download the sign-in sheet from the server.</p>
+</li>
+<li><p>Close the <strong>Internet Explorer</strong> window.</p>
+</li>
+<li><p>Close the <strong>Contoso.Events – Microsoft Visual Studio</strong> window.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have created and consumed messages from Service Bus Queues.</p>
+</blockquote>
+<p>©2016 Microsoft Corporation. All rights reserved. The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode">Creative Commons Attribution 3.0 License</a>, additional terms may apply. All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong><em>not</em></strong> included within the Creative Commons license grant. This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.</p>
+<ol>
+<li>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.</li>
+</ol>

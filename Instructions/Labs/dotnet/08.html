@@ -1,0 +1,367 @@
+<h1 id="module-8-designing-a-communication-strategy-by-using-queues-and-service-bus">Module 8: Designing a Communication Strategy by Using Queues and Service Bus</h1>
+<h1 id="lab-using-queues-and-service-bus-to-manage-communication-between-web-applications-in-azure">Lab: Using Queues and Service Bus to Manage Communication Between Web Applications in Azure</h1>
+<h3 id="scenario">Scenario</h3>
+<p>Now that you can generate sign-in sheets in worker roles, you need a scalable and consistent way to enqueue messages for the worker role. You have decided to use an Azure queue mechanism so that you can scale the worker roles in isolation to meet the demand of the queue size. In this lab, you will begin by implementing the communication between the Administration web application and the worker role by using Storage queues. Then you will replace that implementation with an implementation that uses Service Bus queues.</p>
+<h3 id="objectives">Objectives</h3>
+<p>After you complete this lab, you will be able to:</p>
+<ul>
+<li><p>Create a Service Bus namespace by using the Portal.</p>
+</li>
+<li><p>Create Storage queue messages.</p>
+</li>
+<li><p>Consume Azure Storage queue messages.</p>
+</li>
+<li><p>Create Service Bus queue messages.</p>
+</li>
+<li><p>Consume Service Bus queue messages.</p>
+</li>
+</ul>
+<h3 id="lab-setup">Lab Setup</h3>
+<p><strong>Estimated Time: 60 minutes</strong></p>
+<p>Before starting this lab, you must complete the lab in Module 2. For the lab in this module, you will use the available host machine. Also, you must complete the following steps:</p>
+<ol>
+<li><p>On the host computer, click <strong>Start</strong>, type <strong>Remote</strong>, and then click <strong>Remote Desktop Connection</strong>.</p>
+</li>
+<li><p>In Remote Desktop Connection, provide the name of your virtual machine in the <strong>Computer</strong> box by using the following format:</p>
+<ul>
+<li><strong>[Your VM IP Address]:[<em>Your VM RDP Port</em>]</strong></li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> The name and port for your virtual machine might be saved in the Computer drop-down list. If this is the case, use this value instead of typing it in manually. If you are unsure about your virtual machine’s RDP port, use either of the Azure portals to find your virtual machine’s endpoints. The endpoint with the name <strong>Remote Desktop</strong> is the correct port for RDP. This port is randomized to protect your virtual machine from unauthorized access.</p>
+</blockquote>
+</li>
+<li><p>In Remote Desktop Connection, click <strong>Connect</strong>. Wait until the RDP client accesses the virtual machine.</p>
+</li>
+<li><p>If necessary, sign in by using the following credentials:</p>
+<ul>
+<li><p>User name: <strong>Student</strong></p>
+</li>
+<li><p>Password: <strong>AzurePa$$w0rd</strong></p>
+</li>
+</ul>
+</li>
+<li><p>Verify that you received the credentials to sign in to the Azure portal from your training provider. You will use these credentials and the Azure account throughout the labs in this course.</p>
+</li>
+</ol>
+<h2 id="exercise-1-creating-an-azure-service-bus-namespace">Exercise 1:    Creating an Azure Service Bus Namespace</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li>Create a Service Bus namespace by using the Portal.</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li>Create the Service Bus namespace by using the Portal.</li>
+</ol>
+<h4 id="task-1-create-the-service-bus-namespace-by-using-the-portal">Task 1: Create the Service Bus namespace by using the Portal</h4>
+<blockquote>
+<p><strong>Note:</strong> Service Bus functionality is not available yet in the Azure Portal. Because of this, the classic Portal will be used for this lab.</p>
+</blockquote>
+<ol>
+<li><p>Sign in to the Classic Azure Portal
+(<a href="https://manage.windowsazure.com"><em>https://manage.windowsazure.com</em></a>).</p>
+</li>
+<li><p>View the list of <strong>Service Bus</strong> namespaces for your subscription.</p>
+</li>
+<li><p>Create a new <strong>Service Bus</strong> namespace by using the following values:</p>
+<ul>
+<li><p>Namespace Name: <strong>sb20532[Your Name]</strong></p>
+</li>
+<li><p>Region: <strong>Select the region that is closest to you</strong></p>
+</li>
+<li><p>Type: <strong>Messaging</strong></p>
+</li>
+<li><p>Messaging Tier: <strong>Standard</strong></p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> It takes approximately 1-2 minutes to create your Service Bus namespace instance.</p>
+</blockquote>
+</li>
+<li><p>Note down the connection string for your newly created Service Bus namespace.</p>
+</li>
+<li><p>Create a new <strong>queue</strong> in your namespace by using the following details:</p>
+<ul>
+<li><p><strong>Queue</strong> <strong>Name</strong>: signin</p>
+</li>
+<li><p><strong>Namespace</strong>: sb20532[Your Name]</p>
+</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have created a Service Bus namespace and queue by using the Portal.</p>
+</blockquote>
+<h2 id="exercise-2-using-azure-queue-storage-for-document-generation">Exercise 2:    Using Azure Queue Storage for Document Generation</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise you will:</p>
+<ul>
+<li><p>Create queue messages by using Storage queues.</p>
+</li>
+<li><p>Consume queue messages from Storage queues.</p>
+</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Update worker role to consume requests from the queue.</p>
+</li>
+<li><p>Update administration application to add requests to the queue.</p>
+</li>
+<li><p>Create a Storage account instance.</p>
+</li>
+<li><p>Generate the test data.</p>
+</li>
+<li><p>Debug and verify the application.</p>
+</li>
+</ol>
+<h4 id="task-1-update-worker-role-to-consume-requests-from-the-queue">Task 1: Update worker role to consume requests from the queue</h4>
+<ol>
+<li><p>Open the <strong>Contoso.Events</strong> solution from the following location:</p>
+<blockquote>
+<p>File location: <strong>Allfiles (F):\Mod08\Labfiles\Starter\Contoso.Events</strong></p>
+</blockquote>
+</li>
+<li><p>Open the <strong>TableStorageQueueHelper.cs</strong> file.</p>
+</li>
+<li><p>Add a using statement for the <strong>System.Configuration</strong> namespace to the top of the file:</p>
+<pre><code>using System.Configuration;
+</code></pre></li>
+<li><p>In the <strong>TableStorageQueueHelper</strong> constructor, get the queue client and the name of the queue by using the following code:</p>
+<pre><code>CloudStorageAccount storageAccount = base.StorageAccount;
+
+_queueClient = storageAccount.CreateCloudQueueClient();
+
+_signInQueueName = ConfigurationManager.AppSettings[&quot;SignInQueueName&quot;];
+</code></pre></li>
+<li><p>Remove the existing code from the <strong>Receive</strong> method.</p>
+</li>
+<li><p>Create a new <strong>CloudQueue</strong> instance, and then ensure that the instance exists by using the following code:</p>
+<pre><code>CloudQueue queue = _queueClient.GetQueueReference(_signInQueueName);
+
+queue.CreateIfNotExists();
+</code></pre></li>
+<li><p>Get the <em>CloudQueueMessage</em> variable by calling the <strong>GetMessage</strong> method of the <strong>CloudQueue</strong> class, and then pass the message variable into the constructor of the <strong>TableStorageQueueMessage</strong> class, as shown in the following code:</p>
+<pre><code>CloudQueueMessage message = queue.GetMessage();
+
+return new TableStorageQueueMessage(message);
+</code></pre></li>
+<li><p>In the <strong>CompleteMessage</strong> method, create a new <strong>CloudQueue</strong> instance and ensure that the instance exists by using the following code:</p>
+<pre><code>CloudQueue queue = _queueClient.GetQueueReference(_signInQueueName);
+
+queue.CreateIfNotExists();
+</code></pre></li>
+<li><p>Call the <strong>DeleteMessage</strong> method of the <strong>CloudQueue</strong> class with the <em>CloudQueueMessage</em> variable as the first parameter, as shown in the following code:</p>
+<pre><code>queue.DeleteMessage(message);
+</code></pre></li>
+</ol>
+<h4 id="task-2-update-administration-application-to-add-requests-to-the-queue">Task 2: Update administration application to add requests to the queue</h4>
+<ol>
+<li><p>Open the <strong>SignInSheetViewModel.cs</strong> file located in the <strong>Contoso.Events.ViewModels</strong> project.</p>
+</li>
+<li><p>In the <strong>GenerateSignInSheetTableStorage</strong> method, create a <strong>CloudStorageAccount</strong> instance and a <strong>CloudQueueClient</strong> instance with the <strong>Microsoft.WindowsAzure.Storage.ConnectionString</strong> setting value by using the following code:</p>
+<pre><code>CloudStorageAccount storageAccount = CloudStorageAccount.Parse(tableStorageConnectionString);
+
+CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+</code></pre></li>
+<li><p>Using the <strong>SignQueueName</strong> cloud setting value, create a new <strong>CloudQueue</strong> instance and ensure that the instance exists, as shown in the following code:</p>
+<pre><code>CloudQueue queue = queueClient.GetQueueReference(signInQueueName);
+
+queue.CreateIfNotExists();
+</code></pre></li>
+<li><p>Add the message to the queue by creating a new instance of the <strong>CloudQueueMessage</strong> class using the string <strong>message</strong> as the constructor parameter, and then adding the new instance with the <strong>CloudQueue AddMessage</strong> method, as shown in the following code:</p>
+<pre><code>CloudQueueMessage queueMessage = new CloudQueueMessage(message);
+
+queue.AddMessage(queueMessage);
+</code></pre></li>
+</ol>
+<h4 id="task-3-create-a-storage-account-instance">Task 3: Create a Storage Account Instance</h4>
+<ol>
+<li><p>Sign in to the Azure Portal (<a href="https://portal.azure.com">https://portal.azure.com</a>).</p>
+</li>
+<li><p>Create a Storage Account using the following details:</p>
+<ul>
+<li><p>Name: <strong>provide a globally unique value</strong></p>
+</li>
+<li><p>Replication: <strong>Locally Redundant Storage (LRS)</strong></p>
+</li>
+<li><p>Resource Group: <strong>20532</strong></p>
+</li>
+<li><p>Location: <strong>Select the region that is closest to your location</strong></p>
+</li>
+</ul>
+</li>
+<li><p>Record the <em>account name</em> for your newly created Storage Account instance.</p>
+</li>
+<li><p>Select an access key and record the <em>connection string</em> for that key.</p>
+</li>
+</ol>
+<h4 id="task-4-generate-the-test-data">Task 4: Generate the test data</h4>
+<ol>
+<li><p>Locate the <strong>Contoso.Events.Data.Generation</strong> project.</p>
+</li>
+<li><p>Update the <strong>app.config</strong> file in the project to use your <em>Storage Account</em>&#39;s connection string in the <strong>StorageConnectionString</strong> <em>AppSetting</em>.</p>
+</li>
+<li><p>Debug the <strong>Contoso.Events.Data.Generation</strong> project to generate the SQL and storage tables data.</p>
+</li>
+</ol>
+<h4 id="task-5-debug-and-verify-the-application">Task 5: Debug and verify the application</h4>
+<ol>
+<li><p>Update your solution configuration to start the <strong>Contoso.Events.Web</strong>, <strong>Contoso.Events.Worker</strong> and <strong>Contoso.Events.Management</strong> projects when the solution is debugged.</p>
+</li>
+<li><p>Update the <strong>web.config</strong> file in the <strong>Contoso.Events.Web</strong> project to use your <em>Storage Account</em>&#39;s connection string in the <strong>Microsoft.WindowsAzure.Storage.ConnectionString</strong> <em>AppSetting</em>.</p>
+</li>
+<li><p>Update the <strong>web.config</strong> file in the <strong>Contoso.Events.Management</strong> project to use your <em>Storage Account</em>&#39;s connection string in the <strong>Microsoft.WindowsAzure.Storage.ConnectionString</strong> <em>AppSetting</em>.</p>
+</li>
+<li><p>Update the <strong>app.config</strong> file in the <strong>Contoso.Events.Worker</strong> project to use your <em>Storage Account</em>&#39;s connection string in the following locations:</p>
+<ul>
+<li><p><strong>StorageConnectionString</strong> <em>AppSetting</em></p>
+</li>
+<li><p><strong>AzureWebJobsStorage</strong> <em>ConnectionString</em></p>
+</li>
+<li><p><strong>AzureWebJobsDashboard</strong> <em>ConnectionString</em></p>
+</li>
+</ul>
+</li>
+<li><p>Update the <strong>app.config</strong> file in the <strong>Contoso.Events.Worker</strong> project to use your <em>Service Bus</em>&#39;s connection string in the following locations:</p>
+<ul>
+<li><strong>AzureWebJobsServiceBus</strong> <em>ConnectionString</em></li>
+</ul>
+</li>
+<li><p>Debug the <strong>Contoso.Events.Web</strong>, <strong>Contoso.Events.Worker</strong> and <strong>Contoso.Events.Management</strong> projects.</p>
+</li>
+<li><p>In the <strong>Contoso Events Administration</strong> web application,</p>
+</li>
+<li><p>Switch to the <strong>Contoso.Events – Microsoft Visual Studio</strong> window.</p>
+</li>
+<li><p>Open the <strong>Functions.cs</strong> file in the <strong>Contoso.Events.Worker</strong> solution.</p>
+</li>
+<li><p>Add a breakpoint to the following line in the <strong>ProcessQueueMessage</strong> method:</p>
+<pre><code>HandleMessage(message);
+</code></pre></li>
+<li><p>Switch to the <strong>Home - Contoso.Events.Administration</strong> browser window.</p>
+</li>
+<li><p>In the <strong>Contoso Events Administration</strong> web application, select any event, generate a sign-in sheet, and then download the sign-in sheet.</p>
+</li>
+<li><p>Verify that the application pauses execution at the debug breakpoint.</p>
+</li>
+<li><p>Stop debugging in Visual Studio, and then close Internet Explorer.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have created and
+consumed messages from Storage queues.</p>
+</blockquote>
+<h2 id="exercise-3-using-service-bus-queues-for-document-generation">Exercise 3:    Using Service Bus Queues for Document Generation</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li><p>Create queue messages by using Service Bus queues.</p>
+</li>
+<li><p>Consume queue messages from Service Bus queues.</p>
+</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Update worker role to consume requests from the queue.</p>
+</li>
+<li><p>Update administration application to add requests to the queue.</p>
+</li>
+<li><p>Debug and verify the application.</p>
+</li>
+</ol>
+<h4 id="task-1-update-worker-role-to-consume-requests-from-the-queue">Task 1: Update worker role to consume requests from the queue</h4>
+<ol>
+<li><p>Update the <strong>app.config</strong> file in the <strong>Contoso.Events.Worker</strong> project to use the connection string for your <strong>Service Bus</strong> namespace as the setting value for the <strong>Microsoft.ServiceBus.ConnectionString</strong> setting:</p>
+<ul>
+<li><p>Name: <strong>Microsoft.ServiceBus.ConnectionString</strong></p>
+</li>
+<li><p>Value: <strong>[Your Service Bus Connection String]</strong></p>
+</li>
+</ul>
+</li>
+<li><p>Open the <strong>ServiceBusQueueHelper.cs</strong> file in the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>Add a using statement for the <strong>System.Configuration</strong> namespace to the top of the file:</p>
+<pre><code>using System.Configuration;
+</code></pre></li>
+<li><p>In the <strong>ServiceBusQueueHelper</strong> constructor, get the queue client by using the following code:</p>
+<pre><code>string serviceBusConnectionString = ConfigurationManager.AppSettings[&quot;Microsoft.ServiceBus.ConnectionString&quot;];
+
+string signInQueueName = ConfigurationManager.AppSettings[&quot;SignInQueueName&quot;];
+
+_client = QueueClient.CreateFromConnectionString(serviceBusConnectionString, signInQueueName);
+</code></pre></li>
+<li><p>Remove the existing code from the <strong>Receive</strong> method.</p>
+</li>
+<li><p>Invoke the <strong>Receive</strong> method of the <strong>QueueClient</strong> class, store the result in a <strong>BrokeredMessage</strong>, and then pass the new variable into the <strong>ServiceBusQueueMessage</strong> constructor, as shown in the following code:</p>
+<pre><code>BrokeredMessage message = _client.Receive();
+
+return new ServiceBusQueueMessage(message);
+</code></pre></li>
+<li><p>In the <strong>CompleteMessage</strong> method, invoke the <strong>Complete</strong> method of the <strong>BrokeredMessage</strong> parameter by using the following code:</p>
+<pre><code>message.Complete();
+</code></pre></li>
+<li><p>In the <strong>AbandonMessage</strong> method, invoke the <strong>Abandon</strong> method of the <strong>BrokeredMessage</strong> parameter by using the following code:</p>
+<pre><code>message.Abandon();
+</code></pre></li>
+<li><p>Install Version <strong>1.1.2</strong> of the <strong>Microsoft.Azure.WebJobs.ServiceBus</strong> NuGet package in the <strong>Contoso.Events.Worker</strong> project.</p>
+<pre><code> Install-Package Microsoft.Azure.WebJobs.ServiceBus -Version 1.1.2
+</code></pre></li>
+<li><p>Open the <strong>Functions.cs</strong> file in the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>Locate the method declaration for the <strong>ProcessQueueMessage</strong> method.</p>
+</li>
+<li><p>Update the parameter attribute of type <strong>QueueTrigger</strong> to type <strong>ServiceBusTrigger</strong>.</p>
+</li>
+<li><p>Open the <strong>Program.cs</strong> file in the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>In the <strong>Main</strong> method, create a new instance of the <strong>JobHostConfiguration</strong> class and then enable the <strong>Service Bus</strong> extension.</p>
+<pre><code> JobHostConfiguration config = new JobHostConfiguration();
+ config.UseServiceBus();
+</code></pre></li>
+<li><p>In the <strong>Main</strong> method, update the initialization of the <strong>JobHost</strong> instance by passing in the <strong>JobHostConfiguration</strong> as a constructor parameter:</p>
+<pre><code> var host = new JobHost(config);
+</code></pre></li>
+</ol>
+<h4 id="task-2-update-administration-application-to-add-requests-to-the-queue">Task 2: Update administration application to add requests to the queue</h4>
+<ol>
+<li><p>Update the <strong>Web.config</strong> file in the <strong>Contoso.Events.Management</strong> project to use the connection string for your <strong>Service Bus</strong> namespace as the setting value for the <strong>Microsoft.ServiceBus.ConnectionString</strong> app setting:</p>
+<ul>
+<li><p>Key: <strong>Microsoft.ServiceBus.ConnectionString</strong></p>
+</li>
+<li><p>Value: <strong>[Your Service Bus Connection String]</strong></p>
+</li>
+</ul>
+</li>
+<li><p>Open the <strong>SignInSheetViewModel.cs</strong> file.</p>
+</li>
+<li><p>In the constructor, locate the following line of code:</p>
+<pre><code>GenerateSignInSheetTableStorage(context, eventItem, messageString);
+</code></pre></li>
+<li><p>Replace the above line of code with the following line of code:</p>
+<pre><code>GenerateSignInSheetServiceBus(context, eventItem, message);
+</code></pre></li>
+<li><p>In the <strong>GenerateSignInSheetServiceBus</strong> method, create a <strong>QueueClient</strong> instance with the <strong>Microsoft.WindowsAzure.Storage.ConnectionString</strong> setting value and the <strong>SignInQueueName</strong> setting value by using the following code:</p>
+<pre><code>QueueClient client = QueueClient.CreateFromConnectionString(serviceBusConnectionString, signInQueueName);
+</code></pre></li>
+<li><p>Add the message to the queue by creating a new instance of the <strong>BrokeredMessage</strong> class by using the <strong>QueueMessage</strong> message as the constructor parameter and adding the new instance with the <strong>QueueClient</strong> <em>Send</em> method, by using the following code:</p>
+<pre><code>BrokeredMessage queueMessage = new BrokeredMessage(message);
+client.Send(queueMessage);
+</code></pre></li>
+</ol>
+<h4 id="task-3-debug-and-verify-the-application">Task 3: Debug and verify the application</h4>
+<ol>
+<li><p>Debug the solution.</p>
+</li>
+<li><p>In the <strong>Contoso Events Administration</strong> web application, select any event, generate a sign-in sheet, and then download the sign-in sheet.</p>
+</li>
+<li><p>Verify that the application pauses execution at the debug breakpoint.</p>
+</li>
+<li><p>Stop debugging in Visual Studio 2015, and then close Internet Explorer.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have created and
+consumed messages from Service Bus Queues.</p>
+</blockquote>
+<p>©2016 Microsoft Corporation. All rights reserved.  The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode" title="Creative Commons Attribution 3.0 License">Creative Commons Attribution 3.0 License</a>, additional terms may apply.  All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong>not</strong> included within the Creative Commons license grant.  This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.<br>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.</p>

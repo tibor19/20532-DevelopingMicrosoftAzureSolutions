@@ -1,0 +1,304 @@
+<h1 id="module-4-storing-sql-data-in-azure">Module 4: Storing SQL Data in Azure</h1>
+<h1 id="lab-storing-event-data-in-azure-sql-databases">Lab: Storing Event Data in Azure SQL Databases</h1>
+<h2 id="exercise-1-creating-an-azure-sql-databases-instance">Exercise 1: Creating an Azure SQL Databases Instance</h2>
+<h4 id="task-1-sign-in-to-the-azure-portal">Task 1: Sign in to the Azure Portal</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+</li>
+<li><p>Go to <a href="https://portal.azure.com">https://portal.azure.com</a>.</p>
+</li>
+<li><p>In the email address box, type the email address of your Microsoft account.</p>
+</li>
+<li><p>Click Continue.</p>
+</li>
+<li><p>In the password box, type your password for your Microsoft account.</p>
+</li>
+<li><p>Click <strong>Sign In</strong>.</p>
+</li>
+</ol>
+<h4 id="task-2-create-an-azure-sql-database-by-using-the-azure-portal">Task 2: Create an Azure SQL database by using the Azure Portal</h4>
+<ol>
+<li><p>In the navigation pane on the left side, scroll down, and then click <strong>More Services</strong>.</p>
+</li>
+<li><p>In the <strong>Browse</strong> blade that displays, click <strong>SQL databases</strong>.</p>
+</li>
+<li><p>At the top-left corner of the portal, click + <strong>New</strong>.</p>
+</li>
+<li><p>In the <strong>New</strong> blade that displays, click <strong>Databases</strong>, and then <strong>SQL Database</strong> from <strong>Databases</strong> blade.</p>
+</li>
+<li><p>In the <strong>SQL Database</strong> blade that displays, locate the <strong>Database name</strong> box and provide the value <strong>db20532</strong>.</p>
+</li>
+<li><p>Click <strong>Pricing Tier</strong>.</p>
+</li>
+<li><p>In the <strong>Choose your pricing tier</strong> blade that displays, click the <strong>View all</strong> link and then select the <strong>Basic</strong> option.</p>
+</li>
+<li><p>Click <strong>Select</strong> to close the blade.</p>
+</li>
+<li><p>Click <strong>Select Source</strong>. Perform the following actions:</p>
+<p> a.  Select the <strong>Blank Database</strong> option.</p>
+<p> b.  In the <strong>SQL database</strong> blade, click <strong>Server</strong>.</p>
+<p> c.  In the <strong>Server</strong> blade that displays, click <strong>Create a new server</strong>.</p>
+<p> d. In the <strong>New Server</strong> blade that displays, locate the <strong>Server Name</strong> box.</p>
+<p> e. In the <strong>Server Name</strong> box, type <strong>sv20532[<em>Your Name Here</em>]</strong>.</p>
+<p> f. In the <strong>Server Admin Login</strong> box, type <strong>testuser</strong>.</p>
+<p> g. In the <strong>Password</strong> box, type <strong>TestPa$$w0rd</strong>.</p>
+<p> h. In the <strong>Confirm Password</strong> box, type <strong>TestPa$$w0rd</strong>.</p>
+<p> i. In the <strong>Location</strong> list, select the region that is closest to your location.</p>
+<p> j. In the <strong>New server</strong> blade, click <strong>Select</strong>.</p>
+</li>
+<li><p>In the <strong>SQL database</strong> blade, locate the <strong>Resource group</strong> section and select the existing <em>20532</em> resource group.</p>
+</li>
+<li><p>Click <strong>Create</strong> to create the SQL database and server.</p>
+</li>
+<li><p>Write down the server and database names for the new SQL Database instance.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have created both servers and databases in the SQL Database service.</p>
+</blockquote>
+<h2 id="exercise-2-using-entity-framework-with-local-sql-server">Exercise 2: Using Entity Framework with Local SQL Server</h2>
+<h4 id="task-1-run-the-asp-net-web-application-to-view-events-from-the-local-sql-database">Task 1: Run the ASP.NET web application to view events from the local SQL database</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Desktop</strong> tile.</p>
+</li>
+<li><p>On the taskbar, click the <strong>File Explorer</strong> icon.</p>
+</li>
+<li><p>In the <em>This PC</em> window, go to <strong>Allfiles (F):\Mod04\Labfiles\Starter\Contoso.Events</strong>, and then double-click <strong>Contoso.Events.sln</strong>.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events.DataGeneration</strong> project, point to <strong>Debug</strong>, and then click <strong>Start New Instance</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> The Data Generation script takes between one to two minutes to run.</p>
+</blockquote>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events.Web</strong> project, and then click <strong>Set as Startup Project</strong>.</p>
+</li>
+<li><p>On the <strong>Debug</strong> menu, click <strong>Start Debugging</strong>.</p>
+</li>
+<li><p>On the home page of the web application, verify that it shows a list of multiple events.</p>
+</li>
+<li><p>Close the tab that is displaying the website.</p>
+</li>
+</ol>
+<h2 id="exercise-3-using-entity-framework-with-azure-sql-databases">Exercise 3: Using Entity Framework with Azure SQL Databases</h2>
+<h4 id="task-1-configure-dbcontext-with-a-new-databaseinitializer">Task 1: Configure DbContext with a new DatabaseInitializer</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events.Data</strong> project, point to <strong>Add</strong> and then click <strong>New Item</strong>.</p>
+</li>
+<li><p>In the <strong>Add New Item</strong> dialog box, perform the following steps:</p>
+<p>a. Expand <strong>Installed</strong>, expand <strong>Visual C# Items</strong>, and then click <strong>Code</strong>.</p>
+<p>b. Click the <strong>Class</strong> template.</p>
+<p>c. In the <strong>Name</strong> box, type <strong>EventsContextInitializer.cs</strong>.</p>
+<p>d. Click <strong>Add</strong>.</p>
+</li>
+<li><p>Add the following <strong>using</strong> statement at the top of the code file:</p>
+<pre><code>using System.Data.Entity;
+</code></pre></li>
+<li><p>In the <strong>EventsContextInitializer</strong> class, add the <strong>public</strong> accessor to the left of the class definition:</p>
+<pre><code>class EventsContextInitializer
+</code></pre></li>
+<li><p>Verify that the updated class definition looks like the following line of code:</p>
+<pre><code>public class EventsContextInitializer
+</code></pre></li>
+<li><p>In the <strong>EventsContextInitializer</strong> class, add the <strong>CreateDatabaseIfNotExists&lt;EventsContext&gt;</strong> inheritance statement to the right of the class definition:</p>
+<pre><code>public class EventsContextInitializer
+</code></pre></li>
+<li><p>Verify that the updated class definition looks like the following line of code:</p>
+<pre><code>public class EventsContextInitializer : CreateDatabaseIfNotExists&lt;EventsContext&gt;
+</code></pre></li>
+<li><p>In the Solution Explorer pane, expand the <strong>Contoso.Events.Data</strong> project.</p>
+</li>
+<li><p>In the <strong>Contoso.Events.Data</strong> project, open the <strong>EventsContext.cs</strong> file.</p>
+</li>
+<li><p>Within the static constructor <strong>static EventsContext()</strong>, add the following line of code:</p>
+<pre><code>Database.SetInitializer&lt;EventsContext&gt;(new EventsContextInitializer());
+</code></pre></li>
+<li><p>Save the <em>EventsContext.cs</em> file.</p>
+</li>
+</ol>
+<h4 id="task-2-implement-seed-data-with-dbcontext">Task 2: Implement seed data with DbContext</h4>
+<ol>
+<li><p>In the Solution Explorer pane, expand the <strong>Contoso.Events.Data</strong> project.</p>
+</li>
+<li><p>In the <strong>Contoso.Events.Data</strong> project, open the <strong>EventsContextInitializer.cs</strong> file.</p>
+</li>
+<li><p>Add the following method declaration to the <strong>EventsContextInitializer</strong> class:</p>
+<pre><code>protected override void Seed(EventsContext context){ }
+</code></pre></li>
+<li><p>Add the following <strong>using</strong> statements at the top of the code file:</p>
+<pre><code>using Contoso.Events.Models;
+</code></pre></li>
+<li><p>Place the cursor between the openning and closing curly brackets <strong>{ }</strong> to the right of the <strong>Seed(EventsContext context)</strong> method, and then type the following lines of code:</p>
+<pre><code>if (context.Events.Count() == 0)
+{
+    Event eventItem = new Event();
+    eventItem.EventKey = &quot;FY17SepGeneralConference&quot;;
+    eventItem.StartTime = DateTime.Today;
+    eventItem.EndTime = DateTime.Today.AddDays(3d);
+    eventItem.Title = &quot;FY17 September Technical Conference&quot;;
+    eventItem.Description = &quot;Sed in euismod mi.&quot;;
+    eventItem.RegistrationCount = 1;
+    context.Events.Add(eventItem);
+}
+
+if (context.Registrations.Count() == 0)
+{
+    Registration registrationItem = new Registration();
+    registrationItem.EventKey = &quot;FY17SepGeneralConference&quot;;
+    registrationItem.FirstName = &quot;Aisha&quot;;
+    registrationItem.LastName = &quot;Witt&quot;;
+    context.Registrations.Add(registrationItem);
+}
+
+context.SaveChanges();
+</code></pre></li>
+<li><p>Save the <em>EventsContextInitializer.cs</em> file.</p>
+</li>
+<li><p>In the Solution Explorer pane, right-click the <strong>Contoso.Events.Data</strong> project, and then click <strong>Build</strong>.</p>
+</li>
+</ol>
+<h4 id="task-3-publish-the-web-application-with-updated-dbcontext-to-azure">Task 3: Publish the web application with updated DbContext to Azure</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Web</strong> project.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Web.config</strong> file in the <strong>Contoso.Events.Web</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>Web.Release.config</strong> file.</p>
+</li>
+<li><p>In the <strong>Web.Release.config</strong> file, update the connection string using the key <strong>EventsContextConnectionString</strong> with the following values:</p>
+<ul>
+<li><p>[database]: <strong>db20532</strong></p>
+</li>
+<li><p>[login]: <strong>testuser</strong></p>
+</li>
+<li><p>[server]: <strong>sv20532[<em>Your Name Here</em>]</strong>. (Note that there are two different places to replace [server].)</p>
+</li>
+<li><p>[password]: <strong>TestPa$$w0rd</strong></p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> Ensure that you remove the square brackets as you replace each placeholder.</p>
+</blockquote>
+</li>
+<li><p>Save the <strong>Web.Release.config</strong> file.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events.Web</strong> project, and then click <strong>Publish</strong>.</p>
+</li>
+<li><p>In the Publish Web window, click <strong>Microsoft Azure App Service</strong>.</p>
+</li>
+<li><p>In the <strong>App Service</strong> dialog, perform the following steps:</p>
+<p>a. Select your Azure subscription.</p>
+<p>b. Ensure that the <strong>Resource Group</strong> option is selected in the <strong>View</strong> list.</p>
+<p>c. Click the <strong>New</strong> button.</p>
+</li>
+<li><p>In the <strong>Create App Service</strong> dialog, perform the following steps:</p>
+<p> a. Ensure that you have an auto-generated Web App name. If not, enter a globally unique name.</p>
+<p> b. Select your Azure subscription.</p>
+<p> c. Click the <strong>New</strong> button immediately to the right of the <strong>Resource Group</strong> dialog box.</p>
+<p> d. In the <strong>Resource Group</strong> dialog box, provide the value <strong>TestSQL</strong>.</p>
+<p> e. Click the <strong>New</strong> button immediately to the right of the <strong>App Service Plan</strong> dialog box.</p>
+<p> f. Ensure that you have an auto-generated App Service Plan name. If not, provide the value <strong>TestSQLPlan</strong>.</p>
+<p> g. In the <strong>Location</strong> list, select the region that is closest to your location. <strong>Ensure</strong> that this region is same as the <em>\</em>region* where you created SQL Database.</p>
+<p> h. In the <strong>Size</strong> list, select the <strong>Free</strong> option.</p>
+<p> i. Click the <strong>OK</strong> button to close the <strong>Configure App Service Plan</strong> dialog.</p>
+<p> j. Click the <strong>Create</strong> button to create your App Service instance.</p>
+<blockquote>
+<p><strong>Note:</strong> The deployment process for the new App Service is relatively short and should take 2-5 minutes.</p>
+</blockquote>
+</li>
+<li><p>In the <strong>Publish Web</strong> dialog box, perform the following steps:</p>
+<p>a. Leave the default values in all the fields.</p>
+</li>
+<li><p>Click <strong>Publish</strong>.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> It typically takes five to ten minutes for the publish process to complete. You can track the progress of your publish in the Microsoft Azure Activity Log (<strong>View</strong> &gt; <strong>Other Windws</strong> &gt; <strong>Microsoft Azure Activity Log</strong>) pane that displays when you publish your Web App project.</p>
+</blockquote>
+<h4 id="task-4-verify-that-the-azure-web-app-website-is-using-the-new-data">Task 4: Verify that the Azure Web App website is using the new data</h4>
+<ol>
+<li><p>Wait for the publish process to complete and the console window to display the message <strong>Complete</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> The publish process is complete when the message “<strong>Complete”</strong> displays in the <strong>Microsoft Azure Activity Log</strong>’s history console. The green circular indicator in the Activity Log does not indicate that the publish process is complete, but it indicates that the package is uploaded successfully.</p>
+</blockquote>
+</li>
+<li><p>In the <strong>Azure App Service Activity</strong> pane, click the hyperlink that directs you to the published web application.</p>
+</li>
+<li><p>Verify that the website displays the single event that you created in your Entity Framework context initializer.</p>
+</li>
+</ol>
+<h4 id="task-5-sign-in-to-the-azure-portal">Task 5: Sign in to the Azure Portal</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+</li>
+<li><p>Go to <a href="https://portal.azure.com"><em>https://portal.azure.com</em></a>.</p>
+</li>
+<li><p>In the email address box, type the email address of your Microsoft account</p>
+</li>
+<li><p>In the password box, type the password of your Microsoft account, and then click <strong>Sign In</strong>.</p>
+</li>
+</ol>
+<h4 id="task-6-view-the-data-in-the-azure-sql-database">Task 6: View the data in the Azure SQL Database</h4>
+<ol>
+<li><p>In the navigation pane on the left side, scroll down, and then click <strong>More Services</strong>.</p>
+</li>
+<li><p>In the <strong>Browse</strong> blade that displays, click <strong>SQL databases</strong>.</p>
+</li>
+<li><p>In the list of <strong>SQL Databases</strong>, select the SQL database named <strong>db20532</strong>.</p>
+</li>
+<li><p>In the <strong>db20532 - SQL database</strong> blade, locate the <strong>Essentials</strong> panel.</p>
+</li>
+<li><p>Locate the <strong>Server name</strong> section and click on the associated hyperlink to navigate to the server blade.</p>
+</li>
+<li><p>In the <strong>SQL server</strong> blade, locate the <strong>Essentials</strong> panel.</p>
+</li>
+<li><p>Locate the <strong>Firewall</strong> section and click on the associated hyperlink to navigate to manage firewall settings.</p>
+</li>
+<li><p>In the <strong>Firewall settings</strong> blade, click the <strong>Add client IP</strong> button to add your virtual machine&#39;s IP Address to the list of allowed IP Address ranges.</p>
+</li>
+<li><p>Click on <strong>Save</strong> at the top of the blade. Once saved, close the confirmation dialog by clicking the <strong>Ok</strong> button.</p>
+<blockquote>
+<p><strong>Note:</strong> It might take couple of minutes for the firewall changes to get updated on server.</p>
+</blockquote>
+</li>
+<li><p>Return to the open instance of <strong>Visual Studio</strong>.</p>
+</li>
+<li><p>In Visual Studio, open the <strong>View</strong> menu and then select the <strong>Server Explorer</strong> option.</p>
+</li>
+<li><p><strong>Expand</strong> the <strong>Data Connections</strong> node.</p>
+</li>
+<li><p>Right click on <strong>Data Connections</strong> and click on <strong>Add Connection</strong>.</p>
+</li>
+<li><p>Choose <strong>Microsoft SQL Server</strong> for data source and click <strong>Continue</strong>.</p>
+</li>
+<li><p>In the <strong>Add Connection</strong> wizard, provide following values and click <strong>OK</strong>.</p>
+<p>a. In the <strong>server name</strong> box, type <strong>sv20532[your name].database.windows.net</strong>.</p>
+<p>b. Select <strong>Use SQL Server Authentication</strong>.</p>
+<p>c. In the <strong>Username</strong> box, type <strong>testuser</strong>.</p>
+<p>d. In the <strong>Password</strong> box, type <strong>TestPa$$w0rd</strong>.</p>
+<p>e. In the <strong>Select or enter a database name</strong> dropdown, select <strong>db20532</strong>.</p>
+<p>f. Click the <strong>OK</strong> button.</p>
+<blockquote>
+<p><strong>Note:</strong> If firewall rules are not updated on the server, you may have to wait a few more minutes before proceeding.</p>
+</blockquote>
+</li>
+<li><p>On Visual Studio <strong>Server Explorer</strong>, expand <strong>Data Connections</strong> then <strong>sv20532[your name].db20532.dbo</strong> and then the <strong>Tables</strong> node.</p>
+</li>
+<li><p>Right click <strong>Tables</strong> and click <strong>Refresh</strong>.</p>
+</li>
+<li><p>Right click <strong>Events</strong> table, and then select <strong>Show Table Data</strong>.</p>
+</li>
+<li><p>In the <strong>dbo.Events</strong> table, view the single record.</p>
+</li>
+<li><p>Close the <strong>Events</strong> table window.</p>
+</li>
+<li><p>Close the <strong>Internet Explorer</strong> application.</p>
+</li>
+<li><p>Close the <strong>Contoso.Events – Microsoft Visual Studio</strong> window.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have configured Entity Framework to initialize a new database with seed data.</p>
+</blockquote>
+<hr>
+<p>©2016 Microsoft Corporation. All rights reserved. The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode">Creative Commons Attribution 3.0 License</a>, additional terms may apply. All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong><em>not</em></strong> included within the Creative Commons license grant. This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.</p>
+<p>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.</p>

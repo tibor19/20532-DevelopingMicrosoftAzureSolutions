@@ -1,0 +1,229 @@
+<h1 id="module-9-automating-integration-with-azure-resources">Module 9: Automating Integration with Azure Resources</h1>
+<h1 id="lab-automating-the-creation-of-azure-assets-using-powershell-and-xplat-cli">Lab: Automating the Creation of Azure Assets using PowerShell and xPlat CLI</h1>
+<h3 id="scenario">Scenario</h3>
+<p>Now that you have created many of the resources that you will use in your Azure application, you have decided to automate the creation of your assets in Azure. Some of your administrators are Windows experts and would prefer to automate using PowerShell while others use Linux and would prefer to automate from the command line. Due to this requirement, you will try and implement automation using PowerShell and separately using a cross-platform CLI interface.</p>
+<h3 id="objectives">Objectives</h3>
+<p>After you complete this lab, you will be able to:</p>
+<ul>
+<li><p>Authenticate to Azure by using xPlat CLI</p>
+</li>
+<li><p>Create a Website instance by using xPlat CLI.</p>
+</li>
+<li><p>Remove a Website instance by using xPlat CLI.</p>
+</li>
+<li><p>Authenticate to Azure by using PowerShell.</p>
+</li>
+<li><p>Create a resource group from a template by using PowerShell.</p>
+</li>
+<li><p>Remove a resource group by using PowerShell.</p>
+</li>
+</ul>
+<h3 id="lab-setup">Lab Setup</h3>
+<p>Estimated Time: 45 minutes</p>
+<p>For this lab, you will use the available host machine. Before you begin this lab, you must complete the following steps:</p>
+<p>Prior to starting this lab, you must have completed the lab in <strong>Module 2</strong>.</p>
+<ol>
+<li><p>On the host computer, click <strong>Start</strong>, type <strong>Remote</strong>, and then click <strong>Remote Desktop Connection</strong>.</p>
+</li>
+<li><p>In Remote Desktop Connection, provide the name of your virtual machine or IP Address in the <strong>Computer</strong> box by using the following format:</p>
+<p><strong>[Your VM IP Address]:[<em>Your VM RDP Port</em>]</strong></p>
+<blockquote>
+<p><strong>Note:</strong> The name and port for your virtual machine might be saved in the Computer drop-down list. If this is the case, use this value instead of typing it in manually. If you are unsure about your virtual machine’s RDP port, use either of the Azure portals to find your virtual machine’s endpoints. The endpoint with the name <strong>Remote Desktop</strong> is the correct port for RDP. This port is randomized to protect your virtual machine from unauthorized access.</p>
+</blockquote>
+</li>
+<li><p>In Remote Desktop Connection, click <strong>Connect</strong>. Wait until the RDP client accesses the virtual machine.</p>
+</li>
+<li><p>If necessary, sign in by using the following credentials:</p>
+<blockquote>
+<p>User name: <strong>Student</strong></p>
+<p>Password: <strong>AzurePa$$w0rd</strong></p>
+</blockquote>
+</li>
+<li><p>Verify that you received the credentials to sign in to the Azure portal from your training provider. You will use these credentials and the Azure account throughout the labs in this course.</p>
+</li>
+</ol>
+<h2 id="exercise-1-use-xplat-cli-to-create-and-manage-and-azure-web-app">Exercise 1: Use xPlat CLI to Create and Manage and Azure Web App</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li><p>Install the Azure xPlat CLI package.</p>
+</li>
+<li><p>Authenticate to Azure using the xPlat CLI.</p>
+</li>
+<li><p>Create a Web App using the xPlat CLI.</p>
+</li>
+<li><p>Remove the Web App using xPlat CLI</p>
+</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Install xPlat CLI.</p>
+</li>
+<li><p>Authenticate to Azure by using xPlat CLI.</p>
+</li>
+<li><p>Create a new Website instance by using xPlat CLI.</p>
+</li>
+<li><p>Remove a Website instance by using xPlat CLI.</p>
+</li>
+</ol>
+<h4 id="task-1-preparing-the-xplat-cli-environment">Task 1: Preparing the xPlat CLI Environment</h4>
+<ol>
+<li><p>Open the <strong>Microsoft Web Platform Installer</strong> application.</p>
+</li>
+<li><p>Locate and install the <strong>Microsoft Azure Cross-platform Command Line Tools</strong> product.</p>
+</li>
+<li><p>Open the <strong>Command Prompt</strong> console window.</p>
+</li>
+<li><p>Validate that the <strong>azure</strong> CLI command is available using the following command:</p>
+<pre><code>azure --help
+</code></pre></li>
+<li><p>Switch to the <strong>ARM</strong> mode for the CLI using the following command:</p>
+<pre><code>azure config mode arm
+</code></pre></li>
+</ol>
+<h4 id="task-2-login-to-your-azure-subscription-using-interactive-login">Task 2: Login to Your Azure Subscription Using Interactive Login</h4>
+<ol>
+<li><p>Start the interactive login by using the following command:</p>
+<pre><code>azure login
+</code></pre></li>
+<li><p>Sign in to the Azure Device Login page (<a href="https://aka.ms/devicelogin">https://aka.ms/devicelogin</a>) using the code provided by the CLI command.</p>
+</li>
+<li><p>Return to the <strong>Command Prompt</strong> application.</p>
+</li>
+<li><p>View your active account details:</p>
+<pre><code>azure account show
+</code></pre><blockquote>
+<p><strong>Note:</strong> If you have multiple Azure subscriptions, you can use <strong>azure account set [subscription-name]</strong> to select the appropriate subscription. If you are unsure about your subscription&#39;s name, you can simply use <strong>azure account list</strong>. If your Azure subscription is provided by a Learning Partner, it might be an auto-generated account without any details. In such a case, this command will return an empty result.</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have set up a development environment to use xPlat CLI for Azure service automation.</p>
+</blockquote>
+<h4 id="task-3-create-a-new-website-instance-by-using-xplat-cli">Task 3: Create a new Website instance by using xPlat CLI</h4>
+<ol>
+<li><p>Create a new Resource Group by using the name <strong>rga20532</strong> and the <strong>West US</strong> location:</p>
+<pre><code>azure group create --name rga20532 --location &quot;West US&quot;
+</code></pre></li>
+<li><p>View the list of Resource Groups for your subscription by using the following command:</p>
+<pre><code>azure group list
+</code></pre></li>
+<li><p>Create a new Web App by using a unique name and the <strong>East US</strong> location:</p>
+<pre><code>azure resource create --name [Unique Name] --resource-type &quot;Microsoft.Web/Sites&quot; --api-version &quot;2014-06-01&quot; --location &quot;East US&quot; --resource-group rga20532
+</code></pre></li>
+<li><p>View the list of Resources in the <strong>rga20532</strong> Resource Group by using the following command:</p>
+<pre><code>azure resource list --resource-group rga20532
+</code></pre></li>
+<li><p>View the details for your newly created Website by using the following command:</p>
+<pre><code>azure resource show --name [Unique Name] --resource-type &quot;Microsoft.Web/Sites&quot; --resource-group rga20532 --api-version &quot;2014-06-01&quot; --json
+</code></pre></li>
+<li><p>Record the <strong>defaultHostName</strong> value from your new Web App&#39;s properties.</p>
+</li>
+<li><p>View the newly created Website by using the following command:</p>
+<pre><code>explorer “http://[Host Name]”
+</code></pre></li>
+<li><p>Close Internet Explorer.</p>
+</li>
+<li><p>Switch to the <strong>Command Prompt</strong> console window.</p>
+</li>
+</ol>
+<h4 id="task-4-remove-a-website-instance-by-using-xplat-cli">Task 4: Remove a Website instance by using xPlat CLI</h4>
+<ol>
+<li><p>Remove your newly created Web App instance by using the following command:</p>
+<pre><code>azure resource delete --name [Unique Name] --resource-type &quot;Microsoft.Web/Sites&quot; --resource-group rga20532 --api-version &quot;2014-06-01&quot; --json
+</code></pre></li>
+<li><p>Remove your newly created Resource Group by using the following command:</p>
+<pre><code>azure group delete --name rga20532
+</code></pre></li>
+<li><p>Validate that the Resource Group has been successfully removed using the following command:</p>
+<pre><code> azure group show --name rga20532
+</code></pre></li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used xPlat CLI to manage instances of an Azure service.</p>
+</blockquote>
+<h2 id="exercise-2-use-powershell-to-create-and-manage-a-resource-group">Exercise 2: Use PowerShell to Create and Manage a Resource Group</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li><p>Authenticate to Azure in Windows PowerShell by using Azure Active Directory.</p>
+</li>
+<li><p>Switch the Azure modules in use by using Windows PowerShell.</p>
+</li>
+<li><p>Create a resource group from a template by using Windows PowerShell.</p>
+</li>
+<li><p>Delete a resource group by using Windows PowerShell.</p>
+</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Switch to the Azure Resource Manager PowerShell Modules.</p>
+</li>
+<li><p>Create a resource group by using Windows PowerShell.</p>
+</li>
+<li><p>Remove the resource group by using Windows PowerShell.</p>
+</li>
+</ol>
+<h4 id="task-1-open-the-azure-powershell-console">Task 1: Open the Azure PowerShell Console</h4>
+<ol>
+<li>Open the <strong>Windows PowerShell</strong> console window.</li>
+</ol>
+<h4 id="task-2-authenticate-to-azure-resource-manager-using-powershell">Task 2: Authenticate to Azure Resource Manager Using PowerShell</h4>
+<ol>
+<li><p>Switch to the <strong>AzureResourceManager</strong> mode by using the following command:</p>
+<pre><code>Login-AzureRmAccount
+</code></pre></li>
+<li><p>Authenticate to Azure by signing in to your Azure Active Directory account:</p>
+</li>
+<li><p>To view your current Azure PowerShell session context type the following command in the console, and then press Enter:</p>
+<pre><code>Get-AzureRmContext
+</code></pre><blockquote>
+<p><strong>Note:</strong> If you have multiple Azure subscriptions, you can use <strong>Select-AzureRmSubscription</strong> to select the appropriate subscription.</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="task-3-create-a-resource-group-by-using-powershell">Task 3: Create a resource group by using PowerShell</h4>
+<ol>
+<li><p>Create a new instance of the <strong>Resource group</strong> by using following command and details:</p>
+<pre><code>New-AzureRmResourceGroup -Name rgb20532 -Location &quot;West US&quot; 
+New-AzureRmResourceGroupDeployment -ResourceGroupName rgb20532 -TemplateUri -TemplateFile &quot;F:\Mod09\Labfiles\azuredeploy.json&quot;
+</code></pre><ul>
+<li><p>administratorLogin: <strong>testuser</strong></p>
+</li>
+<li><p>administratorLoginPassword: <strong>TestPa$$w0rd</strong></p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> Wait for the provisioning process to complete. Status messages will be displayed periodically and the final message with the details will be displayed when provisioning is complete.</p>
+</blockquote>
+</li>
+<li><p>View the details for your newly created resource group by using the following command:</p>
+<pre><code>Get-AzureRmResourceGroup –ResourceGroupName rgb20532
+</code></pre></li>
+<li><p>View the details for your newly created Web App in your resource group by using the following command:</p>
+<pre><code>(Get-AzureRmResource -IsCollection -ResourceGroupName rgb20532 -ResourceType &quot;Microsoft.Web/sites&quot; -ApiVersion 2015-08-01).Properties
+</code></pre></li>
+<li><p>Record the value of the <strong>hostNames</strong> property from your new Web App&#39;s properties.</p>
+</li>
+<li><p>View the newly created Website by using the following command:</p>
+<pre><code>explorer “http://[Host Name]”
+</code></pre></li>
+<li><p>Close Internet Explorer.</p>
+</li>
+<li><p>Switch to the <strong>Windows PowerShell</strong> console window.</p>
+</li>
+</ol>
+<h4 id="task-4-remove-the-resource-group-by-using-windows-powershell">Task 4: Remove the resource group by using Windows PowerShell</h4>
+<ol>
+<li><p>Remove your newly created resource group by using the following command:</p>
+<pre><code>Remove-AzureRmResourceGroup –Name rgb20532
+</code></pre><blockquote>
+<p><strong>Note:</strong> Because removing a resource group involves removing multiple resources, this process can take 5 to 15 minutes on average.</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used Azure to interact with the Resource Manager, resource groups, and resource group templates.</p>
+</blockquote>
+<p>©2016 Microsoft Corporation. All rights reserved. The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode">Creative Commons Attribution 3.0 License</a>, additional terms may apply. All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong><em>not</em></strong> included within the Creative Commons license grant. This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.</p>
+<p>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.</p>

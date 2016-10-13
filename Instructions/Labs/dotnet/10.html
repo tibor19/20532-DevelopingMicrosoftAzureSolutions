@@ -1,0 +1,251 @@
+<h1 id="module-10-securing-azure-web-applications">Module 10: Securing Azure Web Applications</h1>
+<h1 id="lab-integrating-azure-active-directory-with-the-events-administration-portal">Lab: Integrating Azure Active Directory with the Events Administration Portal</h1>
+<h3 id="scenario">Scenario</h3>
+<p>Even though the Contoso Events web application is public, the Administration application should be locked down to users only from your domain. You have decided to use Azure AD and ASP.NET identity to provide this functionality. In this lab, you will create a new ASP.NET project by using the ASP.NET identity framework and integrate the project with Azure AD. The website will then use your organization accounts for signing in.</p>
+<h3 id="objectives">Objectives</h3>
+<p>After you complete this lab, you will be able to:</p>
+<ul>
+<li><p>Create an Azure AD directory by using the Classic Portal.</p>
+</li>
+<li><p>Create users in Azure AD by using the Classic Portal.</p>
+</li>
+<li><p>Create a new MVC project that uses Azure AD organizational accounts for security.</p>
+</li>
+</ul>
+<h3 id="lab-setup">Lab Setup</h3>
+<p><strong>Estimated Time: 60 minutes</strong></p>
+<p>Before starting this lab, you must complete the lab in Module 2. For the lab in this module, you will use the available host machine. Also, you must complete the following steps:</p>
+<ol>
+<li><p>On the host computer, click <strong>Start</strong>, type <strong>Remote</strong>, and then click <strong>Remote Desktop Connection</strong>.</p>
+</li>
+<li><p>In Remote Desktop Connection, provide the name of your virtual machine in the <strong>Computer</strong> box by using the following format:</p>
+<ul>
+<li><strong>[Your VM IP Address]:[<em>Your VM RDP Port</em>]</strong></li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> The name and port for your virtual machine might be saved in the Computer drop-down list. If this is the case, use this value instead of typing it in manually. If you are unsure about your virtual machine’s RDP port, use either of the Azure Portals to find your virtual machine’s endpoints. The endpoint with the name <strong>Remote Desktop</strong> is the correct port for RDP. This port is randomized to protect your virtual machine from unauthorized access.</p>
+</blockquote>
+</li>
+<li><p>In Remote Desktop Connection, click <strong>Connect</strong>. Wait until the RDP client accesses the virtual machine.</p>
+</li>
+<li><p>If necessary, sign in by using the following credentials:</p>
+<ul>
+<li><p>User name: <strong>Student</strong></p>
+</li>
+<li><p>Password: <strong>AzurePa$$w0rd</strong></p>
+</li>
+</ul>
+</li>
+<li><p>Verify that you received the credentials to sign in to the Azure Classic Portal from your training provider. You will use these credentials and the Azure account throughout the labs in this course.</p>
+</li>
+</ol>
+<h2 id="exercise-1-creating-an-azure-ad">Exercise 1: Creating an Azure AD</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li><p>Create an Azure AD by using the Classic Portal.</p>
+</li>
+<li><p>Create a Global Administrator role in the new directory.</p>
+</li>
+<li><p>Create a standard User role in the new directory.</p>
+</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Sign in to the Azure Classic Portal.</p>
+</li>
+<li><p>Create a directory by using the Classic Portal.</p>
+</li>
+<li><p>Create a Global Administrator role in the directory.</p>
+</li>
+<li><p>Create a User role in the directory.</p>
+</li>
+</ol>
+<h4 id="task-1-sign-in-to-the-azure-classic-portal">Task 1: Sign in to the Azure Classic Portal</h4>
+<blockquote>
+<p><strong>Note:</strong> For this lab, you will use the Classic Portal because the functionality to create new Azure Active Directory domains is not available in the Preview Classic Portal.Sign in to the Classic Azure Portal (<a href="https://manage.windowsazure.com"><em>https://manage.windowsazure.com</em></a>).</p>
+</blockquote>
+<h4 id="task-2-create-an-directory-by-using-the-classic-portal">Task 2: Create an directory by using the Classic Portal</h4>
+<ol>
+<li><p>View the list of Active Directory directories for your subscription.</p>
+</li>
+<li><p>Create a new directory by using the following details:</p>
+<ul>
+<li><p>Name: <strong>20532</strong></p>
+</li>
+<li><p>Domain Name: <strong>ad20532[<em>Your Name</em>]</strong></p>
+</li>
+<li><p>Country or Region: <strong>Select your current location</strong></p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="task-3-create-a-global-administrator-role-in-the-directory">Task 3: Create a Global Administrator role in the directory</h4>
+<ol>
+<li><p>Go to your newly created directory’s Users list.</p>
+</li>
+<li><p>Add a new user to your directory by using the following details:</p>
+<ul>
+<li><p>Type of User: <strong>New user in your organization</strong></p>
+</li>
+<li><p>User Name: <strong>admin</strong></p>
+</li>
+<li><p>Domain: <strong>ad20532[<em>Your Name</em>]</strong></p>
+</li>
+<li><p>First Name: <strong>Admin</strong></p>
+</li>
+<li><p>Last Name: <strong>User</strong></p>
+</li>
+<li><p>Display Name: <strong>Admin User</strong></p>
+</li>
+<li><p>Role: <strong>Global Admin</strong></p>
+</li>
+<li><p>Alternate E-mail Address: <a href="mailto:example@contoso.com"><strong><em>example@contoso.com</em></strong></a></p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> Make sure you record the temporary password that is generated when you create the new user. In case you forget, you can always reset the user’s password by using the <strong>Reset Password</strong> button that is next to the <strong>Add User</strong> button in the Classic Portal.</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="task-4-create-a-user-role-in-the-directory">Task 4: Create a User role in the directory</h4>
+<ol>
+<li><p>Add a new user to your directory by using the following details:</p>
+<ul>
+<li><p>Type of User: <strong>New user in your organization</strong></p>
+</li>
+<li><p>User Name: <strong>standard</strong></p>
+</li>
+<li><p>Domain: <strong>ad20532[<em>Your Name</em>]</strong></p>
+</li>
+<li><p>First Name: <strong>Standard</strong></p>
+</li>
+<li><p>Last Name: <strong>User</strong></p>
+</li>
+<li><p>Display Name: <strong>Standard User</strong></p>
+</li>
+<li><p>Role: <strong>User</strong></p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> Make sure you record the temporary password that is generated when you create the new user. In case you forget, you can always reset the user’s password by using the <strong>Reset Password</strong> button that is next to the <strong>Add User</strong> button in the Classic Portal.</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have created an Azure AD and populated the directory with users.</p>
+</blockquote>
+<h2 id="exercise-2-securing-an-existing-asp-net-web-application">Exercise 2: Securing an Existing ASP.NET Web Application</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li><p>Use the MVC <strong>AuthorizeAttribute</strong> to secure a web application.</p>
+</li>
+<li><p>The main tasks for this exercise are as follows:</p>
+</li>
+</ul>
+<ol>
+<li><p>Add the Authorize attribute to the <em>HomeController</em> class.</p>
+</li>
+<li><p>Debug the web application.</p>
+</li>
+</ol>
+<h4 id="task-1-add-the-authorize-attribute-to-the-homecontroller-class">Task 1: Add the Authorize attribute to the HomeController class</h4>
+<ol>
+<li><p>Open the <strong>Contoso.Events</strong> solution from the following location:</p>
+<ul>
+<li><p>File location: <strong>Allfiles (F):\Mod10\Labfiles\Starter\Contoso.Events</strong></p>
+</li>
+<li><p>Open the <strong>HomeController.cs</strong> file in the <strong>Contoso.Events.Management.Old</strong> project.</p>
+</li>
+<li><p>Add the <strong>Authorize</strong> attribute to the <strong>HomeController</strong> class.</p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="task-2-debug-the-web-application">Task 2: Debug the web application</h4>
+<ol>
+<li><p>Debug the solution, and then verify that you receive a 401 (Unauthorized) error message.</p>
+</li>
+<li><p>Stop debugging.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used MVC to ensure that a user is signed in before accessing a controller or action.</p>
+</blockquote>
+<h2 id="exercise-3-integrating-azure-ad-with-asp-net-identity">Exercise 3: Integrating Azure AD with ASP.NET Identity</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li><p>Create a new ASP.NET MVC application by using ASP.NET Identity for authentication and authorization.</p>
+</li>
+<li><p>Integrate the new Website with Azure AD organization accounts.</p>
+</li>
+<li><p>The main tasks for this exercise are as follows:</p>
+</li>
+</ul>
+<ol>
+<li><p>Create a new management web application by using Azure AD as the identity provider.</p>
+</li>
+<li><p>Verify that the Management web application requires a sign-in by using an organizational account.</p>
+</li>
+</ol>
+<h4 id="task-1-create-a-new-management-web-application-by-using-azure-ad-as-the-identity-provider">Task 1: Create a new management web application by using Azure AD as the identity provider</h4>
+<ol>
+<li><p>In the <strong>Administration</strong> solution folder, create a new <strong>Contoso.Events.Management</strong> ASP.NET Web Application project by using the following details:</p>
+<ul>
+<li><p>Project Name: <strong>Contoso.Events.Management</strong></p>
+</li>
+<li><p>Project Location: <strong>Allfiles (F):\Mod10\Labfiles\Starter\Contoso.Events</strong></p>
+</li>
+<li><p>Template: <strong>MVC</strong></p>
+</li>
+<li><p>Authentication: <strong>Organizational Accounts</strong></p>
+</li>
+<li><p>Domain: <strong>ad20532[<em>Your Name</em>].onmicrosoft.com</strong></p>
+</li>
+<li><p>Account used for authentication: <strong>admin@ad20532[<em>Your Name</em>].onmicrosoft.com</strong></p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> When associating your new ASP.NET Web Application project with an Azure AD domain, you must sign in by using an account that has a Global Administrator role.</p>
+</blockquote>
+</li>
+<li><p>Set the <strong>Contoso.Events.Management</strong> project as the startup project.</p>
+</li>
+<li><p>In the <strong>Contoso.Events.Management</strong> project, add references to the <strong>Contoso.Events.Models</strong> and <strong>Contoso.Events.ViewModels</strong> projects.</p>
+</li>
+<li><p>Copy all the folders from the <strong>Contoso.Events.Management.Old</strong> project to the <strong>Contoso.Events.Management</strong> project.</p>
+<blockquote>
+<p><strong>Note:</strong> Ensure that you copy the folders and not any of the individual files. Ignore the following files:</p>
+</blockquote>
+<ul>
+<li><p>favicon.ico</p>
+</li>
+<li><p>Global.asax</p>
+</li>
+<li><p>packages.config</p>
+</li>
+<li><p>Web.config</p>
+</li>
+</ul>
+</li>
+<li><p>Copy the <strong>connectionStrings</strong> from the web.config file in the <em>Contoso.Events.Management.Old</em> project and paste them in the new project&#39;s web.config file.</p>
+</li>
+</ol>
+<h4 id="task-2-verify-that-the-management-web-application-requires-a-sign-in-by-using-an-organizational-account">Task 2: Verify that the Management web application requires a sign-in by using an organizational account</h4>
+<ol>
+<li><p>Debug the solution.</p>
+<ul>
+<li><p>Configure IIS Express to trust the self-signed certificate.</p>
+</li>
+<li><p>Verify that you are required to sign in before accessing the <strong>Contoso.Events.Management</strong> web application.</p>
+</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used an Azure AD domain with the ASP.NET Identity framework.</p>
+</blockquote>
+<p>©2016 Microsoft Corporation. All rights reserved. The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode">Creative Commons Attribution 3.0 License</a>, additional terms may apply. All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong><em>not</em></strong> included within the Creative Commons license grant. This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.</p>
+<p>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.</p>

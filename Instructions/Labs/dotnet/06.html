@@ -1,0 +1,279 @@
+<h1 id="module-6-storing-tabular-data-in-azure">Module 6: Storing Tabular Data in Azure</h1>
+<h1 id="lab-storing-event-registration-data-in-azure-storage-tables">Lab: Storing Event Registration Data in Azure Storage Tables</h1>
+<h3 id="scenario">Scenario</h3>
+<p>Even though event registrations could be stored in SQL, you have a unique need. Each event requires a different registration form that can be changed at any time. Essentially, registrations could be of any schema. A relational database such as SQL requires a well-defined schema. Because of your business requirement, you require a database that can store items with flexible structures (or schemas). To facilitate this you have elected to use Azure Table Storage for your event registrations.</p>
+<h3 id="objectives">Objectives</h3>
+<p>After you complete this lab, you will be able to:</p>
+<ul>
+<li><p>Use the Azure Store SDK to create a Table storage client.</p>
+</li>
+<li><p>Use the Azure Store SDK to create a table.</p>
+</li>
+<li><p>Use the Azure Store SDK to add entities to a table.</p>
+</li>
+<li><p>Use the Azure Store SDK to query entities.</p>
+</li>
+<li><p>Use Cloud Explorer in Visual Studio 2015 to view Table storage entities.</p>
+</li>
+</ul>
+<h3 id="lab-setup">Lab Setup</h3>
+<p><strong>Estimated Time: 45 minutes</strong></p>
+<p>Before starting this lab, you must complete the lab in Module 2. For the lab in this module, you will use the available host machine. Also, you must complete the following steps:</p>
+<ol>
+<li><p>On the host computer, click <strong>Start</strong>, type <strong>Remote</strong>, and then click <strong>Remote Desktop Connection</strong>.</p>
+</li>
+<li><p>In Remote Desktop Connection, provide the name of your virtual machine in the <strong>Computer</strong> box by using the following format:</p>
+<ul>
+<li><strong>[Your VM IP Address]:[<em>Your VM RDP Port</em>]</strong></li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> The name and port for your virtual machine might be saved in the Computer drop-down list. If this is the case, use this value instead of typing it in manually. If you are unsure about your virtual machine’s RDP port, use either of the Azure portals to find your virtual machine’s endpoints. The endpoint with the name <strong>Remote Desktop</strong> is the correct port for RDP. This port is randomized to protect your virtual machine from unauthorized access.</p>
+</blockquote>
+</li>
+<li><p>In Remote Desktop Connection, click <strong>Connect</strong>. Wait until the RDP client accesses the virtual machine.</p>
+</li>
+<li><p>If necessary, sign in by using the following credentials:</p>
+<ul>
+<li><p>User name: <strong>Student</strong></p>
+</li>
+<li><p>Password: <strong>AzurePa$$w0rd</strong></p>
+</li>
+</ul>
+</li>
+<li><p>Verify that you received the credentials to sign in to the Azure portal from your training provider. You will use these credentials and the Azure account throughout the labs in this course.</p>
+</li>
+</ol>
+<h2 id="exercise-1-populating-the-sign-in-form-with-registrant-names">Exercise 1: Populating the Sign-In Form with Registrant Names</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li><p>Query table entities by using a <strong>CloudTableClient</strong> instance.</p>
+</li>
+<li><p>Use LINQ-to-Objects on a set of entities.</p>
+</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Create an instance of the CloudTable class.</p>
+</li>
+<li><p>Retrieve strongly-typed registration records by partition key.</p>
+</li>
+<li><p>Use LINQ-to-Objects to project a list of registrant names.</p>
+</li>
+</ol>
+<h4 id="task-1-create-an-instance-of-the-cloudtable-class">Task 1: Create an instance of the CloudTable class</h4>
+<ol>
+<li><p>Open the <strong>Contoso.Events</strong> solution from the following location:</p>
+</li>
+<li><p>File location: <strong>Allfiles (F):\Mod06\Labfiles\Starter\Contoso.Events</strong></p>
+</li>
+<li><p>In the <strong>Contoso.Events.Worker</strong> project, open the <strong>TableStorageHelper.cs</strong> file.</p>
+</li>
+<li><p>From the <strong>GetRegistrantNames</strong> method, remove the existing code.</p>
+</li>
+<li><p>Using the <strong>_tableClient</strong> variable, create a new <strong>CloudTable</strong> instance by using the <strong>GetTableReference</strong> method with the following parameters:</p>
+<ul>
+<li>tableName: <strong>EventRegistrations</strong></li>
+</ul>
+<pre><code>CloudTable table = _tableClient.GetTableReference(&quot;EventRegistrations&quot;);
+</code></pre></li>
+</ol>
+<h4 id="task-2-retrieve-strongly-typed-registration-records-by-partition-key">Task 2: Retrieve strongly-typed registration records by partition key</h4>
+<ol>
+<li><p>By using the following code, create a <strong>string</strong> filter that finds entities with a partition key equivalent to the <strong>eventKey</strong> provided by the <strong>GetRegistrantsNames</strong> method’s parameters.</p>
+<pre><code>string partitionKey = eventKey;   
+string filter = TableQuery.GenerateFilterCondition(&quot;PartitionKey&quot;,  QueryComparisons.Equal, partitionKey);
+</code></pre></li>
+<li><p>Create a <strong>TableQuery</strong> with the filter and run the query by using the <strong>ExecuteQuery</strong> method of the <em>table</em> variable as shown in the following code:</p>
+<pre><code>TableQuery&lt;Registration&gt; query = new  TableQuery&lt;Registration&gt;().Where(filter);   
+IEnumerable&lt;Registration&gt; registrations =  table.ExecuteQuery&lt;Registration&gt;(query);
+</code></pre></li>
+</ol>
+<h4 id="task-3-use-linq-to-objects-to-project-a-list-of-registrant-names">Task 3: Use LINQ-to-Objects to project a list of registrant names</h4>
+<ol>
+<li><p>Create a LINQ query that takes the registrations, orders them by <strong>LastName</strong>, then orders them by <strong>FirstName</strong>, and then projects them into a string of the format <strong>“{LastName}, {FirstName}”</strong> by using the following code:</p>
+<pre><code>IEnumerable&lt;string&gt; names = registrations
+  .OrderBy(r =&gt; r.LastName)
+  .ThenBy(r =&gt; r.FirstName)
+  .Select(r =&gt; String.Format(&quot;{1}, {0}&quot;, r.FirstName, r.LastName));
+</code></pre><blockquote>
+<p><strong>Note:</strong> You can alternatively use the query syntax for LINQ-to-Objects, as shown below:</p>
+<pre><code>IEnumerable names = from r in registrations
+                            orderby r.LastName, r.FirstName
+                            select r.FirstName + &quot;, &quot; + r.LastName
+</code></pre></blockquote>
+</li>
+<li><p>Return the LINQ query as the result of the <strong>GetRegistrantsNames</strong> method.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have queried entities by row key or partition key from Table storage.</p>
+</blockquote>
+<h2 id="exercise-2-updating-the-events-website-to-use-storage-tables">Exercise 2: Updating the Events Website to use Storage Tables</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li>Update the existing Contoso.Events application to use Table storage.</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Update the register controller action to store the registration record.</p>
+</li>
+<li><p>Update the register ViewModel to retrieve the dynamic stub registration from the table.</p>
+</li>
+</ol>
+<h4 id="task-1-update-the-register-controller-action-to-store-the-registration-record">Task 1: Update the register controller action to store the registration record</h4>
+<ol>
+<li><p>In the <strong>Contoso.Events.Web</strong> project, open the <strong>RegisterController.cs</strong> file.</p>
+</li>
+<li><p>Remove the existing code from the <strong>StoreRegistration</strong> method.</p>
+</li>
+<li><p>Create a <strong>CloudStorageAccount</strong> variable by using the <strong>Microsoft.WindowsAzure.Storage.ConnectionString</strong> stored in the Cloud configuration files as shown in the following code:</p>
+<pre><code>string connectionString = ConfigurationManager.AppSettings[&quot;Microsoft.WindowsAzure.Storage.ConnectionString&quot;];
+var storageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(connectionString);
+</code></pre></li>
+<li><p>Create a <em>CloudTable</em> variable by using the storage account and a Storage table named <strong>EventRegistrations</strong> as shown in the following code:</p>
+<pre><code>var tableClient = storageAccount.CreateCloudTableClient();   
+var table = tableClient.GetTableReference(&quot;EventRegistrations&quot;);
+</code></pre></li>
+<li><p>Create and run a <strong>TableOperation</strong> to insert the dynamic registration object into the Storage table by using the following code:</p>
+<pre><code>var operation = TableOperation.Insert(registration); 
+table.Execute(operation);
+</code></pre></li>
+<li><p>Parse the <strong>RowKey</strong> of the registration as a <strong>System.Guid</strong> and return the value as the result of the <strong>StoreRegistration</strong> method by using the following code:</p>
+<pre><code>Guid rowKey = Guid.Parse(registration.RowKey); 
+return rowKey;
+</code></pre></li>
+</ol>
+<h4 id="task-2-update-the-register-viewmodel-to-retrieve-the-dynamic-stub-registration-from-the-table">Task 2: Update the register ViewModel to retrieve the dynamic stub registration from the table</h4>
+<ol>
+<li><p>In the <strong>Contoso.Events.ViewModels</strong> project, open the <strong>RegisterViewModel.cs</strong> file.</p>
+</li>
+<li><p>Locate the <strong>RegisterViewModel</strong> constructor that has a single <strong>string</strong> parameter.</p>
+</li>
+<li><p>Create a <em>CloudStorageAccount</em> variable by using the <strong>Microsoft.WindowsAzure.Storage.ConnectionString</strong> stored in the Cloud configuration files as shown in the following code:</p>
+<pre><code>string connectionString = ConfigurationManager.AppSettings[&quot;Microsoft.WindowsAzure.Storage.ConnectionString&quot;];
+var storageAccount = Microsoft.WindowsAzure.Storage.CloudStorageAccount.Parse(connectionString);
+</code></pre></li>
+<li><p>Create a <em>CloudTable</em> variable by using the storage account, and a Storage table named <strong>EventRegistrations</strong> as shown in the following code:</p>
+<pre><code>var tableClient = storageAccount.CreateCloudTableClient(); 
+var table = tableClient.GetTableReference(&quot;EventRegistrations&quot;);
+</code></pre></li>
+<li><p>Create a <strong>string</strong> filter that finds entities with a <strong>PartitionKey</strong> equivalent to the <strong>eventKey</strong> provided by the <strong>GetRegistrantsNames</strong> method’s parameters as shown in the following code:</p>
+<pre><code>string partitionKey = String.Format(&quot;Stub_{0}&quot;, eventKey); 
+string filter = TableQuery.GenerateFilterCondition(&quot;PartitionKey&quot;,QueryComparisons.Equal, partitionKey);
+</code></pre></li>
+<li><p>Create a <strong>TableQuery</strong> with the filter and run the query by using the <strong>ExecuteQuery</strong> method of the <em>table</em> variable, as shown in the following code:</p>
+<pre><code>TableQuery query = new TableQuery().Where(filter); 
+IEnumerable&lt;DynamicTableEntity&gt; tableEntities = table.ExecuteQuery(query);
+</code></pre></li>
+<li><p>Because the query returns only a single entity, use the <strong>SingleOrDefault</strong> extension method to get the <em>DynamicTableEntity</em> variable, and then pass that variable into the <strong>DynamicEntity.GenerateDynamicItem</strong> static method. Set the <strong>RegisterViewModel</strong>’s <strong>RegistrationStub</strong> property to the result of the method call by using the following code:</p>
+<pre><code>DynamicTableEntity tableEntity = tableEntities.SingleOrDefault(); 
+this.RegistrationStub = DynamicEntity.GenerateDynamicItem(tableEntity);
+</code></pre></li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used the Azure Storage SDK to retrieve and create entities.</p>
+</blockquote>
+<h2 id="exercise-3-verifying-that-the-events-website-is-using-azure-storage-tables-for-registrations">Exercise 3: Verifying that the Events Website is Using Azure Storage Tables for Registrations</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li><p>Use an Azure Storage account to test storage entities in development.</p>
+</li>
+<li><p>Use Visual Studio to debug an application that uses development storage.</p>
+</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Create a storage account instance.</p>
+</li>
+<li><p>Run the data generation console project to populate the Azure storage table with data.</p>
+</li>
+<li><p>Use Cloud Explorer in Visual Studio 2015 to view table storage registrations.</p>
+</li>
+<li><p>Debug the cloud web project to register for the event.</p>
+</li>
+<li><p>Use Cloud Explorer in Visual Studio 2015 to view the new table storage registration.</p>
+</li>
+</ol>
+<h4 id="task-1-create-a-storage-account-instance">Task 1: Create a Storage Account Instance</h4>
+<ol>
+<li><p>Sign in to the Azure Portal (<a href="https://portal.azure.com">https://portal.azure.com</a>).</p>
+</li>
+<li><p>Create a Storage Account using the following details:</p>
+<ul>
+<li><p>Name: <strong>provide a globally unique value</strong></p>
+</li>
+<li><p>Replication: <strong>Locally Redundant Storage (LRS)</strong></p>
+</li>
+<li><p>Resource Group: <strong>20532</strong></p>
+</li>
+<li><p>Location: <strong>Select the region that is closest to your location</strong></p>
+</li>
+</ul>
+</li>
+<li><p>Record the <em>account name</em> for your newly created Storage Account instance.</p>
+</li>
+<li><p>Select an access key and record the <em>connection string</em> for that key.</p>
+</li>
+</ol>
+<h4 id="task-2-run-the-data-generation-console-project-to-populate-the-azure-storage-table-with-data">Task 2: Run the data generation console project to populate the Azure storage table with data</h4>
+<ol>
+<li><p>Locate the <strong>Contoso.Events.Data.Generation</strong> project.</p>
+</li>
+<li><p>Update the <strong>app.config</strong> file in the project to use your <em>Storage Account</em>&#39;s connection string in the <strong>StorageConnectionString</strong> <em>AppSetting</em>.</p>
+</li>
+<li><p>Debug the <strong>Contoso.Events.Data.Generation</strong> project to generate the SQL and storage tables data.</p>
+</li>
+</ol>
+<h4 id="task-3-use-cloud-explorer-in-visual-studio-2015-to-view-table-storage-registrations">Task 3: Use Cloud Explorer in Visual Studio 2015 to view table storage registrations</h4>
+<ol>
+<li><p>In the <strong>Cloud Explorer</strong> pane, open the <strong>Storage Accounts</strong> node.</p>
+</li>
+<li><p>Locate your newly created <strong>Storage Account</strong>.</p>
+</li>
+<li><p>In the node associated with your Storage Account, open the <strong>EventRegistrations</strong> table.</p>
+</li>
+<li><p>Explore the table entities that are auto generated by the console project.</p>
+</li>
+</ol>
+<h4 id="task-4-debug-the-web-and-worker-projects-to-register-for-the-event">Task 4: Debug the web and worker projects to register for the event</h4>
+<ol>
+<li><p>Update your solution configuration to start both the <strong>Contoso.Events.Web</strong> and <strong>Contoso.Events.Worker</strong> projects when the solution is debugged.</p>
+</li>
+<li><p>Update the <strong>web.config</strong> file in the <strong>Contoso.Events.Web</strong> project to use your <em>Storage Account</em>&#39;s connection string in the <strong>Microsoft.WindowsAzure.Storage.ConnectionString</strong> <em>AppSetting</em>.</p>
+</li>
+<li><p>Update the <strong>app.config</strong> file in the <strong>Contoso.Events.Worker</strong> project to use your <em>Storage Account</em>&#39;s connection string in the following locations:</p>
+<ul>
+<li><p><strong>StorageConnectionString</strong> <em>AppSetting</em></p>
+</li>
+<li><p><strong>AzureWebJobsStorage</strong> <em>ConnectionString</em></p>
+</li>
+<li><p><strong>AzureWebJobsDashboard</strong> <em>ConnectionString</em></p>
+</li>
+</ul>
+</li>
+<li><p>Debug the <strong>Contoso.Events.Web</strong> and <strong>Contoso.Events.Worker</strong> projects.</p>
+</li>
+<li><p>Register for an event by using the website.</p>
+</li>
+</ol>
+<h4 id="task-5-use-cloud-explorer-in-visual-studio-2015-to-view-the-new-table-storage-registration">Task 5: Use Cloud Explorer in Visual Studio 2015 to view the new table storage registration</h4>
+<ol>
+<li><p>Switch to the <strong>Contoso.Events – Microsoft Visual Studio</strong> window</p>
+</li>
+<li><p>Open the <strong>Cloud Explorer</strong> pane.</p>
+</li>
+<li><p>Open the <strong>EventRegistrations</strong> table again in the Azure Storage Account.</p>
+</li>
+<li><p>Locate your recently created <strong>Registration</strong> entity.</p>
+</li>
+<li><p>Close the <strong>Internet Explorer</strong> and <strong>Contoso.Events – Microsoft Visual Studio</strong> applications.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used Visual Studio and the Azure to create a comprehensive development environment for Azure Storage.</p>
+</blockquote>
+<p>©2016 Microsoft Corporation. All rights reserved. The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode">Creative Commons Attribution 3.0 License</a>, additional terms may apply. All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong><em>not</em></strong> included within the Creative Commons license grant. This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.</p>
+<p>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.</p>

@@ -1,0 +1,121 @@
+<h1 id="module-5-designing-cloud-applications-for-resiliency">Module 5: Designing Cloud Applications for Resiliency</h1>
+<h1 id="demo-monitoring-a-web-application">Demo: Monitoring a Web Application</h1>
+<ol>
+<li><p>On the Start screen, locate and click the <strong>Visual Studio 2015</strong> tile.</p>
+<blockquote>
+<p><strong>Note:</strong> You might have to use the down arrow to locate the Visual Studio 2015 tile on your Start screen.</p>
+</blockquote>
+</li>
+<li><p>On the <strong>File</strong> menu, point to <strong>New</strong>, and then click <strong>Project</strong>.</p>
+</li>
+<li><p>In the <strong>New Project</strong> dialog box that displays, perform the following steps:</p>
+<p>a.  Expand <strong>Templates</strong>, expand <strong>Visual C#</strong>, and then click <strong>Web</strong>.</p>
+<p>b.  Click <strong>ASP.NET Web Application</strong>.</p>
+<p>c.  In the <strong>Name</strong> box, type <strong>Contoso.Help</strong>.</p>
+<p>d.  In the <strong>Location</strong> box, type <strong>F:\Mod05\Democode</strong>.</p>
+<p>e.  Ensure that the <strong>Add Application Insights to Project</strong> check box is selected.</p>
+<blockquote>
+<p>If you are not already signed in to your Azure account, you will be prompted to sign in at this point.</p>
+</blockquote>
+<p>a.  In the <strong>Send telemetry to</strong> list, select <strong>New Application Insights resource</strong>.</p>
+<p>b.  Click <strong>OK</strong>.</p>
+</li>
+<li><p>In the <strong>New ASP.NET Project</strong> dialog box, perform the following steps:</p>
+<p>a.  In the templates list, click <strong>MVC</strong>.</p>
+<p>b.  Click <strong>Change Authentication</strong>.</p>
+<p>c.  In the <strong>Change Authentication</strong> dialog box, select <strong>No Authentication</strong>, and then click <strong>OK</strong>.</p>
+<p>d.  In the <strong>Microsoft Azure</strong> section, ensure that the <strong>Host in the cloud</strong> check box is selected.</p>
+<p>e.  In the <strong>Microsoft Azure</strong> section, ensure that the <strong>App Service</strong> option is selected in the <strong>Host in the cloud</strong> list.</p>
+<p>f.  Click <strong>OK</strong>.</p>
+</li>
+<li><p>In the <strong>Create App Service</strong> dialog box, perform the following steps:</p>
+<p>a.  Do not modify the randomly-generated Web App name.</p>
+<pre><code>    &gt; **Note:** Values for Resource Group, Subscription and App Service Plan should already be selected. You can modify these selections if you wish.
+</code></pre><p>b.    Click the <strong>New</strong> button in the <strong>App Service Plan</strong> section.</p>
+<p>c.    In the <strong>Configure App Service Plan</strong> dialog, click the <strong>OK</strong> button.</p>
+<p>d.  Back in the <strong>Create App Service</strong> dialog box, click the <strong>Create</strong> button.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Help</strong> project, expand the <strong>Controllers</strong> folder, and then double-click the <strong>HomeController.cs</strong> file.</p>
+</li>
+<li><p>Type the following lines of code at the top of the file:</p>
+<pre><code>using System.Net;
+
+using System.Threading;
+</code></pre></li>
+<li><p>In the <strong>About</strong> method, replace the following line of code:</p>
+<pre><code>return View();
+</code></pre><p>with this line of code:</p>
+<pre><code>return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
+</code></pre></li>
+<li><p>In the <strong>Contact</strong> method, locate the following line of code:</p>
+<pre><code>ViewBag.Message = &quot;Your contact page.&quot;;
+</code></pre></li>
+<li><p>Place the cursor at the end of the above line of code, press Enter, and then type the following code:</p>
+<pre><code>Thread.Sleep(TimeSpan.FromSeconds(5d));
+</code></pre></li>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Help</strong> project, and then click <strong>Publish</strong>.</p>
+</li>
+<li><p>In the <strong>Publish Web</strong> dialog box that displays, perform the following steps:</p>
+<p>a.  Click <strong>Validate Connection</strong>.</p>
+<p>b.  Wait until the connection is successfully validated. You will see a green check mark after the validation is complete.</p>
+<p>c.  Click <strong>Publish</strong>.</p>
+</li>
+<li><p>In the new Internet Explorer tab, verify that your website is successfully published.</p>
+</li>
+<li><p>At the top of your Website, click <strong>Contact</strong>.</p>
+</li>
+<li><p>At the top of your Website, click <strong>About</strong>.</p>
+</li>
+<li><p>After you see the <strong>HTTP 500 Internal Server Error</strong> help page, click the back button in the browser to return to the previous page.</p>
+</li>
+<li><p>At the top of your Website, click <strong>Home</strong>.</p>
+</li>
+<li><p>In a new Internet Explorer tab, go to the Azure Preview Portal (<a href="https://portal.azure.com"><em>https://portal.azure.com</em></a>).</p>
+</li>
+<li><p>In the email address box, type the email address of your Microsoft account</p>
+</li>
+<li><p>Click <strong>Continue</strong>.</p>
+</li>
+<li><p>In the password box, type the password for your Microsoft account.</p>
+</li>
+<li><p>Click <strong>Sign In</strong>.</p>
+</li>
+<li><p>If prompted with the <strong>Welcome to Microsoft Azure</strong> dialog, click <strong>Get Started</strong>.</p>
+</li>
+<li><p>In the navigation pane on the left side of the screen, scroll down, and then click <strong>More Services</strong>.</p>
+</li>
+<li><p>In the <strong>Browse</strong> blade that displays, click <strong>App Services</strong>.</p>
+</li>
+<li><p>In the <strong>App Services</strong> blade that displays, click the App Service instance that you just created.</p>
+</li>
+<li><p>In the App Service blade that displays, click <strong>App Service Plan</strong>.</p>
+</li>
+<li><p>In the App Service Plan blade that displays, click <strong>Scale Up (App Service Plan)</strong>.</p>
+</li>
+<li><p>In the <strong>Choose your pricing</strong> tier blade that displays, do the following:</p>
+<p> a.  Select the <strong>B1 Basic</strong> option.</p>
+<p> b.  Click the <strong>Select</strong> button.</p>
+</li>
+<li><p>In the navigation pane on the left side of the screen, scroll down, and then click <strong>More Services</strong>.</p>
+</li>
+<li><p>Click <strong>Application Insights</strong>.</p>
+</li>
+<li><p>In the new <strong>Application Insights</strong> blade that displays, click your <strong>Web App</strong> instance and view the tiles and dashboard.</p>
+</li>
+<li><p>Scroll down and click the <strong>Web tests</strong> title.</p>
+</li>
+<li><p>In the <strong>All webtests response time (ms)</strong> tile, click <strong>Add web test</strong> button.</p>
+</li>
+<li><p>In the <strong>Create test</strong> blade that displays, perform the following steps:</p>
+<p>a.  In the <strong>Test</strong> <strong>Name</strong> box, type any valid value.</p>
+<p>b.  In the <strong>Url</strong> box, type the URL for your newly created <strong>Website</strong> instance. You can find this URL in the browser tab that is currently displaying your Website.</p>
+<p>c.  Click <strong>Test Locations</strong>.</p>
+<p>d.  In the <strong>Test locations</strong> blade that displays, ensure that at least one test location, which is not in the country that you currently reside, is selected, and then click <strong>OK</strong>.</p>
+<p>e.  Click the <strong>Alerts</strong> option.</p>
+<p>f.  In the <strong>Alerts</strong> blade that displays, ensure that the <strong>Disabled</strong> option is selected in the <strong>Status</strong> toggle, and then click <strong>OK</strong>.</p>
+<p>g.  Click <strong>Create</strong> to create the new web test.</p>
+<blockquote>
+<p>At this point, others can visit your webpage so that you can see more requests on your dashboard. However, this is optional. Typically after five to ten minutes, you will see the first pass or fail status for your newly created web test. If you want, you can view the result.</p>
+</blockquote>
+</li>
+</ol>

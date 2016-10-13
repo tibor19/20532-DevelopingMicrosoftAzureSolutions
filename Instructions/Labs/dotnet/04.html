@@ -1,0 +1,248 @@
+<h1 id="module-4-storing-sql-data-in-azure">Module 4: Storing SQL Data in Azure</h1>
+<h1 id="lab-storing-event-data-in-azure-sql-databases">Lab: Storing Event Data in Azure SQL Databases</h1>
+<h3 id="scenario">Scenario</h3>
+<p>Now that the web application is ready for publishing, you can begin migrating the web application to Azure by creating a database in Azure. You decided to use a database initializer and Entity Framework Code First to automate the creation of your database in SQL Database.</p>
+<h3 id="objectives">Objectives</h3>
+<p>After you complete this lab, you will be able to:</p>
+<ul>
+<li><p>Create an Azure SQL Database server and a database instance by using the Azure Portal.</p>
+</li>
+<li><p>Use Entity Framework Code First to initialize and seed a database in the cloud.</p>
+</li>
+<li><p>Use the Azure SQL Database Portal to view live data in the cloud.</p>
+</li>
+</ul>
+<h3 id="lab-setup">Lab Setup</h3>
+<p><strong>Estimated Time: 45 minutes</strong></p>
+<p>Before starting this lab, you must complete the lab in Module 2. For the lab in this module, you will use the available host machine. Also, you must complete the following steps:</p>
+<ol>
+<li><p>On the host computer, click <strong>Start</strong>, type <strong>Remote</strong>, and then click <strong>Remote Desktop Connection</strong>.</p>
+</li>
+<li><p>In Remote Desktop Connection, provide the name of your virtual machine in the <strong>Computer</strong> box by using the following format:</p>
+<ul>
+<li><strong>[Your VM IP Address]:[<em>Your VM RDP Port</em>]</strong></li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> The name and port for your virtual machine might be saved in the Computer drop-down list. If this is the case, use this value instead of typing it in manually. If you are unsure about your virtual machine’s RDP port, use either of the Azure portals to find your virtual machine’s endpoints. The endpoint with the name <strong>Remote Desktop</strong> is the correct port for RDP. This port is randomized to protect your virtual machine from unauthorized access.</p>
+</blockquote>
+</li>
+<li><p>In Remote Desktop Connection, click <strong>Connect</strong>. Wait until the RDP client accesses the virtual machine.</p>
+</li>
+<li><p>If necessary, sign in by using the following credentials:</p>
+<ul>
+<li><p>User name: <strong>Student</strong></p>
+</li>
+<li><p>Password: <strong>AzurePa$$w0rd</strong></p>
+</li>
+</ul>
+</li>
+<li><p>Verify that you received the credentials to sign in to the Azure portal from your training provider. You will use these credentials and the Azure account throughout the labs in this course.</p>
+</li>
+</ol>
+<h2 id="exercise-1-creating-an-azure-sql-databases-instance">Exercise 1:    Creating an Azure SQL Databases Instance</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li><p>Create a SQL Server instance in Azure.</p>
+</li>
+<li><p>Create a database in Azure.</p>
+</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Sign in to the Azure Portal.</p>
+</li>
+<li><p>Create an Azure SQL database by using the Azure Portal.</p>
+</li>
+</ol>
+<h4 id="task-1-sign-in-to-the-azure-portal">Task 1: Sign in to the Azure Portal</h4>
+<ol>
+<li>Sign in to the Azure Portal (<a href="https://portal.azure.com">https://portal.azure.com</a>).</li>
+</ol>
+<h4 id="task-2-create-an-azure-sql-database-by-using-the-azure-portal">Task 2: Create an Azure SQL database by using the Azure Portal</h4>
+<ol>
+<li><p>View the list of SQL databases for your subscription.</p>
+</li>
+<li><p>Create a SQL database by using the following details:</p>
+<ul>
+<li><p>Name: <strong>db20532</strong></p>
+</li>
+<li><p>Pricing Tier: <strong>Basic</strong></p>
+</li>
+<li><p>Resource Group: <strong>20532</strong></p>
+</li>
+<li><p>Server Name: <strong>sv20532[<em>Your Name Here</em>]</strong></p>
+</li>
+<li><p>Server Admin Login: <strong>testuser</strong></p>
+</li>
+<li><p>Server Admin Password: <strong>TestPa$$w0rd</strong></p>
+</li>
+<li><p>Location: <strong>Select the region that is closest to your location</strong></p>
+</li>
+</ul>
+</li>
+<li><p>Record the server and database names associated with the newly created SQL Database instance.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have created both servers and databases in the SQL Database service.</p>
+</blockquote>
+<h2 id="exercise-2-using-entity-framework-with-local-sql-server">Exercise 2: Using Entity Framework with Local SQL Server</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li>Test the web application with local SQL data.</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li>Run the ASP.NET web application to view events from the local SQL database.</li>
+</ol>
+<h4 id="task-1-run-the-asp-net-web-application-to-view-events-from-the-local-sql-database">Task 1: Run the ASP.NET web application to view events from the local SQL database</h4>
+<ol>
+<li><p>In Visual Studio, open the <strong>Contoso.Events</strong> solution from the following location:</p>
+<ul>
+<li>File location: <strong>Allfiles (F):\Mod04\Labfiles\Starter\Contoso.Events</strong></li>
+</ul>
+</li>
+<li><p>Debug the <strong>Contoso.Events.DataGeneration</strong> console project.</p>
+<blockquote>
+<p><strong>Note:</strong> This Data Generation console application creates some sample data in your local SQL database (LocalDb) so that you can test the ASP.NET web application.</p>
+</blockquote>
+</li>
+<li><p>Debug the <strong>Contoso.Events.Web</strong> web project.</p>
+</li>
+</ol>
+<h2 id="exercise-3-using-entity-framework-with-azure-sql-databases">Exercise 3: Using Entity Framework with Azure SQL Databases</h2>
+<h3 id="scenario">Scenario</h3>
+<p>In this exercise, you will:</p>
+<ul>
+<li><p>Configure an Entity Framework Code First <strong>DatabaseInitializer</strong>.</p>
+</li>
+<li><p>Implement a <strong>Seed</strong> method for the initializer.</p>
+</li>
+<li><p>Publish a Web App application.</p>
+</li>
+<li><p>View tables and data by using the Azure SQL Database Portal.</p>
+</li>
+</ul>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Configure DbContext with a new DatabaseInitializer.</p>
+</li>
+<li><p>Implement seed data with DbContext.</p>
+</li>
+<li><p>Publish the cloud application with updated DbContext to Azure.</p>
+</li>
+<li><p>Verify that the Azure Web App website is using the new data.</p>
+</li>
+<li><p>Sign in to the Azure Portal.</p>
+</li>
+<li><p>View the migrated data in the Azure SQL Portal.</p>
+</li>
+</ol>
+<h4 id="task-1-configure-dbcontext-with-a-new-databaseinitializer">Task 1: Configure DbContext with a new DatabaseInitializer</h4>
+<ol>
+<li><p>In the <strong>Contoso.Events.Data</strong> project, create a new <strong>EventsContextInitializer</strong> class</p>
+</li>
+<li><p>Update the <strong>EventsContextInitializer</strong> class with the <strong>public</strong> accessor.</p>
+</li>
+<li><p>Update the <strong>EventsContextInitializer</strong> class to inherit from the <strong>CreateDatabaseIfNotExists&lt;EventsContext&gt;</strong> generic class.</p>
+</li>
+<li><p>Add a <strong>using</strong> statement for the <strong>System.Data.Entity</strong> namespace.</p>
+</li>
+<li><p>In the <strong>Contoso.Events.Data</strong> project, open the <strong>EventsContext</strong> class</p>
+</li>
+<li><p>Update the <strong>EventsContext</strong> static constructor with the following lines of code:</p>
+<pre><code>Database.SetInitializer&lt;EventsContext&gt;(new EventsContextInitializer());
+</code></pre></li>
+</ol>
+<h4 id="task-2-implement-seed-data-with-dbcontext">Task 2: Implement seed data with DbContext</h4>
+<ol>
+<li><p>Override the <strong>Seed</strong> method of the <strong>EventsContextInitializer</strong> class.</p>
+</li>
+<li><p>Add a <strong>using</strong> statement for the <strong>Contoso.Events.Models</strong> namespace.</p>
+</li>
+<li><p>At the end of the <strong>Seed</strong> method, create an instance of the <strong>EventItem</strong> class by using the following values:</p>
+<ul>
+<li><p>EventKey: <strong>&quot;FY17SepGeneralConference&quot;</strong></p>
+</li>
+<li><p>StartTime: <strong>DateTime.Today</strong></p>
+</li>
+<li><p>EndTime: <strong>DateTime.Today.AddDays(3d)</strong></p>
+</li>
+<li><p>Title: <strong>&quot;FY17 September Technical Conference&quot;</strong></p>
+</li>
+<li><p>Description: <strong>&quot;Sed in euismod mi.&quot;</strong></p>
+</li>
+<li><p>RegistrationCount: <strong>1</strong></p>
+</li>
+</ul>
+</li>
+<li><p>At the end of the <strong>Seed</strong> method, add the newly created <strong>EventItem</strong> to the <strong>context.Events</strong> collection.</p>
+</li>
+<li><p>At the end of the <strong>Seed</strong> method, create an instance of the <strong>Registration</strong> class by using the following values:</p>
+<ul>
+<li><p>EventKey: <strong>&quot;FY17SepGeneralConference&quot;</strong></p>
+</li>
+<li><p>FirstName: <strong>&quot;Aisha&quot;</strong></p>
+</li>
+<li><p>LastName: <strong>&quot;Witt&quot;</strong></p>
+</li>
+</ul>
+</li>
+<li><p>At the end of the <strong>Seed</strong> method, add the newly created Registration to the <strong>context.Registrations</strong> collection.</p>
+</li>
+<li><p>At the end of the <strong>Seed</strong> method, invoke the <strong>context.SaveChanges()</strong> method.</p>
+</li>
+<li><p>Build the <strong>Contoso.Events.Data</strong> project.</p>
+</li>
+</ol>
+<h4 id="task-3-publish-the-web-application-with-updated-dbcontext-to-azure">Task 3: Publish the web application with updated DbContext to Azure</h4>
+<ol>
+<li><p>Update the <strong>Web.Release.config</strong> file in the <strong>Contoso.Events.Web</strong> project to use a connection string to your Azure SQL database.</p>
+</li>
+<li><p>Publish the <strong>Contoso.Events.Web</strong> project to a new Web App instance in Azure App Service by using the following details:</p>
+<ul>
+<li><p>Name: <strong>Keep the auto-generated Web App name</strong></p>
+</li>
+<li><p>Resource Group: <strong>Create a New Resource Group named <em>TestSQL</em></strong></p>
+</li>
+<li><p>App Service Plan: <strong>Keep the auto-generated App Service Plan name</strong></p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="task-4-verify-that-the-azure-web-app-website-is-using-the-new-data">Task 4: Verify that the Azure Web App website is using the new data</h4>
+<ol>
+<li>View the website for your published Web App.</li>
+</ol>
+<h4 id="task-5-sign-in-to-the-azure-portal">Task 5: Sign in to the Azure Portal</h4>
+<ol>
+<li>Sign in to the Azure Portal (<a href="https://portal.azure.com">https://portal.azure.com</a>).</li>
+</ol>
+<h4 id="task-6-view-the-data-in-the-azure-sql-database">Task 6: View the data in the Azure SQL Database</h4>
+<ol>
+<li><p>View the list of SQL databases for your subscription.</p>
+</li>
+<li><p>View the blade for your previously created SQL database:</p>
+<ul>
+<li>Name: <strong>db20532</strong></li>
+</ul>
+</li>
+<li><p>Update the firewall to allow your virtual machine to remotely access the Azure SQL Database server instance.</p>
+</li>
+<li><p>Manage your SQL database from Visual Studio using the following credentials:</p>
+<ul>
+<li><p>Username: <strong>testuser</strong></p>
+</li>
+<li><p>Password: <strong>TestPa$$w0rd</strong></p>
+</li>
+</ul>
+</li>
+<li><p>View the data in the <strong>dbo.Events</strong> table.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have configured Entity Framework to initialize a new database with seed data.</p>
+</blockquote>
+<p>©2016 Microsoft Corporation. All rights reserved.  The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode" title="Creative Commons Attribution 3.0 License">Creative Commons Attribution 3.0 License</a>, additional terms may apply.  All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong>not</strong> included within the Creative Commons license grant.  This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.<br>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.  </p>

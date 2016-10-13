@@ -1,0 +1,196 @@
+<h1 id="module-6-storing-tabular-data-in-azure">Module 6: Storing Tabular Data in Azure</h1>
+<h1 id="demo-implementing-azure-storage-tables">Demo: Implementing Azure Storage Tables</h1>
+<ol>
+<li><p>On the Start screen, locate and click the <strong>Visual Studio 2015</strong> tile.</p>
+<blockquote>
+<p><strong>Note:</strong> You might have to use the down arrow to locate the Visual Studio 2015 tile on your Start screen.</p>
+</blockquote>
+</li>
+<li><p>On the <strong>File</strong> menu, point to <strong>New,</strong> and then click <strong>Project</strong>.</p>
+</li>
+<li><p>In the <strong>New Project</strong> dialog box, perform the following steps:</p>
+</li>
+<li><p>Expand <strong>Templates</strong>, <strong>Visual C#</strong>, <strong>Windows</strong> and then click <strong>Classic Desktop</strong>.</p>
+</li>
+<li><p>Click the <strong>Console Application</strong> template.</p>
+</li>
+<li><p>In the <strong>Name</strong> box, enter the value <strong>Contoso.Storage.Table</strong>.</p>
+</li>
+<li><p>In the <strong>Location</strong> box, specify the value <strong>AllFiles (F):\Mod06\Labfiles\Starter</strong></p>
+</li>
+<li><p>Click <strong>OK</strong>.</p>
+</li>
+<li><p>On the <strong>View</strong> menu, point to <strong>Other Windows</strong>, and then click <strong>Package Manager Console</strong>.</p>
+</li>
+<li><p>In the console, enter the following command:</p>
+<pre><code> Install-Package Microsoft.Data.Services.Client -Version 5.6.0;
+</code></pre></li>
+<li><p>Press Enter.</p>
+</li>
+<li><p>After execution of the first command is completed, enter the following command:</p>
+<pre><code>Install-Package WindowsAzure.Storage -Version 3.1.0.1;
+</code></pre></li>
+<li><p>Press Enter.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Storage.Table</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>Program.cs</strong> file.</p>
+</li>
+<li><p>Add the following <strong>using</strong> statement at the top of the code file:</p>
+<pre><code>using Microsoft.WindowsAzure.Storage;
+</code></pre></li>
+<li><p>Add the following <strong>using</strong> statement at the top of the code file:</p>
+<pre><code>using Microsoft.WindowsAzure.Storage.Table;
+</code></pre></li>
+<li><p>At the end of the <strong>Main</strong> method and before the closing parenthesis, add the following code:</p>
+<pre><code>CloudTableClient tableClient = CloudStorageAccount.DevelopmentStorageAccount.CreateCloudTableClient();
+</code></pre></li>
+<li><p>At the end of the <strong>Main</strong> method and before the closing parenthesis, add the following code:</p>
+<pre><code>CloudTable table = tableClient.GetTableReference(&quot;roster&quot;);
+</code></pre></li>
+<li><p>At the end of the <strong>Main</strong> method and before the closing parenthesis, add the following code:</p>
+<pre><code>table.CreateIfNotExists();
+</code></pre></li>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Storage.Table</strong> project, point to <strong>Add</strong>, and then click <strong>New Item</strong>.</p>
+</li>
+<li><p>In the <strong>Add New Item</strong> dialog box, perform the following steps:</p>
+<p>a.  Expand <strong>Installed</strong>, expand <strong>Visual C# Items</strong>, and then click <strong>Code</strong>.</p>
+<p>b.  Click the <strong>Class</strong> template.</p>
+<p>c.  In the <strong>Name</strong> box, type <strong>Employee.cs</strong>.</p>
+<p>d.  Click <strong>Add</strong>.</p>
+</li>
+<li><p>In the <strong>Employee</strong> class, add the <strong>public</strong> accessor at the left side of the class definition:</p>
+<pre><code>class Employee
+</code></pre></li>
+<li><p>Verify that the updated class definition reads as follows:</p>
+<pre><code>public class Employee
+</code></pre></li>
+<li><p>Add the following <strong>using</strong> statement at the top of the code file:</p>
+<pre><code>using Microsoft.WindowsAzure.Storage.Table;
+</code></pre></li>
+<li><p>In the <strong>Employee</strong> class, add the <strong>inheritance</strong> statement <strong>: TableEntity</strong> at the right side of the class definition:</p>
+<pre><code>public class Employee
+</code></pre></li>
+<li><p>Verify that the updated class definition reads as follows:</p>
+<pre><code>public class Employee : TableEntity
+</code></pre></li>
+<li><p>Within the <strong>Employee</strong> class, add the following line of code:</p>
+<pre><code>public int YearsAtCompany { get; set; }
+</code></pre></li>
+<li><p>Within the <strong>Employee</strong> class, add the following method:</p>
+<pre><code>public override string ToString()
+{
+
+}
+</code></pre></li>
+<li><p>Within the <strong>ToString</strong> method, add the following line of code:</p>
+<pre><code>return RowKey + &quot;\t\t[&quot; + YearsAtCompany + &quot;]&quot;;
+</code></pre></li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Storage.Table</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>Program.cs</strong> file.</p>
+</li>
+<li><p>At the end of the <strong>Main</strong> method and before the closing parenthesis, add the first Employee with a partition key of <strong>IT</strong> as shown below:</p>
+<pre><code>Employee first = new Employee { PartitionKey = &quot;IT&quot;, RowKey = &quot;ibahena&quot;, YearsAtCompany = 7 };
+</code></pre></li>
+<li><p>Add a second employee with a partition key of <strong>HR</strong>, as shown below:</p>
+<pre><code>Employee second = new Employee { PartitionKey = &quot;HR&quot;, RowKey = &quot;rreeves&quot;, YearsAtCompany = 12 };
+</code></pre></li>
+<li><p>Add a third employee with a partition key of <strong>HR</strong>, as shown below:</p>
+<pre><code>Employee third = new Employee { PartitionKey = &quot;HR&quot;, RowKey = &quot;rromani&quot;, YearsAtCompany = 3 };
+</code></pre></li>
+<li><p>At the end of the <strong>Main</strong> method and before the closing parenthesis, create a new <strong>TableOperation</strong> that inserts the first Employee as shown below:</p>
+<pre><code>TableOperation insertOperation = TableOperation.InsertOrReplace(first);
+</code></pre></li>
+<li><p>On the next line, use the <strong>Execute</strong> method on the table variable to execute the <strong>TableOperation</strong>, as shown below:</p>
+<pre><code>table.Execute(insertOperation);
+</code></pre></li>
+<li><p>At the end of the <strong>Main</strong> method and before the closing parenthesis, create a new <strong>TableBatchOperation</strong> with the following code:</p>
+<pre><code>TableBatchOperation batchOperation = new TableBatchOperation();
+</code></pre></li>
+<li><p>On the next line, add an <strong>InsertOrReplace</strong> operation to the batch for the second Employee, as shown below:</p>
+<pre><code>batchOperation.InsertOrReplace(second);
+</code></pre></li>
+<li><p>On the next line, add an <strong>InsertOrReplace</strong> operation to the batch for the third Employee, as shown below:</p>
+<pre><code>batchOperation.InsertOrReplace(third);
+</code></pre></li>
+<li><p>On the next line, use the <strong>ExecuteBatch</strong> method on the table variable to execute the <strong>TableBatchOperation</strong>, as shown below:</p>
+<pre><code>table.ExecuteBatch(batchOperation);
+</code></pre></li>
+<li><p>At the end of the <strong>Main</strong> method and before the closing parenthesis, create a string filter to retrieve only entities with a partition key of <strong>HR</strong> by using the <strong>TableQuery.GenerateFilterCondition</strong> static method:</p>
+<pre><code>string queryFilter = TableQuery.GenerateFilterCondition(&quot;PartitionKey&quot;, QueryComparisons.Equal, &quot;HR&quot;);
+</code></pre></li>
+<li><p>On the next line, create a new <strong>TableQuery</strong> and invoke the <strong>Where</strong> method by using the string filter, as shown below:</p>
+<pre><code>TableQuery&lt;Employee&gt; query = new TableQuery&lt;Employee&gt;().Where(queryFilter);
+</code></pre></li>
+<li><p>On the next line, write a header to the Console window, as shown below:</p>
+<pre><code>Console.WriteLine(&quot;HR Employees\n&quot;);
+</code></pre></li>
+<li><p>On the next line, use a <strong>foreach</strong> loop to iterate over the results of the query, as shown below:</p>
+<pre><code>foreach (Employee hrEmployee in table.ExecuteQuery&lt;Employee&gt;(query))
+{
+
+}
+</code></pre></li>
+<li><p>Within the loop, write the <strong>Employee</strong> object to the Console window, as shown below:</p>
+<pre><code>Console.WriteLine(hrEmployee);
+</code></pre></li>
+<li><p>At the end of the main method and before the closing parenthesis, write a header to the Console window:</p>
+<pre><code>Console.WriteLine(&quot;\n\n\n\nIT Employee\n&quot;);
+</code></pre></li>
+<li><p>On the next line, create a new <strong>TableOperation</strong> to retrieve the single entity with a partition key of <strong>IT</strong> and row key of <strong>ibahena</strong>:</p>
+<pre><code>TableOperation retrieveOperation = TableOperation.Retrieve&lt;Employee&gt;(&quot;IT&quot;, &quot;ibahena&quot;);
+</code></pre></li>
+<li><p>On the next line, execute the <strong>TableOperation</strong> by using the <strong>Execute</strong> method of the table variable and store the result in a <em>TableResult</em> variable, as shown below:</p>
+<pre><code>TableResult result = table.Execute(retrieveOperation);
+</code></pre></li>
+<li><p>On the next line, cast the <strong>Result</strong> property of the <em>TableResult</em> variable to an <strong>Employee</strong> object, as shown below:</p>
+<pre><code>Employee itEmployee = (Employee)result.Result;
+</code></pre></li>
+<li><p>On the next line, write the <strong>Employee</strong> object to the Console window, as shown below:</p>
+<pre><code>Console.WriteLine(itEmployee);
+</code></pre></li>
+<li><p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+</li>
+<li><p>In the <em>Address bar</em> navigate to the following address:</p>
+<p><a href="https://go.microsoft.com/fwlink/?LinkId=717179&amp;clcid=0x409">https://go.microsoft.com/fwlink/?LinkId=717179&amp;clcid=0x409</a></p>
+</li>
+<li><p>In the <strong>Internet Explorer</strong> download dialog box, click <strong>Save</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> The download of the <em>Azure Storage Emulator</em> executable typically takes around five minutes.</p>
+</blockquote>
+</li>
+<li><p>Click the <strong>Windows File Explorer</strong> icon in your Taskbar.</p>
+</li>
+<li><p>On the left navigation bar, expand the <strong>This PC</strong> node and click the <strong>Downloads</strong> node:</p>
+</li>
+<li><p>Double-click the <strong>MicrosoftAzureStorageEmulator.msi</strong> file to start the emulator.</p>
+</li>
+<li><p>In the <strong>Microsoft Azure Storage Emulator Setup</strong> wizard, select the checkbox next to the <strong>&quot;I accept the terms in the License Agreement&quot;</strong> statement.</p>
+</li>
+<li><p>Click the <strong>Install</strong> button to install the emulator.</p>
+</li>
+<li><p>Wait for the installer to complete.</p>
+<blockquote>
+<p><strong>Note:</strong> The installer can take between two to five minutes.</p>
+</blockquote>
+</li>
+<li><p>Click the <strong>Finish</strong> button to close the installer wizard.</p>
+</li>
+<li><p>On the Start screen, type <strong>Azure Storage Emulator</strong>.</p>
+</li>
+<li><p>Click the <strong>Microsoft Azure Storage Emulator</strong> tile.</p>
+</li>
+<li><p>After the command-line application is finished, close the open console window.</p>
+</li>
+<li><p>Switch to the Contoso.Storage.Table – Microsoft Visual Studio window.</p>
+</li>
+<li><p>On the <strong>Debug</strong> menu, click <strong>Start Without Debugging</strong>.</p>
+</li>
+<li><p>View the output in the console window.</p>
+</li>
+<li><p>Press any key to close the console window.</p>
+</li>
+<li><p>Close the <strong>Contoso.Storage.Table – Microsoft Visual Studio</strong> application.</p>
+</li>
+</ol>

@@ -1,0 +1,31 @@
+<h1 id="module-9-automating-integration-with-azure-resources">Module 9: Automating Integration with Azure Resources</h1>
+<h1 id="demo-viewing-a-resource-group-template">Demo: Viewing a Resource Group Template</h1>
+<ol>
+<li><p>On the Start screen, click the down arrow to view all the applications, and then click <strong>Windows PowerShell</strong>.</p>
+</li>
+<li><p>Switch to the <strong>Windows PowerShell</strong> console window.</p>
+</li>
+<li><p>To sign in to Azure, type the following command in the console, and then press Enter:</p>
+<pre><code>Login-AzureRmAccount
+</code></pre><blockquote>
+<p><strong>Note:</strong> If you have not used <em>Windows PowerShell</em> before, you may be prompted to allow PowerShell to collect usage data. You can safely skip this dialog.</p>
+</blockquote>
+</li>
+<li><p>In the <strong>Sign in to your account</strong> dialog box, perform the following steps:</p>
+<p>a.  Enter the email address of your Microsoft account.</p>
+<p>b.  Click <strong>Continue</strong>.</p>
+<p>c.  Enter the password for your Microsoft account.</p>
+<p>d.  Click <strong>Sign In</strong>.</p>
+</li>
+<li><p>To create a new <em>Resource Group</em> named <strong>20532Auto</strong> with it&#39;s metadata located in the <strong>West US</strong> region, type the following command in the console, and then press Enter:</p>
+<pre><code>New-AzureRmResourceGroup -Name &quot;20532Auto&quot; -Location &quot;West US&quot;
+</code></pre></li>
+<li><p>To add a <em>Public IP Address</em> resource named <strong>ExamplePIP</strong> located in the <strong>East US</strong> region to the resource group, type the following command in the console, and then press Enter:</p>
+<pre><code>New-AzureRmResource -Location &quot;East US&quot; -ResourceName &quot;ExamplePIP&quot; -ResourceType &quot;Microsoft.Network/publicIPAddresses&quot; -ResourceGroupName &quot;20532Auto&quot; -Properties @{} -Force
+</code></pre></li>
+<li><p>To list all resources in the <strong>20532Auto</strong> <em>Resource Group</em>, type the following command in the console, and then press Enter:</p>
+<pre><code> Find-AzureRmResource -ResourceGroupNameContains &quot;20532Auto&quot;
+</code></pre></li>
+<li><p>Close the <strong>Windows PowerShell</strong> console window.</p>
+</li>
+</ol>

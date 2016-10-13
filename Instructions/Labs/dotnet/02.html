@@ -1,0 +1,224 @@
+<h1 id="module-2-building-application-infrastructure-in-azure">Module 2: Building Application Infrastructure in Azure</h1>
+<h1 id="lab-creating-an-azure-virtual-machine-for-development-and-testing">Lab: Creating an Azure Virtual Machine for Development and Testing</h1>
+<h3 id="scenario">Scenario</h3>
+<p>Before you begin the process of migrating your application from an on premise server to Azure, you must create a development environment. You have elected to use Azure to host a Windows Server 2012 R2 Virtual Machine. In this Virtual Machine, you will install project files, Visual Studio 2015 Community Edition, Azure SDK for .NET 2.8.2 and Azure PowerShell. Once complete, you will use this virtual machine for all remaining development tasks.</p>
+<h3 id="objectives">Objectives</h3>
+<p>After you complete this lab, you will be able to:</p>
+<ul>
+<li><p>Create an affinity group in your Azure subscription.</p>
+</li>
+<li><p>Create a virtual network.</p>
+</li>
+<li><p>Create a Storage instance.</p>
+</li>
+<li><p>Create a virtual machine.</p>
+</li>
+<li><p>Manage the virtual machine VHDs.</p>
+</li>
+<li><p>Install development software on a virtual machine.</p>
+</li>
+</ul>
+<h3 id="lab-setup">Lab Setup</h3>
+<p><strong>Estimated Time: 90 minutes</strong></p>
+<p>For this lab, you will use the available host machine. Before you begin this lab, you must complete the following steps:</p>
+<ol>
+<li>Verify that you received the credentials from your training provider to sign in to the Azure portal. You will use these credentials and the Azure account throughout the labs in this course.</li>
+</ol>
+<h2 id="exercise-1-creating-a-network-and-resource-container">Exercise 1: Creating a Network and Resource Container</h2>
+<h3 id="scenario">Scenario</h3>
+<p>You want to create a virtual network that you can use for your new virtual machine. As part of creating the virtual network, you will also create a resource group.</p>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Sign in to the Azure Portal.</p>
+</li>
+<li><p>Create a virtual network and a resource group.</p>
+</li>
+</ol>
+<h4 id="task-1-sign-in-to-the-azure-portal">Task 1: Sign in to the Azure Portal</h4>
+<ol>
+<li><p>Sign in to the Azure Portal (<a href="https://portal.azure.com">https://portal.azure.com</a>).</p>
+</li>
+<li><p>Click <strong>Get Started</strong>.</p>
+</li>
+</ol>
+<h4 id="task-2-create-a-resource-group">Task 2: Create a Resource Group</h4>
+<ol>
+<li><p>View the list of resource groups for your subscription.</p>
+</li>
+<li><p>Create a new resource group using the name: <strong>20532</strong>.</p>
+</li>
+</ol>
+<h4 id="task-3-create-a-virtual-network">Task 3: Create a Virtual Network</h4>
+<ol>
+<li><p>View the list of virtual networks for your subscription.</p>
+</li>
+<li><p>Create a virtual network by using the following details:</p>
+<ul>
+<li><p>Name: <strong>vnet20532</strong></p>
+</li>
+<li><p>Location: <strong>Select the region that is closest to your location</strong></p>
+</li>
+<li><p>Existing Resource Group: <strong>20532</strong></p>
+</li>
+<li><p>Address Space: <strong>10.0.0.0/16</strong></p>
+</li>
+<li><p>Subnet Name: <strong>Apps</strong></p>
+</li>
+<li><p>Subnet Address Range: <strong>10.0.0.0/24</strong></p>
+</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have a new virtual network and resource group in Azure.</p>
+</blockquote>
+<h2 id="exercise-2-creating-a-development-virtual-machine">Exercise 2: Creating a Development Virtual Machine</h2>
+<h3 id="scenario">Scenario</h3>
+<p>You need a new storage account that you will use while creating your virtual machine. This storage account will contain the VHDs for the virtual machine that you will create.</p>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Create a storage account.</p>
+</li>
+<li><p>Create a virtual machine.</p>
+</li>
+</ol>
+<h4 id="task-1-create-a-storage-account">Task 1: Create a storage account</h4>
+<ol>
+<li><p>View the list of Storage instances for your subscription.</p>
+</li>
+<li><p>Create a Storage instance by using the following details:</p>
+<ul>
+<li><p>Name: <strong>stor20532[Your Name Here]</strong></p>
+</li>
+<li><p>Deployment model: <strong>Resource manager</strong></p>
+</li>
+<li><p>Account kind: <strong>General purpose</strong></p>
+</li>
+<li><p>Performance: <strong>Standard</strong></p>
+</li>
+<li><p>Replication: <strong>Locally-redundant storage (LRS)</strong>  </p>
+</li>
+<li><p>Resource Group: <strong>20532</strong></p>
+</li>
+<li><p>Location: <strong>Select the region that is closest to your location</strong></p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="task-2-create-a-virtual-machine">Task 2: Create a virtual machine</h4>
+<ol>
+<li><p>View the list of virtual machines for your subscription.</p>
+</li>
+<li><p>Go to the Virtual Machine gallery and select the <strong>Visual Studio Community 2015 with Azure SDK 2.9 on Windows Server 2012 R2</strong> template.</p>
+</li>
+<li><p>Create a new virtual machine using the template and the following details:</p>
+<ul>
+<li><p>Name: <strong>vm20532</strong></p>
+</li>
+<li><p>VM disk type: <strong>HDD</strong></p>
+</li>
+<li><p>User Name: <strong>Student</strong></p>
+</li>
+<li><p>Password: <strong>AzurePa$$w0rd</strong></p>
+</li>
+<li><p>Size: <strong>F4 Standard</strong></p>
+</li>
+<li><p>Virtual Network: <strong>vnet20532</strong></p>
+</li>
+<li><p>Subnet: <strong>Apps</strong></p>
+</li>
+<li><p>Resource Group: <strong>20532</strong></p>
+</li>
+<li><p>Storage Account: <strong>stor20532[Your Name Here]</strong></p>
+</li>
+<li><p>Diagnostic Storage Account: <strong>Disabled</strong></p>
+</li>
+<li><p>Image: <strong>Windows Server 2012 R2 Datacenter</strong></p>
+</li>
+</ul>
+</li>
+<li><p>Add a second disk to the virtual machine by using the following settings:</p>
+<ul>
+<li><p>Disk File Name: <strong>vm20532-AllFiles.vhd</strong></p>
+</li>
+<li><p>Size (GiB): <strong>128</strong></p>
+</li>
+<li><p>Type: <strong>HDD</strong></p>
+</li>
+<li><p>Storage Account: <strong>stor20532[Your Name Here]</strong></p>
+</li>
+<li><p>Storage Container: <strong>vhds</strong></p>
+</li>
+</ul>
+</li>
+<li><p>Connect to the newly created virtual machine using Remote Desktop.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have a new virtual machine stored in a new storage account.</p>
+</blockquote>
+<h2 id="exercise-3-configuring-the-virtual-machine-for-development">Exercise 3:    Configuring the Virtual Machine for Development</h2>
+<h3 id="scenario">Scenario</h3>
+<p>Now that you have a new virtual machine, you need to configure Internet Explorer&#39;s Enhanced Security Configuration option. You also need to ensure that your working files are on the machine and ready.</p>
+<p>The main tasks for this exercise are as follows:</p>
+<ol>
+<li><p>Disable Internet Explorer Enhanced Security Configuration</p>
+</li>
+<li><p>Create an AllFiles drive and extract the AllFiles Content to it.</p>
+</li>
+<li><p>Authenticate to Visual Studio using the Microsoft Account associated with your Azure subscription.</p>
+</li>
+</ol>
+<h4 id="task-1-disable-ie-enhanced-security-configuration">Task 1: Disable IE Enhanced Security Configuration</h4>
+<ol>
+<li><p>If Server Manager is not already open, open <strong>Server Manager</strong>.</p>
+</li>
+<li><p>Within the <em>Local Server</em> configuration screen, disable <strong>Internet Explorer Enhanced Security Configuration</strong> for both <em>Administrators</em> and <em>Users</em>.</p>
+</li>
+</ol>
+<h4 id="task-2-create-an-allfiles-drive">Task 2: Create an AllFiles Drive</h4>
+<ol>
+<li><p>Initialize the new disk by using the Windows Disk Manager.</p>
+</li>
+<li><p>Format the new empty drive partition by using the following settings:</p>
+<ul>
+<li><p>Drive Letter: <strong>F</strong></p>
+</li>
+<li><p>Volume Label: <strong>AllFiles</strong></p>
+</li>
+<li><p>Partition Style: <strong>MBR (Master Boot Record)</strong></p>
+</li>
+</ul>
+</li>
+</ol>
+<h4 id="task-3-download-the-allfiles-content">Task 3: Download the AllFiles Content</h4>
+<ol>
+<li><p>Download the <strong>AllFiles</strong> compressed folder from the GitHub website</p>
+<ul>
+<li>(<a href="https://github.com/MicrosoftLearning/20532-DevelopingMicrosoftAzureSolutions/releases/latest">https://github.com/MicrosoftLearning/20532-DevelopingMicrosoftAzureSolutions/releases/latest</a>)</li>
+</ul>
+</li>
+<li><p>Unblock the AllFiles compressed folder.</p>
+</li>
+<li><p>Extract the content of the AllFiles compressed folder to the drive F.</p>
+<ul>
+<li>Extract target: <strong>Allfiles</strong> <strong>(F):\</strong></li>
+</ul>
+</li>
+</ol>
+<h4 id="task-4-add-your-azure-subscription-to-visual-studio">Task 4: Add your Azure subscription to Visual Studio</h4>
+<ol>
+<li><p>Open <strong>Visual Studio 2015</strong>.</p>
+</li>
+<li><p>When prompted, sign-in using the <strong>Microsoft Account</strong> associated with your Azure subscription.</p>
+<blockquote>
+<p><strong>Note:</strong> Ensure that the <strong>Keep me signed in</strong> option is selected when you sign-in.</p>
+</blockquote>
+</li>
+<li><p>Validate that you can see the Visual Studio <strong>Start Page</strong>.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, your development virtual machine will have your lab files installed. Your virtual machine will also have Visual Studio, Azure PowerShell, and the Azure SDK installed.</p>
+</blockquote>
+<p>©2016 Microsoft Corporation. All rights reserved.  The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode" title="Creative Commons Attribution 3.0 License">Creative Commons Attribution 3.0 License</a>, additional terms may apply.  All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong>not</strong> included within the Creative Commons license grant.  This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.<br>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.  </p>

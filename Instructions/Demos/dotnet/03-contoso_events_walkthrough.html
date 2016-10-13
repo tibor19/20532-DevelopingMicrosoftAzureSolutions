@@ -1,0 +1,158 @@
+<h1 id="module-3-hosting-web-applications-on-the-azure-platform">Module 3: Hosting Web Applications on the Azure Platform</h1>
+<h1 id="demo-contoso-events-walkthrough">Demo: Contoso Events Walkthrough</h1>
+<ol>
+<li><p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+</li>
+<li><p>Go to <a href="https://portal.azure.com">https://portal.azure.com</a></p>
+</li>
+<li><p>Enter the email address of your Microsoft account. Click <strong>Continue</strong>.</p>
+</li>
+<li><p>Enter the password for your Microsoft account.</p>
+</li>
+<li><p>Click <strong>Sign In</strong>.</p>
+</li>
+<li><p>In the navigation pane on the left side of the Azure Portal, scroll down, and then click <strong>More Services</strong>.</p>
+</li>
+<li><p>In the <strong>Browse</strong> blade that displays, click <strong>Storage accounts</strong>.</p>
+</li>
+<li><p>In the <strong>Storage accounts</strong> blade that displays, view your list of storage account instances.</p>
+</li>
+<li><p>At the top of the <strong>Storage accounts</strong> blade, click the <strong>Add</strong> button.</p>
+</li>
+<li><p>In the <strong>Create storage account</strong> blade that displays, perform the following steps:</p>
+<p>a. In the <strong>Name</strong> box, provide a globally unique value.</p>
+<p>b. In the <strong>Deployment model</strong> section, ensure that the <em>Resource manager</em> option is selected.</p>
+<p>c. In the <strong>Account kind</strong> list, ensure that the <em>General purpose</em> option is selected.</p>
+<p>d. In the <strong>Performance</strong> section, ensure that the <em>Standard</em> option is selected.</p>
+<p>e. Click on the <strong>Replication</strong> list and select the <strong>Locally-Redundant Storage (LRS)</strong> option.</p>
+<p>f. In the <strong>Location</strong> list, select the region closest to your current location.</p>
+<p>g. In the <strong>Resource group</strong> section, select the <strong>Use existing</strong> option.</p>
+<p>h. In the <strong>Resource group</strong> section, locate the dialog box and provide the value <strong>20532</strong>.</p>
+<p>i. Ensure that the <strong>Pin to dashboard</strong> option is selected.</p>
+<p>j. Click <strong>Create</strong>.</p>
+</li>
+<li><p>Once the <strong>Storage account</strong> instance is created, the blade for the new instance will open automatically.</p>
+</li>
+<li><p>In the <strong>Storage account</strong> blade, record the name of your <em>storage account</em>.</p>
+</li>
+<li><p>In the <strong>Settings</strong> section, select the <strong>Access keys</strong> option.</p>
+</li>
+<li><p>In the <strong>Access keys</strong> blade, locate a key that you wish to use.</p>
+<blockquote>
+<p><strong>Note:</strong> you can use any of the keys listed for this lab.</p>
+</blockquote>
+</li>
+<li><p>For the access key you selected, click the three ellipsis (...) button to the right of the key. Once clicked, select the <strong>View connection string</strong> option.</p>
+</li>
+<li><p>In the <strong>View connection string</strong> dialog, record your connection string for the access key you selected.</p>
+<blockquote>
+<p><strong>Note:</strong> This connection string will be used in various parts of this lab.</p>
+</blockquote>
+</li>
+<li><p>Close the <strong>View connection string</strong> dialog.</p>
+</li>
+<li><p>On the Start screen, click the <strong>Desktop</strong> tile.</p>
+</li>
+<li><p>On the taskbar, click the <strong>File Explorer</strong> icon.</p>
+</li>
+<li><p>In the Libraries window, go to Allfiles <strong>(F):\Mod03\Democode\Contoso.Events</strong>, and then double-click <strong>Contoso.Events.sln</strong>.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Shared</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Data.Generation</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>app.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code>&lt;add key=&quot;StorageConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events.Data.Generation</strong> project, point to <strong>Debug</strong>, and then click <strong>Start New Instance</strong>.</p>
+</li>
+<li><p>Wait for debugging to complete (when the console window closes).</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events</strong> solution, and then click <strong>Properties</strong>.</p>
+</li>
+<li><p>Navigate to the <strong>Startup Project</strong> section located under the <strong>Common Properties</strong> header.</p>
+</li>
+<li><p>In the <strong>Startup Project</strong> section, locate and select the <strong>Multiple startup projects</strong> option.</p>
+</li>
+<li><p>Within the <strong>Multiple startup projects</strong> table, perform the following actions:</p>
+<p>a. Locate the <strong>Contoso.Events.Web</strong> entry and change it&#39;s <em>Action</em> from <strong>None</strong> to <strong>Start</strong>.</p>
+<p>b. Locate the <strong>Contoso.Events.Management</strong> entry and change it&#39;s <em>Action</em> from <strong>None</strong> to <strong>Start</strong>.</p>
+<p>c. Locate the <strong>Contoso.Events.Worker</strong> entry and change it&#39;s <em>Action</em> from <strong>None</strong> to <strong>Start</strong>.</p>
+</li>
+<li><p>Click the <strong>OK</strong> button to close the <em>Property</em> dialog.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Administration</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Management</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>web.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>web.config</strong> file, locate the following configuration setting:</p>
+<pre><code>&lt;add key=&quot;Microsoft.WindowsAzure.Storage.ConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Roles</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Web</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>web.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>web.config</strong> file, locate the following configuration setting:</p>
+<pre><code>&lt;add key=&quot;Microsoft.WindowsAzure.Storage.ConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>app.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code>&lt;add name=&quot;AzureWebJobsStorage&quot; connectionString=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>connectionString</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code>&lt;add name=&quot;AzureWebJobsDashboard&quot; connectionString=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>connectionString</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code>&lt;add key=&quot;StorageConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>On the <strong>Debug</strong> menu, click <strong>Start Debugging</strong>.</p>
+</li>
+<li><p>In Internet Explorer, locate and click the <strong>Home – Contoso Events</strong> window.</p>
+</li>
+<li><p>Click any one of the <strong>Sales Conference</strong> events to go to the event details webpage. Ensure that you do not select a <strong>Technical Conference</strong> or <strong>Internal Conference</strong>.</p>
+<p>a.  If a sales conference is not listed in the <em>Upcoming Events</em> section, click the <strong>All Events</strong> to see all the events.</p>
+<p>b.  On the <strong>All Events</strong> page, click the <em>arrow buttons</em> next to the page indicator to cycle through pages of events until you find a <strong>Sales Conference</strong>.</p>
+<p>c.  Click the <strong>Go to Event</strong> button to navigate to the event.</p>
+</li>
+<li><p>View the selected <strong>Sales Conference</strong> event details.</p>
+</li>
+<li><p>To go to the event’s registration page, click <strong>Register Now</strong>.</p>
+</li>
+<li><p>In the <strong>Region</strong> box, type <strong>Western</strong>.</p>
+</li>
+<li><p>In the <strong>AnnualSales</strong> box, provide the value <strong>45000</strong>.</p>
+</li>
+<li><p>In the <strong>FirstName</strong> box, provide the value <strong>Corrine</strong>.</p>
+</li>
+<li><p>In the <strong>LastName</strong> box, provide the value <strong>Horn</strong>.</p>
+</li>
+<li><p>Click the <strong>Submit</strong> button.</p>
+</li>
+<li><p>Click the <strong>Go back to Events List</strong> buton.</p>
+</li>
+<li><p>Close the <strong>Internet Explorer</strong> application.</p>
+</li>
+<li><p>Close the <strong>Contoso.Events – Microsoft Visual Studio</strong> application.</p>
+</li>
+</ol>

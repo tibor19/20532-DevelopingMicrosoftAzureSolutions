@@ -1,0 +1,230 @@
+<h1 id="module-10-securing-azure-web-applications">Module 10: Securing Azure Web Applications</h1>
+<h1 id="lab-integrating-azure-active-directory-with-the-events-administration-portal">Lab: Integrating Azure Active Directory with the Events Administration Portal</h1>
+<h2 id="exercise-1-creating-an-azure-ad">Exercise 1: Creating an Azure AD</h2>
+<h4 id="task-1-sign-in-to-the-azure-classic-portal">Task 1: Sign in to the Azure Classic Portal</h4>
+<blockquote>
+<p><strong>Note:</strong> For this lab, you will use the Classic Portal because the functionality to create new Azure Active Directory domains is not available in the Portal.</p>
+</blockquote>
+<p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+<p>Go to <a href="https://manage.windowsazure.com"><em>https://manage.windowsazure.com</em></a></p>
+<p>Enter the email address and password for your Microsoft account, and then click <strong>Sign In</strong>.</p>
+<h4 id="task-2-create-an-directory-by-using-the-classic-portal">Task 2: Create an directory by using the Classic Portal</h4>
+<ol>
+<li><p>In the navigation pane on the left side of the screen, scroll down, and then click <strong>Active Directory</strong>.</p>
+</li>
+<li><p>Click the <strong>Directory</strong> tab at the top of the page.</p>
+</li>
+<li><p>At the bottom of the screen, click <strong>+New</strong>.</p>
+<p>a. Select <strong>APP SERVICES</strong>, <strong>ACTIVE</strong> <strong>DIRECTORY</strong>, <strong>DIRECTORY</strong>, and then click <strong>CUSTOM</strong> <strong>CREATE</strong>.</p>
+<p>b. In the <strong>Add Directory</strong> dialog box, perform the following steps:</p>
+<p>c. In the <strong>Directory</strong> list, select <strong>Create new directory</strong>.</p>
+<p>d. In the <strong>Name</strong> box, type <strong>20532</strong>.</p>
+<p>e. In the <strong>Domain Name</strong> box, type <strong>ad20532[<em>Your Name</em>]</strong>.</p>
+<p>f. In the <strong>Country or Region</strong> list, select your current location.</p>
+<p>g. Click the check mark button to add the directory.</p>
+</li>
+</ol>
+<h4 id="task-3-create-a-global-administrator-role-in-the-directory">Task 3: Create a Global Administrator role in the directory</h4>
+<ol>
+<li><p>In the list of directories, click the name of the directory <strong>20532</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> You may be prompted with a popup dialog talking about Azure AD features. You can safely ignore this dialog by clicking the <em>checkmark</em> button to close it.</p>
+</blockquote>
+</li>
+<li><p>Click the <strong>Users</strong> tab at the top of the page.</p>
+</li>
+<li><p>At the bottom of the screen, click <strong>Add User</strong>.</p>
+</li>
+<li><p>In the <strong>Add user</strong> dialog box, perform the following steps:</p>
+<p>a. In the <strong>Type of User</strong> list, select <strong>New user in your organization</strong>.</p>
+<p>b. In the <strong>User Name</strong> box, type <strong>admin</strong>.</p>
+<p>c. In the <strong>Domain</strong> list, ensure that only your domain (<strong>ad20532[<em>Your Name</em>]</strong>) is selected.</p>
+<p>d. Click the right arrow to move to the next step in the wizard.</p>
+<p>e. In the <strong>First Name</strong> box, type <strong>Admin</strong>.</p>
+<p>f. In the <strong>Last Name</strong> box, type <strong>User</strong>.</p>
+<p>g. In the <strong>Display Name</strong> box, type <strong>Admin User</strong>.</p>
+<p>h. In the <strong>Role</strong> list, select <strong>Global Admin</strong>.</p>
+<p>i. In the <strong>Alternate Email Address</strong> box, type <strong>example@contoso.com</strong>.</p>
+<p>j. Ensure the <strong>Enable Multi-Factor Authentication</strong> check box is cleared.</p>
+</li>
+<li><p>Click the right arrow to move to the next step in the wizard.</p>
+<p>a. On the <strong>Get Temporary Password</strong> screen, click <strong>Create</strong> to create the user.</p>
+<p>b. Record the temporary password that is generated for the user.</p>
+</li>
+<li><p>Click the check mark button to complete the wizard.</p>
+</li>
+</ol>
+<h4 id="task-4-create-a-user-role-in-the-directory">Task 4: Create a User role in the directory</h4>
+<ol>
+<li><p>At the bottom of the screen, click <strong>Add User</strong>.</p>
+</li>
+<li><p>In the <strong>Add User</strong> dialog box, perform the following steps:</p>
+<p>a. In the <strong>Type of User</strong> list, select <strong>New user in your organization</strong>.</p>
+<p>b. In the <strong>User Name</strong> box, type <strong>standard</strong>.</p>
+<p>c. In the <strong>Domain</strong> list, ensure that only your domain (<strong>ad20532[<em>Your Name</em>]</strong>) is selected.</p>
+<p>d. Click the right arrow to move to the next step in the wizard.</p>
+<p>e. In the <strong>First Name</strong> box, type <strong>Standard</strong>.</p>
+<p>f. In the <strong>Last Name</strong> box, type <strong>User</strong>.</p>
+<p>g. In the <strong>Display Name</strong> box, type <strong>Standard User</strong>.</p>
+<p>h. In the <strong>Role</strong> list, select <strong>User</strong>.</p>
+<p>i. Ensure the <strong>Enable Multi-Factor Authentication</strong> check box is cleared.</p>
+</li>
+<li><p>Click the right arrow to move to the next step in the wizard.</p>
+<p>a. On the <strong>Get Temporary Password</strong> screen, click <strong>Create</strong> to create the user.</p>
+<p>b. Record the temporary password that is generated for the user.</p>
+</li>
+<li><p>Click the check mark button to complete the wizard.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have created an Azure AD and populated the directory with users.</p>
+</blockquote>
+<h2 id="exercise-2-securing-an-existing-asp-net-web-application">Exercise 2: Securing an Existing ASP.NET Web Application</h2>
+<h4 id="task-1-add-the-authorize-attribute-to-the-homecontroller-class">Task 1: Add the Authorize attribute to the HomeController class</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Desktop</strong> tile.</p>
+</li>
+<li><p>On the taskbar, click the <strong>File Explorer</strong> icon.</p>
+</li>
+<li><p>In the Libraries window, go to <strong>Allfiles (F):\Mod10\Labfiles\Starter\Contoso.Events</strong>, and then double-click <strong>Contoso.Events.sln</strong>.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Administration</strong> folder.</p>
+<p>a. Expand the <strong>Contoso.Events.Management.Old</strong> project.</p>
+<p>b. Expand the <strong>Controllers</strong> folder.</p>
+<p>c. Double-click the <strong>HomeController.cs</strong> file.</p>
+<p>d. Locate the class definition at the top of the file:    </p>
+<pre><code>public class HomeController : Controller
+</code></pre><p>e. In the line above the class definition, add the <strong>Authorize</strong> attribute:</p>
+<pre><code>[Authorize]
+</code></pre><p>f. Save the <strong>HomeController.cs</strong> file.</p>
+</li>
+</ol>
+<h4 id="task-2-debug-the-web-application">Task 2: Debug the web application</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events.Management.Old</strong> project, and then click <strong>Set as Startup Project</strong>.</p>
+</li>
+<li><p>On the <strong>Debug</strong> menu, click <strong>Start Debugging</strong>.</p>
+</li>
+<li><p>Wait for Internet Explorer to open.</p>
+</li>
+<li><p>Verify that the website returns a <strong>401 – Unauthorized</strong> error message.</p>
+</li>
+<li><p>Switch to the <em>Contoso.Events – Microsoft Visual Studio</em> window.</p>
+</li>
+<li><p>On the <strong>Debug</strong> menu, click <strong>Stop Debugging</strong>.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used MVC to ensure that a user is signed in before accessing a controller or action.</p>
+</blockquote>
+<h2 id="exercise-3-integrating-azure-ad-with-asp-net-identity">Exercise 3: Integrating Azure AD with ASP.NET Identity</h2>
+<h4 id="task-1-create-a-new-management-web-application-by-using-azure-ad-as-the-identity-provider">Task 1: Create a new management web application by using Azure AD as the identity provider</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Administration</strong> solution folder, point to <strong>Add</strong>, and then click <strong>New Project</strong>.</p>
+</li>
+<li><p>In the <strong>Add New Project</strong> dialog box, perform the following steps:</p>
+<p>a. Expand <strong>Installed</strong>, expand <strong>Visual C#</strong>, and then click <strong>Web</strong>.</p>
+<p>b. Click the <strong>ASP.NET Web Application</strong> project type.</p>
+<p>c. In the <strong>Name</strong> box, type <strong>Contoso.Events.Management</strong>.</p>
+<p>d. Ensure that the <strong>Location</strong> box has the value <strong>F:\Mod10\Labfiles\Starter\Contoso.Events</strong>.</p>
+<p>e. Click <strong>OK</strong>.</p>
+</li>
+<li><p>In the <strong>New ASP.NET Project – Contoso.Events.Management</strong> dialog box, perform the following steps:</p>
+<p>a. Click the <strong>MVC</strong> template.</p>
+<p>b. Ensure that the <strong>Microsoft Azure – Host in the Cloud</strong> check box is cleared.</p>
+<p>c. Leave the remaining fields to their default values.</p>
+<p>d. Click <strong>Change Authentication</strong>.</p>
+</li>
+<li><p>In the <strong>Change Authentication</strong> dialog box, select <strong>Work And School Accounts</strong>.</p>
+<p>a. In the <strong>Domain</strong> box, type <strong>ad20532[<em>Your Name</em>].onmicrosoft.com</strong>.</p>
+<p>b. Leave the default values in the remaining fields.</p>
+<p>c. Click <strong>OK</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> The screens that display during sign-in process might vary depending on whether you signed in by using that domain lately or set up Internet Explorer to remember a specific sign-in.</p>
+</blockquote>
+</li>
+<li><p>Sign in by using the <strong>Admin User</strong> account (<strong>admin@ad20532[<em>Your Name</em>].onmicrosoft.com</strong>) and the temporary password that is created earlier in this lab.</p>
+</li>
+<li><p>If you are prompted with an <strong>Additional security verification</strong> dialog, you can safely close and ignore this dialog.</p>
+</li>
+<li><p>In the <strong>Change Password</strong> dialog box, update your password to <strong>Pa$$w0rd</strong>.</p>
+</li>
+<li><p>In the <strong>New ASP.NET Project – Contoso.Events.Management</strong> dialog box, click <strong>OK</strong>.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Administration</strong> folder.</p>
+</li>
+<li><p>Right-click the <strong>Contoso.Events.Management</strong> project, and then click <strong>Set as StartUp Project</strong>.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Administration</strong> folder.</p>
+</li>
+<li><p>Right-click the <strong>Contoso.Events.Management</strong> project, point to <strong>Add</strong>, and then click <strong>Reference</strong>.</p>
+</li>
+<li><p>In the <strong>Reference Manager – Contoso.Events.Management</strong> dialog box, perform the following steps:</p>
+<p>a. On the left side, expand the <strong>Solution</strong> tab and then click the <strong>Projects</strong> option.</p>
+<p>b. Double-click the <strong>Contoso.Events.Models</strong> reference.</p>
+<p>c. Double-click the <strong>Contoso.Events.ViewModels</strong> reference.</p>
+<p>d. Click <strong>OK</strong>.</p>
+</li>
+<li><p>On the View menu, point to Other Windows, and then click Package Manager Console.</p>
+<p>a. In the Package Manager Console pane, in the Default Project list, select Contoso.Events.Management.</p>
+<p>b. In the Package Manager Console text area, place the cursor after the text PM, type the following command:</p>
+<pre><code>Install-Package EntityFramework -Version 6.0.2
+</code></pre><p>c. Press Enter.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Administration</strong> folder.</p>
+</li>
+<li><p>Expand the <strong>Contoso.Events.Management.Old</strong> project.</p>
+<p>a. Copy the following folders:</p>
+<ul>
+<li><p><strong>App_Start</strong></p>
+</li>
+<li><p><strong>Content</strong></p>
+</li>
+<li><p><strong>Controllers</strong></p>
+</li>
+<li><p><strong>Fonts</strong></p>
+</li>
+<li><p><strong>Scripts</strong></p>
+</li>
+<li><p><strong>Views</strong></p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> To copy all the folders at once press the Shift key and then click the <strong>App_Start</strong> and <strong>Views</strong> folders. This will select all six folders at the same time. You can then use the shortcut menu or press Ctrl+C to copy the folders.</p>
+</blockquote>
+<p>b. Paste all the copied folders in the <strong>Contoso.Events.Management</strong> project.</p>
+<p>c. When prompted to merge the folders, click <strong>Apply to all items</strong>, and then click <strong>Yes</strong>.</p>
+<p>d. When prompted with <strong>Destination File Exists</strong>, click <strong>Apply to all items</strong>, and then click <strong>Yes</strong>.</p>
+<p>e. Copy the <em>connectionStrings</em> from the web.config file in the <strong>Contoso.Events.Management.Old</strong> project and paste the content into the web.config file in <strong>Contoso.Events.Management</strong> project.</p>
+</li>
+</ol>
+<h4 id="task-2-verify-that-the-management-web-application-requires-a-sign-in-by-using-an-organizational-account">Task 2: Verify that the Management web application requires a sign-in by using an organizational account</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events.Management</strong> project, and then click <strong>Set as Startup Project</strong>.</p>
+</li>
+<li><p>On the <strong>Debug</strong> menu, click <strong>Start Debugging</strong>.</p>
+<p>a. The <strong>Microsoft Visual Studio</strong> dialog will appear indicating that you can configure IIS Express to trust the self-signed certificate.</p>
+<p>b. Click <strong>Yes</strong>.</p>
+<p>c. The <strong>Security Warning</strong> dialog will appear indicating that the self-signed certificate cannot be verified but can still be installed.</p>
+<p>d. Click <strong>Yes</strong>.</p>
+</li>
+<li><p>Sign in by using the <strong>Standard User</strong> account and temporary password that was created earlier in this lab.</p>
+</li>
+<li><p>If you are prompted with an <strong>Additional security verification</strong> dialog, you can safely close and ignore this dialog.</p>
+</li>
+<li><p>In the <strong>Change Password</strong> dialog box, update your password to <strong>Pa$$w0rd</strong>.</p>
+</li>
+<li><p>View the home page of the <strong>Contoso.Events.Management</strong> web application.</p>
+</li>
+<li><p>Click <strong>Go To Events List</strong> to view the list of events.</p>
+</li>
+<li><p>Close the <strong>Internet Explorer</strong> application.</p>
+</li>
+<li><p>Close the <strong>Microsoft Visual Studio</strong> application.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used an Azure AD domain with the ASP.NET Identity framework.</p>
+</blockquote>
+<p>©2016 Microsoft Corporation. All rights reserved. The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode">Creative Commons Attribution 3.0 License</a>, additional terms may apply. All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong><em>not</em></strong> included within the Creative Commons license grant. This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.</p>
+<p>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.</p>

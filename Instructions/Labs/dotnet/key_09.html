@@ -1,0 +1,207 @@
+<h1 id="module-9-automating-integration-with-azure-resources">Module 9: Automating Integration with Azure Resources</h1>
+<h1 id="lab-automating-the-creation-of-azure-assets-using-powershell-and-xplat-cli">Lab: Automating the Creation of Azure Assets using PowerShell and xPlat CLI</h1>
+<h2 id="exercise-1-use-xplat-cli-to-create-and-manage-and-azure-web-app">Exercise 1: Use xPlat CLI to Create and Manage and Azure Web App</h2>
+<h4 id="task-1-preparing-the-xplat-cli-environment">Task 1: Preparing the xPlat CLI Environment</h4>
+<ol>
+<li><p>Open the <strong>Microsoft Web Platform Installer</strong> application.</p>
+</li>
+<li><p>In the <strong>Web Platform Installer</strong> dialog, click the <strong>Products</strong> tab.</p>
+</li>
+<li><p>Locate the <strong>Microsoft Azure Cross-platform Command Line Tools</strong> option.</p>
+</li>
+<li><p>Click the <strong>Add</strong> button to the right of <strong>Microsoft Azure Cross-platform Command Line Tools</strong> option.</p>
+</li>
+<li><p>Click the <strong>Install</strong> button.</p>
+</li>
+<li><p>You will be prompted with a list of pre-requisite applications. Click the <strong>I Accept</strong> button.</p>
+</li>
+<li><p>Wait for the installation process to complete, then click <strong>Finish</strong>.</p>
+</li>
+<li><p>On the Start screen, click the down arrow to view all the applications, and then click <strong>Command Prompt</strong>.</p>
+</li>
+<li><p>Switch to the <strong>Command Prompt</strong> window.</p>
+</li>
+<li><p>To validate that the <strong>azure</strong> CLI command is available, type the following command in the console, and then press Enter:</p>
+<pre><code>azure --help
+</code></pre></li>
+<li><p>Type <strong>Y</strong> to indicate that you approve of the data collection process.</p>
+</li>
+<li><p>To switch to the <strong>ARM</strong> mode for the CLI, type the following command in the console, and then press Enter:</p>
+<pre><code>azure config mode arm
+</code></pre></li>
+</ol>
+<h4 id="task-2-login-to-your-azure-subscription-using-interactive-login">Task 2: Login to Your Azure Subscription Using Interactive Login</h4>
+<ol>
+<li><p>To begin the interactive login process, type the following command in the console, and then press Enter:</p>
+<pre><code>azure login
+</code></pre></li>
+<li><p>Take a note of the code provided by the CLI command tool:</p>
+<blockquote>
+<p><strong>Note:</strong> The code is displayed in the command prompt. For example, you may see: <code>Enter the code A2U763CQ9 to authenticate</code>. In this example, the code is <code>A2U763CQ9</code>.</p>
+</blockquote>
+</li>
+<li><p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+</li>
+<li><p>Go to <em>(<a href="https://aka.ms/devicelogin">https://aka.ms/devicelogin</a>)</em>.</p>
+</li>
+<li><p>In the code dialog box, type in the code you recorded earlier.</p>
+</li>
+<li><p>If the code is correct, the page will refresh automatically and render the name of the application requesting access to your Azure subscription (<strong>Microsoft Azure CLI</strong>).</p>
+</li>
+<li><p>Click the <strong>Continue</strong> button.</p>
+</li>
+<li><p>In the email address dialog box, type the email address of your Microsoft account.</p>
+</li>
+<li><p>In the password dialog box, type the password for your Microsoft account.</p>
+</li>
+<li><p>Click <strong>Sign In</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> If you were successful, you will see the message <em>&quot;You have signed in to the Microsoft Azure Cross-platform Command Line Interface application on your device&quot;</em>. The code has a timeout so it is possible to not login quickly enough using the Device Login page. If this happens, simply repeat this task.</p>
+</blockquote>
+</li>
+<li><p>Return to the <strong>Command Prompt</strong> application.</p>
+</li>
+<li><p>To view your account details, type the following command in the console, and then press Enter:</p>
+<pre><code>azure account show
+</code></pre><blockquote>
+<p><strong>Note:</strong> If you have multiple Azure subscriptions, you can use <strong>azure account set [subscription-name]</strong> to select the appropriate subscription. If you are unsure about your subscription&#39;s name, you can simply use <strong>azure account list</strong>. If your Azure subscription is provided by a Learning Partner, it might be an auto-generated account without any details. In such a case, this command will return an empty result.</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have set up a development environment to use xPlat CLI for Azure service automation.</p>
+</blockquote>
+<h4 id="task-3-create-a-new-website-instance-by-using-xplat-cli">Task 3: Create a new Website instance by using xPlat CLI</h4>
+<ol>
+<li><p>To create a new Resource Group, type the following command in the console by providing the name <strong>rga20532</strong>, the <strong>West US</strong> location and then press Enter:</p>
+<pre><code>azure group create --name rga20532 --location &quot;West US&quot;
+</code></pre><blockquote>
+<p><strong>Note:</strong> You might get an error message notifying you that your Website’s name is not unique. If this occurs, select a new name until your Website is created.</p>
+</blockquote>
+</li>
+<li><p>To view a list of your Resource Groups, type the following command in the console, and then press Enter:</p>
+<pre><code>azure group list
+</code></pre></li>
+<li><p>To create a new Web App Resource, type the following command in the console by providing the unique name selected for your Web App, the <strong>East US</strong> location and then press Enter:</p>
+<pre><code>azure resource create --name [Unique Name] --resource-type &quot;Microsoft.Web/Sites&quot; --api-version &quot;2014-06-01&quot; --location &quot;East US&quot; --resource-group rga20532
+</code></pre><blockquote>
+<p><strong>Note:</strong> You might get an error message notifying you that your Website’s name is not unique. If this occurs, select a new name until your Website is created.</p>
+</blockquote>
+</li>
+<li><p>To view a list of Resources in the <strong>rga20532</strong> Resource Group, type the following command in the console, and then press Enter:</p>
+<pre><code>azure resource list --resource-group rga20532
+</code></pre></li>
+<li><p>To get the details for your new Website, type the following command in the console by providing the unique name selected for your Website, and then press Enter:</p>
+<pre><code>azure resource show --name [Unique Name] --resource-type &quot;Microsoft.Web/Sites&quot; --resource-group rga20532 --api-version &quot;2014-06-01&quot; --json
+</code></pre></li>
+<li><p>Record the <strong>defaultHostName</strong> value from the list of key-value pairs that are generated by the previous command.</p>
+<blockquote>
+<p><strong>Note:</strong> this hostname property will look similar to this: <code>&quot;defaultHostName&quot;: &quot;websitepiaxfa4veu6lw.azurewebsites.net&quot;</code>.</p>
+</blockquote>
+</li>
+<li><p>To view the new Website in Internet Explorer, type the following command in the console, and then press Enter:</p>
+<pre><code>explorer “http://[Host Name]”
+</code></pre></li>
+<li><p>Verify that the new Website is running.</p>
+</li>
+<li><p>Close Internet Explorer.</p>
+</li>
+<li><p>Switch to the <strong>Command Prompt</strong> console window.</p>
+</li>
+</ol>
+<h4 id="task-4-remove-a-website-instance-by-using-xplat-cli">Task 4: Remove a Website instance by using xPlat CLI</h4>
+<ol>
+<li><p>To remove your new Web App, type the following command in the console by providing the unique name selected for your Website, and then press Enter:</p>
+<pre><code>azure resource delete --name [Unique Name] --resource-type &quot;Microsoft.Web/Sites&quot; --resource-group rga20532 --api-version &quot;2014-06-01&quot;
+</code></pre></li>
+<li><p>Type <strong>Y</strong> to indicate that you want to remove the Web App, and then press Enter.</p>
+</li>
+<li><p>To remove your new Resource Group, type the following command in the console by providing the name <strong>rga20532</strong>, and then press Enter:</p>
+<pre><code>azure group delete --name rga20532
+</code></pre></li>
+<li><p>Type <strong>Y</strong> to indicate that you want to remove the Resource Group, and then press Enter.</p>
+</li>
+<li><p>To verify that your Resource Group has been removed, type the following command in the console by providing the name <strong>rga20532</strong>, and then press Enter. The result should be a failure:</p>
+<pre><code>azure group show --name rga20532
+</code></pre></li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used xPlat CLI to manage instances of an Azure service.</p>
+</blockquote>
+<h2 id="exercise-2-use-powershell-to-create-and-manage-a-resource-group">Exercise 2: Use PowerShell to Create and Manage a Resource Group</h2>
+<h4 id="task-1-open-the-azure-powershell-console">Task 1: Open the Azure PowerShell Console</h4>
+<ol>
+<li><p>On the Start screen, click the down arrow to view all the applications, and then click <strong>Windows PowerShell</strong>.</p>
+</li>
+<li><p>Switch to the <strong>Windows PowerShell</strong> window.</p>
+</li>
+</ol>
+<h4 id="task-2-authenticate-to-azure-resource-manager-using-powershell">Task 2: Authenticate to Azure Resource Manager Using PowerShell</h4>
+<ol>
+<li><p>To switch modules, type the following command in the console, and then press Enter:</p>
+<pre><code>Login-AzureRmAccount
+</code></pre></li>
+<li><p>In the <strong>Sign in to your account</strong> dialog box, perform the following steps:</p>
+<p>a. Enter the email address of your Microsoft account.</p>
+<p>b. Enter the password for your Microsoft account.</p>
+<p>c. Click <strong>Sign In</strong>.</p>
+</li>
+<li><p>To view your current Azure PowerShell session context type the following command in the console, and then press Enter:</p>
+<pre><code>Get-AzureRmContext
+</code></pre></li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> If you have multiple Azure subscriptions, you can use <strong>Select-AzureRmSubscription</strong> to select the appropriate subscription.</p>
+</blockquote>
+<h4 id="task-3-create-a-resource-group-by-using-powershell">Task 3: Create a resource group by using PowerShell</h4>
+<ol>
+<li><p>To create a new instance of a resource group from the template, type the following command in the console, and then press Enter:</p>
+<pre><code>New-AzureRmResourceGroup -Name rgb20532 -Location &quot;West US&quot;
+</code></pre></li>
+<li><p>To provide the parameters for the template, type the following command in the console, and then perform the following steps:</p>
+<pre><code>New-AzureRmResourceGroupDeployment -ResourceGroupName rgb20532 -TemplateFile &quot;F:\Mod09\Labfiles\azuredeploy.json&quot;
+</code></pre><p>f. For the <strong>administratorLogin</strong> prompt, provide the value <strong>testuser</strong>, and then press Enter.</p>
+<p>g. For the <strong>administratorLoginPassword</strong> prompt, provide the value <strong>TestPa$$w0rd</strong>, and press Enter.</p>
+<blockquote>
+<p><strong>Note:</strong> Wait for the provisioning process to complete. Status messages will be displayed periodically and the final message with the details will be displayed when provisioning is complete.</p>
+</blockquote>
+</li>
+<li><p>To get the details of your new resource group, type the following command in the console by providing the unique name selected for your Website, and then press Enter:</p>
+<pre><code>Get-AzureRmResourceGroup –ResourceGroupName rgb20532
+</code></pre></li>
+<li><p>To get the details of your new Website, type the following command in the console by providing the unique name selected for your Website, and then press Enter:</p>
+<pre><code>(Get-AzureRmResource -IsCollection -ResourceGroupName rgb20532 -ResourceType &quot;Microsoft.Web/sites&quot; -ApiVersion 2015-08-01).Properties
+</code></pre></li>
+<li><p>Record the value of the <strong>hostNames</strong> property from the JSON data generated by the previous command.</p>
+<blockquote>
+<p><strong>Note:</strong> this hostname property will look similar to this: <code>DefaultHostName : websitepiaxfa4veu6lw.azurewebsites.net</code>.</p>
+</blockquote>
+</li>
+<li><p>To view the new Website in Internet Explorer, type the following command in the console, and then press Enter:</p>
+<pre><code>explorer “http://[Host Name]”
+</code></pre></li>
+<li><p>Verify that the new Website is running.</p>
+</li>
+<li><p>Close Internet Explorer.</p>
+</li>
+<li><p>Switch to the <strong>Windows PowerShell</strong> console window.</p>
+</li>
+</ol>
+<h4 id="task-4-remove-the-resource-group-by-using-powershell">Task 4: Remove the resource group by using PowerShell</h4>
+<ol>
+<li><p>To remove your new resource group, type the following command in the console, and then press Enter:</p>
+<pre><code>Remove-AzureRmResourceGroup –Name rgb20532
+</code></pre></li>
+<li><p>Type <strong>Y</strong> to indicate that you want to remove the Website, and then press Enter.</p>
+<blockquote>
+<p><strong>Note:</strong> Because removing a resource group involves removing multiple resources, this process can take 5 to 15 minutes on average.</p>
+</blockquote>
+</li>
+<li><p>Close the <strong>Windows PowerShell</strong> console window.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used Azure to interact with the Resource Manager, resource groups, and resource group templates.</p>
+</blockquote>
+<p>©2016 Microsoft Corporation. All rights reserved. The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode">Creative Commons Attribution 3.0 License</a>, additional terms may apply. All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong><em>not</em></strong> included within the Creative Commons license grant. This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.</p>
+<p>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.</p>

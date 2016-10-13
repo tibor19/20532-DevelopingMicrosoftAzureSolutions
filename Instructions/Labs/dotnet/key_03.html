@@ -1,0 +1,262 @@
+<h1 id="module-3-hosting-web-applications-on-the-azure-platform">Module 3: Hosting Web Applications on the Azure Platform</h1>
+<h1 id="lab-creating-an-asp-net-web-app-using-an-azure-web-app">Lab: Creating an ASP.NET Web App Using an Azure Web App</h1>
+<h2 id="exercise-1-creating-an-azure-web-app">Exercise 1: Creating an Azure Web App</h2>
+<h4 id="task-1-create-a-web-app-instance-by-using-the-portal">Task 1: Create a Web App instance by using the Portal</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+</li>
+<li><p>Go to <em>(<a href="https://portal.azure.com">https://portal.azure.com</a>)</em>.</p>
+</li>
+<li><p>In the email address box, type the email address of your Microsoft account.</p>
+</li>
+<li><p>In the password box, type the password for your Microsoft account.</p>
+</li>
+<li><p>Click <strong>Sign In</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> If this is your first time logging in to the Portal, you may be prompted with a “Welcome” dialog. You can safely close this dialog and continue.</p>
+</blockquote>
+</li>
+<li><p>In the navigation pane on the left side of the screen, click <strong>New</strong>.</p>
+</li>
+<li><p>Select the <strong>Web + Mobile</strong> option.</p>
+</li>
+<li><p>Click the <strong>See all</strong> link to navigate to the <em>Marketplace</em>.</p>
+</li>
+<li><p>Search for and select the <strong>Web App + SQL</strong> template.</p>
+</li>
+<li><p>In the <strong>Web App + SQL</strong> blade, click the <strong>Create</strong> button.</p>
+</li>
+<li><p>In the form that displays, perform the following steps:</p>
+<p> a. In the <strong>App name</strong> dialog box, create a unique name for your website.</p>
+<p> b. In the <strong>Subscription Group</strong> section, select the subscription you wish to use.</p>
+<p> c. In the <strong>Resource Group</strong> section, select the <strong>Use existing</strong> option and then select the <strong>20532</strong> Resource Group from the list.</p>
+<p> d. Select the <strong>App Service plan</strong> option.</p>
+<p> e. In the <strong>App Service plan</strong> blade, click the <strong>Create New</strong> button.</p>
+<p> f. In the next <strong>App Service plan</strong> blade, locate the <strong>App Service plan</strong> dialog box and provide the value <strong>SamplePlan</strong>.</p>
+<p> g. In the <strong>Location</strong> list, select the region that is closest to your location.</p>
+<p> h. Select the <strong>Pricing tier</strong> option.</p>
+<p> i. In the <strong>Choose your pricing tier</strong> blade, click the <strong>View all</strong> link.</p>
+<p> j. Locate and select the <strong>Free</strong> pricing tier.</p>
+<p> k. Click the <strong>Select</strong> button.</p>
+<p> l. Back in the <strong>App Service plan</strong> blade, click the <strong>OK</strong> button.</p>
+<p> m. Back in the <strong>Web App + SQL</strong> blade, click the <strong>SQL Database</strong> option.</p>
+<p> n. In the <strong>Database</strong> blade, click the <strong>Create a new database</strong> option.</p>
+<p> o. In the <strong>SQL Database</strong> blade, locate the <strong>Name</strong> box and provide the value <strong>EventsContextDB</strong>.</p>
+<p> p. In the <strong>SQL Database</strong> blade, click the <strong>Target server</strong> option.</p>
+<p> q. In the <strong>Server</strong> blade, click the <strong>Create a new server</strong> option.</p>
+<p> r. In the <strong>Server name</strong> dialog box, create a unique name for your server instance.</p>
+<p> s. In the <strong>Server admin login</strong> dialog box, create a user name (<strong>testuser</strong>) for your administrative SQL user.</p>
+<p> t. In the <strong>Password</strong> and <strong>Confirm Password</strong> dialog boxes, create a password (<strong>TestPa$$w0rd</strong>) for your administrative SQL user.</p>
+<p> u. In the <strong>Location</strong> list, select the region that is closest to your location and leave the <strong>Allow azure services to access server</strong> checked.</p>
+<p> v. Back in the <strong>SQL Database</strong> blade, keep the default value for <strong>Collation</strong>.</p>
+<p> w. Click the <strong>Select</strong> button.</p>
+<p> x. Back in the <strong>SQL Database</strong> blade, click the <strong>Select</strong> button.</p>
+<p> y. Back in the <strong>Web App + SQL</strong> blade, leave <strong>App Insights</strong> turned off.</p>
+<p> z. Click the <strong>Create</strong> button to create your Web App and SQL database.</p>
+</li>
+</ol>
+<h4 id="task-2-go-to-the-newly-created-web-app-s-placeholder-page">Task 2: Go to the newly created Web App&#39;s placeholder page</h4>
+<blockquote>
+<p><strong>Note:</strong> Creating a Web App is typically very fast, but you have to wait for the Web App to be created and running before you can go to the Web App. When the Web App is running, its status displays as Running in the <strong>Web Apps</strong> list.</p>
+</blockquote>
+<ol>
+<li><p>In the navigation pane on the left side, click <strong>More Services</strong>.</p>
+</li>
+<li><p>Scroll-down, locate and select the <strong>App Services</strong> option.</p>
+</li>
+<li><p>In the <strong>App Services</strong> list, click the Web App that you just created.</p>
+</li>
+<li><p>Click the <strong>Essentials</strong> panel at the top of the blade.</p>
+</li>
+<li><p>Under the <strong>Url</strong> header, click the hyperlink to the Web App.</p>
+</li>
+<li><p>Verify that the Web App exists.</p>
+</li>
+<li><p>Close the tab displaying the website.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used the Azure Portal to create a Web App instance.</p>
+</blockquote>
+<h2 id="exercise-2-deploying-an-asp-net-web-application-to-an-azure-web-app">Exercise 2: Deploying an ASP.NET Web Application to an Azure Web App</h2>
+<h4 id="task-1-open-an-existing-asp-net-web-application-project-with-visual-studio-2015">Task 1: Open an existing ASP.NET web application project with Visual Studio 2015</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Desktop</strong> tile.</p>
+</li>
+<li><p>On the taskbar, click the <strong>File Explorer</strong> icon.</p>
+</li>
+<li><p>In the Libraries window, go to <strong>Allfiles (F):\Mod03\Labfiles\Starter\Contoso.Events</strong>, and then double-click <strong>Contoso.Events.sln</strong>.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events.Management</strong> project, and then click <strong>Set as Startup Project</strong>.</p>
+</li>
+<li><p>On the <strong>Debug</strong> menu, click <strong>Start Debugging</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> If this is the first time you are creating a build for this solution, NuGet will implicitly restore any missing packages. You do not have to manually restore the missing packages.</p>
+</blockquote>
+</li>
+<li><p>On the home page of the web application, verify that a list of three events displays under the <strong>Latest 3 Events</strong> header.</p>
+</li>
+<li><p>Click <strong>Events</strong> in the navigation bar at the top of the webpage.</p>
+</li>
+<li><p>Verify that the Events page displays a list of events.</p>
+</li>
+<li><p>Close the tab displaying the Web App.</p>
+</li>
+</ol>
+<h4 id="task-2-download-the-publish-profile-for-the-azure-web-app">Task 2: Download the publish profile for the Azure Web App</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+</li>
+<li><p>Go to (<a href="https://portal.azure.com">https://portal.azure.com</a>).</p>
+</li>
+<li><p>In the email address box, type the email address of your Microsoft account.</p>
+</li>
+<li><p>In the password box, type the password for your Microsoft account.</p>
+</li>
+<li><p>Click <strong>Sign In</strong></p>
+</li>
+<li><p>In the navigation pane on the left side, click <strong>More Services</strong>.</p>
+</li>
+<li><p>Scroll-down, locate and select the <strong>App Services</strong> option.</p>
+</li>
+<li><p>In the <strong>App Services</strong> list, click the Web App that you just created.</p>
+</li>
+<li><p>Click the <strong>More</strong> button at the top of the blade.</p>
+</li>
+<li><p>Click the <strong>Get publish profile</strong> option.</p>
+</li>
+<li><p>In the download dialog box, click the arrow to the right of the <strong>Save</strong> button, and then click <strong>Save As</strong>.</p>
+</li>
+<li><p>In the <strong>Save As</strong> dialog box, go to <strong>Allfiles (F):\Mod03\Labfiles</strong>, and then click <strong>Save</strong>.</p>
+</li>
+</ol>
+<h4 id="task-3-publish-the-asp-net-web-application-to-the-azure-web-app">Task 3: Publish the ASP.NET web application to the Azure Web App</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane of the Contoso.Events - Microsoft Visual Studio window, right-click <strong>Contoso.Events.Management</strong>, and then click <strong>Publish</strong>.</p>
+</li>
+<li><p>In the Publish Web window, click <strong>Import</strong>.</p>
+</li>
+<li><p>In the <strong>Import from a publish profile file</strong> dialog box, click the <strong>Browse</strong> option.</p>
+</li>
+<li><p>In the Libraries window, go to <strong>Allfiles (F):\Mod03\Labfiles</strong>, and then double-click your previously saved publish profile.</p>
+</li>
+<li><p>Click <strong>OK</strong>.</p>
+</li>
+<li><p>Verify that the <strong>Site Name</strong> dialog box matches your Web App’s name.</p>
+</li>
+<li><p>Click <strong>Publish</strong>.</p>
+</li>
+</ol>
+<h4 id="task-4-verify-that-the-web-application-is-successfully-published">Task 4: Verify that the web application is successfully published</h4>
+<blockquote>
+<p><strong>Note:</strong> If you see the placeholder page that displayed in Exercise 1 - Task 2, it might mean that client-side caching is occurring. You can always force refresh your browser and cache by pressing Ctrl+F5.</p>
+</blockquote>
+<ol>
+<li><p>On the home page of the web application, verify that a list of three events displays under the <strong>Latest 3 Events</strong> header.</p>
+</li>
+<li><p>Click <strong>Events</strong> in the navigation bar at the top of the webpage.</p>
+</li>
+<li><p>Verify that the <strong>Events</strong> page displays a list of events.</p>
+</li>
+<li><p>Close the tab displaying the Web App.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used a publish profile to publish web applications directly to a Web App.</p>
+</blockquote>
+<h2 id="exercise-3-configuring-an-azure-web-app">Exercise 3: Configuring an Azure Web App</h2>
+<h4 id="task-1-implement-logic-to-read-a-configuration-setting-from-app-settings">Task 1: Implement logic to read a configuration setting from app settings</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane of the Contoso.Events - Microsoft Visual Studio window, expand the <strong>Contoso.Events.ViewModels</strong> project.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, double-click <strong>EventsListViewModel.cs</strong>.</p>
+</li>
+<li><p><strong>Locate</strong> the following code in line 20 of EventsListViewModel.cs:</p>
+<pre><code>this.EventCount = 3;
+</code></pre></li>
+<li><p><strong>Replace</strong> the line of code with the following code:</p>
+<pre><code>this.EventCount = Int32.Parse(ConfigurationManager.AppSettings[&quot;EventsListViewModel.EventCount&quot;]);
+</code></pre></li>
+<li><p>In the <strong>Solution Explorer</strong> pane of the Contoso.Events - Microsoft Visual Studio window, expand the <strong>Contoso.Events.Management</strong> project.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, double-click <strong>Web.config</strong>.</p>
+</li>
+<li><p>In the <strong>appSettings</strong> element, in line 8, add the following line of code:</p>
+<pre><code>&lt;add key=&quot;EventsListViewModel.EventCount&quot; value=&quot;5&quot; /&gt;
+</code></pre></li>
+<li><p>On the <strong>Debug</strong> menu, click <strong>Start Debugging</strong>.</p>
+</li>
+<li><p>On the home page of the web application, verify that a list of five events displays under the <strong>Latest 5 Events</strong> header.</p>
+</li>
+<li><p>Close the tab displaying the Web App.</p>
+</li>
+</ol>
+<h4 id="task-2-publish-web-application-to-the-azure-web-app">Task 2: Publish web application to the Azure Web App</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane of the Contoso.Events - Microsoft Visual Studio window, right-click <strong>Contoso.Events.Management</strong>, and then click <strong>Publish</strong>.</p>
+</li>
+<li><p>Click <strong>Publish</strong>.</p>
+</li>
+<li><p>On the home page of the web application, verify that a list of five events displays under the <strong>Latest 5 Events</strong> header.</p>
+</li>
+<li><p>Close the tab displaying the Web App.</p>
+</li>
+</ol>
+<h4 id="task-3-modify-the-app-settings-in-the-portal">Task 3: Modify the app settings in the Portal</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+</li>
+<li><p>Go to (<em><a href="https://portal.azure.com">https://portal.azure.com</a></em>).</p>
+</li>
+<li><p>In the email address box, type the email address of your Microsoft account.</p>
+</li>
+<li><p>In the password box, type the password for your Microsoft account.</p>
+</li>
+<li><p>Click <strong>Sign In</strong>.</p>
+</li>
+<li><p>In the navigation pane on the left side, click <strong>More Services</strong>.</p>
+</li>
+<li><p>Scroll-down, locate and select the <strong>App Services</strong> option.</p>
+</li>
+<li><p>In the <strong>App Services</strong> list, click the Web App that you just created.</p>
+</li>
+<li><p>In your <em>Web App</em>&#39;s blade, locate the <strong>Settings</strong> section.</p>
+</li>
+<li><p>In the <strong>Settings</strong> section, select the <strong>Application settings</strong> option.</p>
+</li>
+<li><p>In the <strong>Application settings</strong> blade, scroll-down to the <strong>App Settings</strong> section.</p>
+</li>
+<li><p>In the <strong>Key</strong> box, type <strong>EventsListViewModel.EventCount</strong>.</p>
+</li>
+<li><p>In the <strong>Value</strong> box, type <strong>2</strong>.</p>
+</li>
+<li><p>Click <strong>Save</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> After you update the configuration settings, you must wait for a few seconds to see the configuration changes. You will know that the configuration changes are applied when the <strong>Configure</strong> tab is editable again.</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="task-4-verify-that-the-app-settings-are-successfully-updated">Task 4: Verify that the app settings are successfully updated</h4>
+<ol>
+<li><p>Return to your <em>Web App</em>&#39;s blade.</p>
+</li>
+<li><p>Locate the <strong>Essentials</strong> panel at the top of the blade.</p>
+</li>
+</ol>
+<ol>
+<li><p>Under the <strong>Url</strong> header, click the hyperlink to the Web App.</p>
+</li>
+<li><p>On the home page of the web application, verify that a list of two events displays under the <strong>Latest 2 Events</strong> header.</p>
+</li>
+<li><p>Close the tab displaying the Web App.</p>
+</li>
+<li><p>Close the <strong>Internet Explorer</strong> application.</p>
+</li>
+<li><p>Close the <strong>Contoso.Events - Microsoft Visual Studio</strong> application.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have configured custom app settings by using a Web.config file and the Azure Portal.</p>
+</blockquote>
+<p>©2016 Microsoft Corporation. All rights reserved. The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode">Creative Commons Attribution 3.0 License</a>, additional terms may apply. All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong><em>not</em></strong> included within the Creative Commons license grant. This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.</p>
+<p>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.</p>

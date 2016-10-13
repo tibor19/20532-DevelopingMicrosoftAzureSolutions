@@ -1,0 +1,77 @@
+<h1 id="module-9-automating-integration-with-azure-resources">Module 9: Automating Integration with Azure Resources</h1>
+<h1 id="demo-managing-a-web-app-using-powershell">Demo: Managing a Web App Using PowerShell</h1>
+<ol>
+<li><p>On the Windows Start screen, click the down arrow to view all the applications, and then click <strong>Windows PowerShell</strong>.</p>
+</li>
+<li><p>Switch to the <strong>Windows PowerShell</strong> console window.</p>
+</li>
+<li><p>To sign in to Azure, type the following command in the console, and then press Enter:</p>
+<pre><code>Add-AzureAccount
+</code></pre><blockquote>
+<p><strong>Note:</strong> If you have not used <em>Windows PowerShell</em> before, you may be prompted to allow PowerShell to collect usage data. You can safely skip this dialog.</p>
+</blockquote>
+</li>
+<li><p>In the <strong>Sign in to your account</strong> dialog box, perform the following steps:</p>
+<p>a.  Enter the email address of your Microsoft account..</p>
+<p>b.  Click <strong>Continue</strong>.</p>
+<p>c.  Enter the password for your Microsoft account.</p>
+<p>d.  Click <strong>Sign In</strong>.</p>
+</li>
+<li><p>To view your account details, type the following command in the console, and the press Enter:</p>
+<pre><code>Get-AzureAccount
+</code></pre></li>
+<li><p>To get your publish settings file, type the following command in the console, and then press Enter:</p>
+<pre><code>Get-AzurePublishSettingsFile
+</code></pre></li>
+<li><p>In the <strong>Internet Explorer</strong> tab that opens, perform the following steps:</p>
+<p>a.  Enter the email address of your Microsoft account.</p>
+<p>b.  Click <strong>Continue</strong>.</p>
+<p>c.  Enter the password for your Microsoft account.</p>
+<p>d.  Click <strong>Sign In</strong>.</p>
+<p>e.  At the bottom of the Internet Explorer window, click the arrow that is on the right side of the <strong>Save</strong> button, and then click <strong>Save As</strong> in the download dialog box.</p>
+</li>
+<li><p>In the <strong>Save As</strong> dialog box that displays, perform the following steps:</p>
+<p>a.  Go to the <strong>AllFiles (F):\Mod09\Demofiles</strong> folder.</p>
+<p>b.  In the <strong>File Name</strong> box, type <strong>20532</strong>.</p>
+<p>c.  In the <strong>Save as type</strong> box, ensure that the <strong>PUBLISHSETTINGS File</strong> option is selected.</p>
+<p>d.  Click <strong>Save</strong>.</p>
+</li>
+<li><p>Close Internet Explorer.</p>
+</li>
+<li><p>Switch to the <strong>Windows PowerShell</strong> console window.</p>
+</li>
+<li><p>To import your publish settings file, type the following command in the console, and then press Enter:</p>
+<pre><code>Import-AzurePublishSettingsFile F:\Mod09\Demofiles\20532.publishsettings
+</code></pre></li>
+<li><p>To view any available account details (there might be none), type the following command in the console, and then press Enter:</p>
+<pre><code>Get-AzureAccount
+</code></pre></li>
+<li><p>To create a new Website, type the following command in the console by providing the unique name selected for your Website, and then press Enter:</p>
+<pre><code>New-AzureWebsite [Unique Name]
+</code></pre><blockquote>
+<p>You might get an error message notifying you that your Website’s name is not unique. If this occurs, select a new name until your Website is created.</p>
+</blockquote>
+</li>
+<li><p>To view the list of Websites, type the following command in the console, and then press Enter:</p>
+<pre><code>Get-AzureWebsite
+</code></pre></li>
+<li><p>To view the details for your new Website, type the following command in the console by providing the unique name selected for your website, and then press Enter:</p>
+<pre><code>Get-AzureWebsite –Name [Unique Name]
+</code></pre></li>
+<li><p>To stop your new Website, type the following command in the console by providing the unique name selected for your Website, and then press Enter:</p>
+<pre><code>Stop-AzureWebsite –Name [Unique Name]
+</code></pre></li>
+<li><p>To view the list of your Websites, type the following command in the console, and press Enter:</p>
+<pre><code>Get-AzureWebsite
+</code></pre></li>
+<li><p>To remove your new Website, type the following command in the console by providing the unique name selected for your Website, and then press Enter:</p>
+<pre><code>Remove-AzureWebsite –Name [Unique Name]
+</code></pre></li>
+<li><p>Type <strong>Y</strong> to indicate that you want to remove the Website, and then press Enter.</p>
+</li>
+<li><p>To verify that your Website is removed, type the following command in the console by providing the unique name selected for your Website, and then press Enter. The result should be empty:</p>
+<pre><code>Get-AzureWebsite –Name [Unique Name]
+</code></pre></li>
+<li><p>Close the <strong>Windows PowerShell</strong> console window.</p>
+</li>
+</ol>

@@ -1,0 +1,403 @@
+<h1 id="module-7-storing-and-consuming-files-from-azure-storage">Module 7: Storing and Consuming Files from Azure Storage</h1>
+<h1 id="lab-storing-generated-documents-in-azure-storage-blobs">Lab: Storing Generated Documents in Azure Storage Blobs</h1>
+<h2 id="exercise-1-implementing-azure-storage-blobs">Exercise 1: Implementing Azure Storage Blobs</h2>
+<h4 id="task-1-sign-in-to-the-azure-portal">Task 1: Sign in to the Azure Portal</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+</li>
+<li><p>Go to <a href="https://portal.azure.com">https://portal.azure.com</a></p>
+</li>
+<li><p>Type the email address of your Microsoft account.</p>
+</li>
+<li><p>Click <strong>Continue</strong>.</p>
+</li>
+<li><p>Type the password for your Microsoft account.</p>
+</li>
+<li><p>Click <strong>Sign In</strong>.</p>
+</li>
+</ol>
+<h4 id="task-2-create-a-container-by-using-the-portal">Task 2: Create a container by using the Portal</h4>
+<ol>
+<li><p>In the navigation pane on the left side of the screen, scroll down, and then click <strong>More Services</strong>.</p>
+</li>
+<li><p>In the <strong>Browse</strong> blade that displays, click <strong>Storage accounts</strong>.</p>
+</li>
+<li><p>In the <strong>Storage accounts</strong> blade that displays, view the list of Storage instances.</p>
+</li>
+<li><p>In the list of Storage instances, locate the storage account with the prefix <strong>stor20532</strong>.</p>
+</li>
+<li><p>Click the name of the storage account to go to its dashboard.</p>
+</li>
+<li><p>In the <strong>stor20532<em>[Your Name Here</em>]</strong> blade that displays, click the <strong>Blobs</strong> tile.</p>
+</li>
+<li><p>In the <strong>Blob service</strong> blade that displays, view the list of your containers.</p>
+</li>
+<li><p>At the top of the blade, click the <strong>Container</strong> button.</p>
+</li>
+<li><p>In the <strong>New container</strong> blade that displays, perform the following steps:</p>
+<p>a. In the <strong>Name</strong> box, type <strong>example</strong>.</p>
+<p>b. In the <strong>Access Type</strong> list, select <strong>Container</strong>.</p>
+<p>c. Click the <strong>Create</strong> button to create your container.</p>
+</li>
+</ol>
+<h4 id="task-3-obtain-the-storage-account-connection-string">Task 3: Obtain the Storage Account connection string</h4>
+<ol>
+<li><p>In the <strong>Storage account</strong> blade, record the name of your <em>storage account</em>.</p>
+</li>
+<li><p>Click the <strong>Settings</strong> button at the top of the blade.</p>
+</li>
+<li><p>In the <strong>Settings</strong> section, select the <strong>Access keys</strong> option.</p>
+</li>
+<li><p>In the <strong>Access keys</strong> blade, locate a key that you wish to use.</p>
+<blockquote>
+<p><strong>Note:</strong> you can use any of the keys listed for this lab.</p>
+</blockquote>
+</li>
+<li><p>For the access key you selected, click the three ellipsis (...) button to the right of the key. Once clicked, select the <strong>View connection string</strong> option.</p>
+</li>
+<li><p>In the <strong>View connection string</strong> dialog, record your connection string for the access key you selected.</p>
+<blockquote>
+<p><strong>Note:</strong> This connection string will be used in various parts of this lab.</p>
+<p><strong>Example:</strong> DefaultEndpointsProtocol=https;AccountName={your storage account};AccountKey=ODQYiL8AJuqxDYnwA54u88KRHN3JayY/ns+hfjAiBqHXjDd4xQRfIzAYG2SQ9ZJryDLFUD5hSc6Yk8m3L02D2w==;</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="task-4-add-and-access-blob-files-in-your-container">Task 4: Add and access blob files in your container</h4>
+<ol>
+<li><p>On the Start screen, locate and click the <strong>Visual Studio 2015</strong> tile.</p>
+<blockquote>
+<p><strong>Note:</strong> You might have to use the down arrow to locate the Visual Studio 2015 tile on your Start screen.</p>
+</blockquote>
+</li>
+<li><p>On the <strong>View</strong> menu, click <strong>Cloud Explorer</strong>.</p>
+</li>
+<li><p>Expand the <strong>Storage Accounts</strong> node.</p>
+<blockquote>
+<p><strong>Note:</strong> If you have not previously indicated that you want Visual Studio to remember your credentials, you will be prompted to enter your Microsoft account username and password to continue.</p>
+</blockquote>
+</li>
+<li><p>Expand the <strong>stor20532<em>[Your Name]</em></strong> account node under the <strong>Storage</strong> node.</p>
+</li>
+<li><p>Expand the <strong>Blob Containers</strong> node under your storage account’s node.</p>
+</li>
+<li><p>Double-click <strong>example</strong>.</p>
+</li>
+<li><p>In the <strong>example [Container]</strong> tab, click the <em>Upload Blob</em> button.</p>
+<blockquote>
+<p><strong>Note:</strong> The icon on the upload button includes an arrow that is pointing upward to a horizontal line.</p>
+</blockquote>
+</li>
+<li><p>In the <strong>Upload New File</strong> dialog box, perform the following steps:</p>
+<p>a. Click the <strong>Browse</strong> button.</p>
+<p>b. Go to the <strong>(F):\Mod07\LabFiles\Starter\</strong> directory.</p>
+<p>c. Click the <strong>samplefile</strong> text document.</p>
+<p>d. Click <strong>Open</strong>.</p>
+<p>e. Leave the <strong>folder</strong> option set to it&#39;s default (blank) value.</p>
+<p>e. Click the <strong>OK</strong> button to complete the dialog.</p>
+</li>
+<li><p>Switch to the <strong>Internet Explorer</strong> window.</p>
+</li>
+<li><p>In a new tab, type the following URL by replacing <strong>[<em>storage account</em>]</strong> with the name of your storage account:</p>
+<pre><code>https://[storage account].blob.core.windows.net/example/samplefile.txt
+</code></pre><blockquote>
+<p><strong>Note:</strong> In Visual Studio, you can also right click the samplefile.txt file and select <strong>Copy URL</strong> and paste it in your new tab.</p>
+</blockquote>
+</li>
+<li><p>Verify that the text <strong>This is your sample file!</strong> displays in the browser.</p>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have created a blob container by using the Portal and viewed the blobs in the container.</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="exercise-2-populating-the-container-with-files-and-media">Exercise 2: Populating the Container with Files and Media</h2>
+<h4 id="task-1-open-the-blob-helper-in-the-web-app-worker-project">Task 1: Open the blob helper in the Web App worker project</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Desktop</strong>.</p>
+</li>
+<li><p>On the taskbar, click <strong>File Explorer</strong>.</p>
+</li>
+<li><p>In the Libraries window, go to <strong>Allfiles (F):\Mod07\Labfiles\Starter\Contoso.Events</strong>, and then double-click <strong>Contoso.Events.sln</strong>.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Roles</strong> solution folder.</p>
+</li>
+<li><p>In the Solution Explorer pane, expand the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>BlobStorageHelper.cs</strong> file.</p>
+</li>
+</ol>
+<h4 id="task-2-add-word-documents-to-the-container-after-they-are-created">Task 2: Add Word documents to the container after they are created</h4>
+<ol>
+<li><p>In the <strong>BlobStorageHelper</strong> class, find the method with the following signature:</p>
+<pre><code>public Uri CreateBlob(MemoryStream stream, string eventKey)
+</code></pre></li>
+<li><p>Remove the following single line of code in the class:</p>
+<pre><code>return null;
+</code></pre></li>
+<li><p>At the end of the <strong>CreateBlob</strong> method and before the closing curly bracket, create a new <strong>CloudBlobContainer</strong> for the <strong>signin</strong> container.</p>
+<pre><code>CloudBlobContainer container = _blobClient.GetContainerReference(&quot;signin&quot;);
+</code></pre></li>
+<li><p>Call the <strong>CreateIfNotExists</strong> method of the <em>CloudBlobContainer</em> variable to ensure that the container exists<strong>:</strong></p>
+<pre><code>container.CreateIfNotExists();
+</code></pre></li>
+<li><p>At the end of the <strong>CreateBlob</strong> method and before the closing curly bracket, create a new variable named <em>blobName</em>:</p>
+<pre><code>string blobName;
+</code></pre></li>
+<li><p>Use the <strong>String.Format</strong> static method to create a string, and then assign the string to the <em>blobName</em> variable:</p>
+<pre><code>blobName = String.Format(&quot;{0}_SignIn_{1:ddmmyyyss}.docx&quot;, eventKey, DateTime.UtcNow);
+</code></pre></li>
+<li><p>At the end of the <strong>CreateBlob</strong> method and before the closing curly bracket, create a block blob reference by using the <strong>GetBlockBlobReference</strong> method and the <em>blobName</em> variable as the parameter:</p>
+<pre><code>ICloudBlob blob = container.GetBlockBlobReference(blobName);
+</code></pre></li>
+<li><p>Use the <strong>Seek</strong> method of the <em>MemoryStream</em> variable to set the position of the stream to the beginning and offset the position by the value of <strong>0</strong>:</p>
+<pre><code>stream.Seek(0, SeekOrigin.Begin);
+</code></pre></li>
+<li><p>Use the <strong>UploadFromStream</strong> method of the <strong>ICloudBlob</strong> interface to upload the stream to the referenced blob:</p>
+<pre><code>blob.UploadFromStream(stream);
+</code></pre></li>
+<li><p>At the end of the <strong>CreateBlob</strong> method and before the closing curly bracket, add the following statement:</p>
+<pre><code>return blob.Uri;
+</code></pre></li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have used the Azure Storage SDK to manage blobs and containers in your storage account.</p>
+</blockquote>
+<h2 id="exercise-3-retrieving-files-and-media-from-the-container">Exercise 3: Retrieving Files and Media from the Container</h2>
+<h4 id="task-1-download-documents-from-blob-storage-and-stream-to-the-client">Task 1: Download documents from blob storage and stream to the client</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Shared</strong> solution folder.</p>
+</li>
+<li><p>In the Solution Explorer pane, expand the Contoso.Events.ViewModels project.</p>
+</li>
+<li><p>Double-click the <strong>DownloadViewModel.cs</strong> file.</p>
+</li>
+<li><p>In the <strong>DownloadViewModel</strong> class, find the method with the following signature:</p>
+<pre><code>public async Task&lt;DownloadPayload&gt; GetStream()
+</code></pre></li>
+<li><p>Remove the following single line of code in the class:</p>
+<pre><code>return await Task.FromResult&lt;DownloadPayload&gt;(null);
+</code></pre></li>
+<li><p>At the end of the <strong>GetStream</strong> method and before the closing curly bracket, create a new <strong>CloudBlobClient</strong> variable for the <em>_storageAccount</em> variable:</p>
+<pre><code>CloudBlobClient blobClient = _storageAccount.CreateCloudBlobClient();
+</code></pre></li>
+<li><p>Create a new <strong>CloudBlobContainer</strong> instance for the <strong>signin</strong> container by using the <em>CloudBlobClient</em> variable:</p>
+<pre><code>CloudBlobContainer container = blobClient.GetContainerReference(&quot;signin&quot;);
+</code></pre></li>
+<li><p>Call the <strong>CreateIfNotExists</strong> method of the <em>CloudBlobContainer</em> variable to ensure that the container exists:</p>
+<pre><code>container.CreateIfNotExists();
+</code></pre></li>
+<li><p>At the end of the <strong>GetStream</strong> method and before the closing curly bracket, create a block blob reference by using the <strong>GetBlockBlobReference</strong> method and the <em>_blobId</em> variable as the parameter:</p>
+<pre><code>ICloudBlob blob = container.GetBlockBlobReference(_blobId);
+</code></pre></li>
+<li><p>Use the <strong>OpenReadAsync</strong> method of the <em>ICloudBlob</em> variable to create a <strong>Stream</strong> and store it in a variable:</p>
+<pre><code>Stream blobStream = await blob.OpenReadAsync();
+</code></pre></li>
+<li><p>At the end of the <strong>GetStream</strong> method and before the closing curly bracket, create a new instance of the <strong>DownloadPayload</strong> class:</p>
+<pre><code>DownloadPayload payload = new DownloadPayload();
+</code></pre></li>
+<li><p>Assign the <strong>Stream</strong> variable to the <strong>DownloadPayload</strong> variable’s <strong>Stream</strong> property:</p>
+<pre><code>payload.Stream = blobStream;
+</code></pre></li>
+<li><p>Assign the <em>ICloudBlob</em> variable’s <strong>Properties.ContentType</strong> value to the <em>DownloadPayload</em> variable’s <strong>ContentType</strong> property:</p>
+<pre><code>payload.ContentType = blob.Properties.ContentType;
+</code></pre></li>
+<li><p>Return the <em>DownloadPayload</em> variable:</p>
+<pre><code>return payload;
+</code></pre></li>
+</ol>
+<h4 id="task-2-generate-the-test-data">Task 2: Generate the Test Data</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Shared</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Data.Generation</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>app.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add key=&quot;StorageConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events.Data.Generation</strong> project, point to <strong>Debug</strong>, and then click <strong>Start New Instance</strong>.</p>
+</li>
+<li><p>Wait for debugging to complete (when the console window closes).</p>
+</li>
+</ol>
+<h4 id="task-3-download-generated-sign-in-sheets-from-the-blob-storage">Task 3: Download generated sign-in sheets from the blob storage</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, right-click the <strong>Contoso.Events</strong> solution, and then click <strong>Properties</strong>.</p>
+</li>
+<li><p>Navigate to the <strong>Startup Project</strong> section located under the <strong>Common Properties</strong> header.</p>
+</li>
+<li><p>In the <strong>Startup Project</strong> section, locate and select the <strong>Multiple startup projects</strong> option.</p>
+</li>
+<li><p>Within the <strong>Multiple startup projects</strong> table, perform the following actions:</p>
+<p> a. Locate the <strong>Contoso.Events.Web</strong> entry and change it&#39;s <em>Action</em> from <strong>None</strong> to <strong>Start</strong>.</p>
+<p> b. Locate the <strong>Contoso.Events.Management</strong> entry and change it&#39;s <em>Action</em> from <strong>None</strong> to <strong>Start</strong>.</p>
+<p> c. Locate the <strong>Contoso.Events.Worker</strong> entry and change it&#39;s <em>Action</em> from <strong>None</strong> to <strong>Start</strong>.</p>
+</li>
+<li><p>Click the <strong>OK</strong> button to close the <em>Property</em> dialog.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Administration</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Management</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>web.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>web.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add key=&quot;Microsoft.WindowsAzure.Storage.ConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Roles</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Web</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>web.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>web.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add key=&quot;Microsoft.WindowsAzure.Storage.ConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.Worker</strong> project.</p>
+</li>
+<li><p>Locate and open the <strong>app.config</strong> file in the project.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add name=&quot;AzureWebJobsStorage&quot; connectionString=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>connectionString</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add name=&quot;AzureWebJobsDashboard&quot; connectionString=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>connectionString</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>Within the <strong>app.config</strong> file, locate the following configuration setting:</p>
+<pre><code> &lt;add key=&quot;StorageConnectionString&quot; value=&quot;UseDevelopmentStorage=true&quot; /&gt;
+</code></pre></li>
+<li><p>Update the setting by replacing the value of the <strong>value</strong> attribute (currently <em>UseDevelopmentStorage=true</em>) with your <em>Storage Account</em>&#39;s connection string.</p>
+</li>
+<li><p>On the <strong>Debug</strong> menu, click <strong>Start Debugging</strong>.</p>
+</li>
+<li><p>On the home page for the <strong>Contoso Events Administration</strong> web application, click the button to view the list of events.</p>
+</li>
+<li><p>Click the <strong>Sign-In Sheet</strong> button for any event in the list.</p>
+</li>
+<li><p>View the sign-in page that notifies you that a sign-in sheet is being generated.</p>
+</li>
+<li><p>Wait for one to two minutes, and then refresh the sign-in sheet page.</p>
+</li>
+<li><p>Click <strong>Sign-In Sheet</strong> to download the sign-in sheet from the server.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have downloaded blobs from your storage account by using the Azure Storage SDK.</p>
+</blockquote>
+<h2 id="exercise-4-specifying-permissions-for-the-container">Exercise 4: Specifying Permissions for the Container</h2>
+<h4 id="task-1-modify-container-access-using-cloud-explorer">Task 1: Modify Container Access using Cloud Explorer</h4>
+<ol>
+<li><p>On the desktop, click the <strong>Contoso.Events - Visual Studio 2015</strong> window.</p>
+</li>
+<li><p>On the <strong>Debug</strong> menu, click <strong>Stop Debugging</strong>.</p>
+</li>
+<li><p>On the <strong>View</strong> menu, click <strong>Cloud Explorer</strong>.</p>
+</li>
+<li><p>Expand the <strong>Storage Accounts</strong> node.</p>
+</li>
+<li><p>Expand the node for the storage account used in this lab under the <strong>Storage Accounts</strong> node.</p>
+</li>
+<li><p>Expand the <strong>Blob Containers</strong> node under the node <strong>stor20532<em>[Your Name Here</em>]</strong>.</p>
+</li>
+<li><p>Select the <strong>signin</strong> container, and then click <strong>Properties Tab</strong> below.</p>
+</li>
+<li><p>In the <strong>Properties</strong> pane, locate <strong>Public Read Access</strong>.</p>
+</li>
+<li><p>Ensure that the value of the <strong>Public Read Access</strong> property is set to <strong>Off</strong>.</p>
+</li>
+</ol>
+<h4 id="task-2-generate-temporary-sas-tokens-by-using-the-sdk">Task 2: Generate temporary SAS tokens by using the SDK</h4>
+<ol>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Shared</strong> solution folder.</p>
+</li>
+<li><p>In the <strong>Solution Explorer</strong> pane, expand the <strong>Contoso.Events.ViewModels</strong> project.</p>
+</li>
+<li><p>Double-click the <strong>DownloadViewModel.cs</strong> file.</p>
+</li>
+<li><p>In the <strong>DownloadViewModel</strong> class, find the method with the following signature:</p>
+<pre><code>public async Task&lt;string&gt; GetSecureUrl()
+</code></pre></li>
+<li><p>Remove the single line of code in the class:</p>
+<pre><code>return await Task.FromResult&lt;string&gt;(String.Empty);
+</code></pre></li>
+<li><p>At the end of the <strong>GetSecureUrl</strong> method and before the closing curly bracket, create a new <strong>CloudBlobClient</strong> for the <em>_storageAccount</em> variable.</p>
+<pre><code>CloudBlobClient blobClient = _storageAccount.CreateCloudBlobClient();
+</code></pre></li>
+<li><p>Create a new <strong>CloudBlobContainer</strong> for the <strong>signin</strong> container by using the <em>CloudBlobClient</em> variable.</p>
+<pre><code>CloudBlobContainer container = blobClient.GetContainerReference(&quot;signin&quot;);
+</code></pre></li>
+<li><p>Call the <strong>CreateIfNotExists</strong> method of the <em>CloudBlobContainer</em> variable to ensure that the container exists<strong>:</strong></p>
+<pre><code>container.CreateIfNotExists();
+</code></pre></li>
+<li><p>At the end of the <strong>GetSecureUrl</strong> method and before the closing curly bracket, create a new instance of the <strong>SharedAccessBlobPolicy</strong> class:</p>
+<pre><code>SharedAccessBlobPolicy blobPolicy = new SharedAccessBlobPolicy();
+</code></pre></li>
+<li><p>Set the <em>SharedAccessBlobPolicy</em> variable’s <strong>SharedAccessExpiryTime</strong> property to 15 minutes from the current time:</p>
+<pre><code>blobPolicy.SharedAccessExpiryTime = DateTime.Now.AddHours(0.25d);
+</code></pre></li>
+<li><p>Set the <em>SharedAccessBlobPolicy</em> variable’s <strong>Permissions</strong> property to <strong>SharedAccessBlobPermissions.Read</strong>:</p>
+<pre><code>blobPolicy.Permissions = SharedAccessBlobPermissions.Read;
+</code></pre></li>
+<li><p>At the end of the <strong>GetSecureUrl</strong> method and before the closing curly bracket, create a new instance of the <strong>BlobContainerPermissions</strong> class:</p>
+<pre><code>BlobContainerPermissions blobPermissions = new BlobContainerPermissions();
+</code></pre></li>
+<li><p>Add the newly created <strong>SharedAccessBlobPolicy</strong> to the <em>BlobContainerPermissions</em> variable’s <strong>SharedAccessPolicy</strong> with the key <strong>“ReadBlobPolicy”</strong>:</p>
+<pre><code>blobPermissions.SharedAccessPolicies.Add(&quot;ReadBlobPolicy&quot;, blobPolicy);
+</code></pre></li>
+<li><p>Set the <em>BlobContainerPermissions</em> variable’s <strong>PublicAccess</strong> property to <strong>BlobContainerPublicAccessType.Off</strong>:</p>
+<pre><code>blobPermissions.PublicAccess = BlobContainerPublicAccessType.Off;
+</code></pre></li>
+<li><p>At the end of the <strong>GetSecureUrl</strong> method and before the closing curly bracket, call the asynchronous <strong>SetPermissionsAsync</strong> method of the <em>CloudBlobContainer</em> variable by using the <em>BlobContainerPermissions</em> variable as the parameter:</p>
+<pre><code>await container.SetPermissionsAsync(blobPermissions);
+</code></pre></li>
+<li><p>Invoke the <strong>GetSharedAccessSignature</strong> method of the <em>CloudBlobContainer</em> variable by using a new instance of the <strong>SharedAccessBlobPolicy</strong> class as the first parameter and the <strong>“ReadBlobPolicy”</strong> key as the second parameter:</p>
+<pre><code>string sasToken = container.GetSharedAccessSignature(new   SharedAccessBlobPolicy(), &quot;ReadBlobPolicy&quot;);
+</code></pre></li>
+<li><p>At the end of the <strong>GetSecureUrl</strong> method and before the closing curly bracket, create a block blob reference by using the <strong>GetBlockBlobReference</strong> method and the <em>_blobId</em> variable as the parameter:</p>
+<pre><code>ICloudBlob blob = container.GetBlockBlobReference(_blobId);
+</code></pre></li>
+<li><p>Take the <strong>Uri</strong> property of the <em>ICloudBlob</em> variable and store it in a new <em>Uri</em> variable.</p>
+<pre><code>Uri blobUrl = blob.Uri;
+</code></pre></li>
+<li><p>At the end of the <strong>GetSecureUrl</strong> method and before the closing curly bracket, concatenate the <strong>AbsoluteUri</strong> of the <em>Uri</em> variable and the <em>sasToken</em> variable:</p>
+<pre><code>string secureUrl = blobUrl.AbsoluteUri + sasToken;
+</code></pre></li>
+<li><p>Return the string variable as the result of the method:</p>
+<pre><code>return secureUrl;
+</code></pre></li>
+</ol>
+<h4 id="task-3-download-documents-from-a-protected-container-by-using-the-sas-token">Task 3: Download documents from a protected container by using the SAS token</h4>
+<ol>
+<li><p>On the <strong>Debug</strong> menu, click <strong>Start Debugging</strong>.</p>
+</li>
+<li><p>On the home page for the <strong>Contoso Events Administration</strong> web application, click the button to view the list of events.</p>
+</li>
+<li><p>Click the <strong>Sign-In Sheet</strong> button for any event in the list.</p>
+</li>
+<li><p>View the sign-in page which notifies you that a sign-in sheet is being generated.</p>
+</li>
+<li><p>Wait for one or two minutes, and then refresh the sign-in sheet page.</p>
+</li>
+<li><p>Click <strong>Sign-In Sheet</strong> to download the sign-in sheet from the server by using the blob Url.</p>
+</li>
+<li><p>Close the <strong>Internet Explorer</strong> application.</p>
+</li>
+<li><p>Close the <strong>Contoso.Events - Visual Studio</strong> application.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have modified the permissions of the containers and generated SAS tokens for the containers.</p>
+</blockquote>
+<hr>
+<p>©2016 Microsoft Corporation. All rights reserved. The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode">Creative Commons Attribution 3.0 License</a>, additional terms may apply. All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong><em>not</em></strong> included within the Creative Commons license grant. This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.</p>
+<p>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.</p>

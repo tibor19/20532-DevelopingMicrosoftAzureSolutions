@@ -1,0 +1,306 @@
+<h1 id="module-2-building-application-infrastructure-in-azure">Module 2: Building Application Infrastructure in Azure</h1>
+<h1 id="lab-creating-an-azure-virtual-machine-for-development-and-testing">Lab: Creating an Azure Virtual Machine for Development and Testing</h1>
+<h3 id="exercise-1-creating-a-network-and-resource-container">Exercise 1:    Creating a Network and Resource Container</h3>
+<h4 id="task-1-sign-in-to-the-azure-portal">Task 1: Sign in to the Azure Portal</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+</li>
+<li><p>Go to <a href="https://portal.azure.com">https://portal.azure.com</a></p>
+</li>
+<li><p>Enter the email address of your Microsoft account. Click <strong>Continue</strong>.</p>
+</li>
+<li><p>Enter the password for your Microsoft account.</p>
+</li>
+<li><p>Click <strong>Sign In</strong>.</p>
+</li>
+</ol>
+<h4 id="task-2-create-a-resource-group">Task 2: Create a Resource Group</h4>
+<ol>
+<li><p>In the navigation pane on the left side of the Azure Portal, scroll down, and then click <strong>More Services</strong>.</p>
+</li>
+<li><p>In the <strong>Browse</strong> blade that displays, click <strong>Resource groups</strong>.</p>
+</li>
+<li><p>In the <strong>Resource groups</strong> blade that displays, view your list of resource groups.</p>
+</li>
+<li><p>At the top of the <strong>Resource groups</strong> blade, click the <strong>Add</strong> button.</p>
+</li>
+<li><p>In the <strong>Resource group</strong> blade, perform the following steps:</p>
+<p>a. In the <strong>Resource group name</strong> dialog box, provide the value <strong>20532</strong>.</p>
+<p>b. In the <strong>Resource group location</strong> list, select the region that is closest to your current location.</p>
+</li>
+<li><p>In the <strong>Resource group</strong> blade, click <strong>Create</strong>.</p>
+</li>
+</ol>
+<h4 id="task-3-create-a-virtual-network">Task 3: Create a Virtual Network</h4>
+<ol>
+<li><p>In the navigation pane on the left side of the Azure Portal, scroll down, and then click <strong>More Services</strong>.</p>
+</li>
+<li><p>In the <strong>Browse</strong> blade that displays, click <strong>Virtual networks</strong>.</p>
+</li>
+<li><p>In the <strong>Virtual networks</strong> blade that displays, view your list of virtual network instances.</p>
+</li>
+<li><p>At the top of the <strong>Virtual networks</strong> blade, click the <strong>Add</strong> button.</p>
+</li>
+<li><p>In the <strong>Create virtual network</strong> blade, perform the following steps:</p>
+<p>a. In the <strong>Name</strong> dialog box, provide the value <strong>vnet20532</strong>.</p>
+<p>b. In the <strong>Location</strong> list, select the region that is closest to your current location.</p>
+<p>c. Ensure that the <strong>Address space</strong> box has the value <strong>10.0.0.0/16</strong>.</p>
+<p>d. In the <strong>Subnet name</strong> box, provide the value <strong>Apps</strong>.</p>
+<p>e. Ensure that the <strong>Subnet address range</strong> box has the value <strong>10.0.0.0/24</strong>.</p>
+<p>f. In the <strong>Resource group</strong> section, select the <strong>Use existing</strong> option.</p>
+<p>g. In the <strong>Resource group</strong> section, locate the dialog box and provide the value <strong>20532</strong>.</p>
+</li>
+<li><p>In the <strong>Create virtual network</strong> blade, click <strong>Create</strong>.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have a new virtual network and resource group in Azure</p>
+</blockquote>
+<h3 id="exercise-2-creating-a-development-virtual-machine">Exercise 2:    Creating a Development Virtual Machine</h3>
+<h4 id="task-1-create-a-storage-account">Task 1: Create a storage account</h4>
+<ol>
+<li><p>In the navigation pane on the left side of the Azure Portal, scroll down, and click <strong>More Services</strong>.</p>
+</li>
+<li><p>In the <strong>Browse</strong> blade that displays, click <strong>Storage Accounts</strong>.</p>
+</li>
+<li><p>In the <strong>Storage accounts</strong> blade that displays, view your list of Storage instances.</p>
+</li>
+<li><p>At the top of the <strong>Storage accounts</strong> blade, click the <strong>Add</strong> button.</p>
+</li>
+<li><p>In the <strong>Create storage account</strong> blade that displays, perform the following steps:</p>
+<p>a. In the <strong>Name</strong> box, provide the value <strong>stor20532[your name in lowercase here]</strong>.</p>
+<p>b. In the <strong>Deployment model</strong> section, ensure that the <em>Resource manager</em> option is selected.</p>
+<p>c. In the <strong>Account kind</strong> list, ensure that the <em>General purpose</em> option is selected.</p>
+<p>d. In the <strong>Performance</strong> section, ensure that the <em>Standard</em> option is selected.</p>
+<p>e. Click on the <strong>Replication</strong> list and select the <strong>Locally-redundant storage (LRS)</strong> option.</p>
+<p>f. In the <strong>Location</strong> list, select the region closest to your current location.</p>
+<p>g. In the <strong>Resource group</strong> section, select the <strong>Use existing</strong> option.</p>
+<p>h. In the <strong>Resource group</strong> section, locate the dialog box and provide the value <strong>20532</strong>.</p>
+<p>i. Ensure that the <strong>Pin to Dashboard</strong> option is selected.</p>
+<p>j. Click <strong>Create</strong>.</p>
+<blockquote>
+<p><strong>Note</strong> Wait for Azure to finish creating the storage account prior to moving forward with the lab. You will receive a notification when the <em>Storage Account</em> is created and you will see the Storage Account&#39;s blade.</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="task-2-create-a-virtual-machine">Task 2: Create a virtual machine</h4>
+<ol>
+<li><p>In the navigation pane on the left side of the Azure Portal, scroll down, and click <strong>More Services</strong>.</p>
+</li>
+<li><p>In the <strong>Browse</strong> blade that displays, click <strong>Virtual machines</strong>.</p>
+</li>
+<li><p>In the <strong>Virtual machines</strong> blade that displays, view your list of Virtual Machine instances.</p>
+</li>
+<li><p>At the top of the <strong>Virtual machines</strong> blade, click the <strong>Add</strong> button.</p>
+</li>
+<li><p>In the <strong>Virtual Machines</strong> blade that displays, search for and select the following template:</p>
+<ul>
+<li>Visual Studio Community 2015 with Azure SDK 2.9 on Windows Server 2012 R2</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> Ensure that you select this specific template as all further lab instructions assume that you are using this exact Azure SDK version, OS and Visual Studio version.</p>
+</blockquote>
+</li>
+<li><p>In the <strong>Visual Studio Community 2015 with Azure SDK 2.9 on Windows Server 2012 R2</strong> blade, ensure that the <strong>Resource Manager</strong> deployment model is selected and click the <strong>Create</strong> button.</p>
+</li>
+<li><p>In the <strong>Create virtual machine</strong> blade that displays, click <strong>Basics</strong> and perform the following steps:</p>
+<p>a. In the <strong>Name</strong> dialog box, provide the value <strong>vm20532</strong>.</p>
+<p>b. In the <strong>VM disk type</strong> list, select the value <strong>HDD</strong>.</p>
+<p>c. In the <strong>User Name</strong> dialog box, provide the value <strong>Student</strong>.</p>
+<p>d. In the <strong>Password</strong> and <strong>Confirm Password</strong> dialog boxes, provide the value <strong>AzurePa$$w0rd</strong></p>
+<p>e. In the <strong>Subscription</strong> section, select the subscription you wish to use.</p>
+<p>f. In the <strong>Resource Group</strong> section, locate the <strong>Use existing</strong> option, and then select the <strong>20532</strong> resource group.</p>
+<p>g. In the <strong>Location</strong> list, select the region closest to your current location.</p>
+<p>h. Click <strong>OK</strong>.</p>
+</li>
+<li><p>In the <strong>Create Virtual Machine</strong> blade that displays, click <strong>Size</strong> and perform the following steps:</p>
+<p>a. Locate and click the <strong>View all</strong> hyperlink.</p>
+<p>b. Locate and select the <strong>F4 Standard</strong> option.</p>
+<p>c. Click the <strong>Select</strong> button.</p>
+</li>
+<li><p>In the <strong>Create Virtual Machine</strong> blade that displays, click <strong>Settings</strong> and perform the following steps:</p>
+<p>a. Click the <strong>Storage Account</strong> section and then select <strong>stor20532[your name here]</strong>.</p>
+<p>b. Click the <strong>Virtual Network</strong> section and then select <strong>vnet20532</strong>.</p>
+<p>c. Click the <strong>Subnet</strong> section and then select <strong>Apps</strong>.</p>
+<p>d  Leave default values for <strong>Public IP Address</strong>, <strong>Network Security Group (firewall)</strong>, <strong>Extensions</strong> and <strong>High Availability</strong>.</p>
+<p>e. Under the <strong>Monitoring &gt; Diagnostics</strong> section, select the <strong>Disabled</strong> option.</p>
+<p>f. Leave the default value for <strong>Diagnostic Storage Account</strong>.</p>
+<p>g. Scroll down and click <strong>OK</strong>.</p>
+</li>
+<li><p>In the <strong>Create Virtual Machine</strong> blade that displays, click <strong>Summary</strong> and click <strong>OK</strong> to create the virtual machine using your specified configuration.</p>
+<blockquote>
+<p><strong>Note:</strong> The creation of a new virtual machine can take anywhere between 10 to 15 minutes. You will see a notification on the Dashboard (home screen) when your virtual machine is created and running.</p>
+</blockquote>
+</li>
+<li><p>Select the newly created virtual machine from your Dashboard.</p>
+</li>
+<li><p>In the <strong>vm20532</strong> blade, locate the <strong>Settings</strong> section.</p>
+</li>
+<li><p>In the <strong>Settings</strong> section, select the <strong>Disks</strong> option.</p>
+</li>
+<li><p>In the <strong>Disks</strong> blade, click <strong>Attach New</strong>.</p>
+</li>
+<li><p>In the <strong>Attach a new disk</strong> blade, perform the following steps:</p>
+<p>a. In the <strong>name</strong> box, provide <strong>vm20532-AllFiles</strong></p>
+<p>b. For <strong>Type</strong>, select <strong>HDD</strong>.</p>
+<p>c. In the <strong>Size (GiB)</strong> dialog box, provide the value, <strong>128</strong>.</p>
+<p>d. Click on <strong>Location</strong> and then from the <strong>Storage account</strong> blade, select the previously created storage account, <strong>stor20532[Your Name Here]</strong></p>
+<p>e. In the <strong>Containers</strong> blade, select <strong>vhds</strong> container and click <strong>Select</strong>.</p>
+<p>f. To create the second disk, click <strong>OK</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> Wait about five minutes for the empty disk to be attached to the virtual machine.</p>
+</blockquote>
+</li>
+<li><p>Select the <strong>Overview</strong> option to return to the <strong>vm20532</strong> blade.</p>
+</li>
+<li><p>Click <strong>Connect</strong> at the top of the screen.</p>
+</li>
+<li><p>In the <strong>Internet Explorer download</strong> dialog box, click <strong>Open</strong>.</p>
+</li>
+<li><p>In the <strong>Remote Desktop Connection</strong> dialog box, perform the following steps:</p>
+<p>a. Click <strong>Don’t ask me again for connections to this computer</strong> to prevent this dialog box from displaying again.</p>
+<p>b. Click <strong>Connect</strong>.</p>
+</li>
+<li><p>In the <strong>Windows Security</strong> dialog box, perform the following steps:</p>
+<p>a. For the <strong>User name</strong> dialog box, provide the value, <strong>Student</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> If you computer is on a domain, you may need to add a backslash before the username to &quot;escape&quot; the domain.</p>
+</blockquote>
+<p>b. For the <strong>Password</strong> dialog box, provide the value, <strong>AzurePa$$w0rd</strong>.</p>
+<p>c. Click <strong>OK</strong>.</p>
+</li>
+<li><p>In the <strong>Remote Desktop Connection</strong> dialog box, perform the following steps:</p>
+<p>a. Verify if the Remote certificate name matches the name of your virtual machine.</p>
+<p>b. Click <strong>Don’t ask me again for connections to this computer</strong> to prevent this dialog box from displaying again.</p>
+<p>c. Click <strong>Yes</strong>.</p>
+</li>
+<li><p>When you are prompted to allow your network connection to discover external devices, click <strong>Yes</strong>.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, you will have a new virtual machine stored in a new storage account.</p>
+</blockquote>
+<h3 id="exercise-3-configuring-the-virtual-machine-for-development">Exercise 3: Configuring the Virtual Machine for Development</h3>
+<h4 id="task-1-disable-ie-enhanced-security-configuration">Task 1: Disable IE Enhanced Security Configuration</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Server Manager</strong> tile.</p>
+</li>
+<li><p>In the navigation pane on the left side, click <strong>Local Server</strong>.</p>
+</li>
+<li><p>In the <strong>Properties</strong> box, click the <strong>IE Enhanced Security Configuration</strong> option that is currently set to <strong>On</strong>.</p>
+</li>
+<li><p>In the <strong>Internet Explorer Enhanced Security Configuration</strong> dialog box, perform the following steps:</p>
+<p>a. Under <em>Administrators</em>, select <strong>Off</strong>.</p>
+<p>b. Under <em>Users</em>, select <strong>Off</strong>.</p>
+<p>c. Click <strong>OK</strong>.</p>
+</li>
+</ol>
+<h4 id="task-2-create-an-allfiles-drive">Task 2: Create an AllFiles Drive</h4>
+<ol>
+<li><p>Press the <code>Windows logo key + W</code> to open <strong>Universal Search – Settings</strong>.</p>
+</li>
+<li><p>In the <strong>Search</strong> dialog box, provide the value <strong>disk</strong>.</p>
+</li>
+<li><p>Click <strong>Create and format hard disk partitions</strong>.</p>
+</li>
+<li><p>In the <strong>Initialize Disk</strong> dialog box, perform the following steps:</p>
+<p>a. Verify that <strong>Disk 2</strong> is selected for initialization.</p>
+<p>b. Verify that <strong>MBR (Master Boot Record)</strong> is the selected partition style.</p>
+<p>c. Click <strong>OK</strong>.</p>
+</li>
+<li><p>In the lower-half of the Disk Management window, perform the following steps:</p>
+<p>a. Scroll down and find <strong>Disk 2</strong> that was previously initialized.</p>
+<p>b. Right-click the unallocated partition, and then click <strong>New Simple Volume</strong>.</p>
+</li>
+<li><p>In the <strong>New Simple Volume</strong> wizard, perform the following steps:</p>
+<p>a. Click <strong>Next</strong>.</p>
+<p>b. Verify that the <strong>Simple volume size in MB</strong> is a number greater than <strong>100000</strong>.</p>
+<p>c. Click <strong>Next</strong>.</p>
+<p>d. In the <strong>Assign the following drive letter</strong> list, click <strong>F</strong>.</p>
+<p>e. Click <strong>Next</strong>.</p>
+<p>f. Verify that the <strong>File System</strong> setting is set to <strong>NTFS</strong>.</p>
+<p>g. In the <strong>Volume Label</strong> dialog box, provide the value <strong>AllFiles</strong>.</p>
+<p>h. Click <strong>Next</strong>.</p>
+<p>i. Click <strong>Finish</strong> to close the dialog box, and then create the partition.</p>
+<blockquote>
+<p><strong>Note:</strong> If a dialog box displays stating that “You need to format the disk in drive F: before you can use it.”, you can safely close it because you already formatted the disk.</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="task-3-download-the-allfiles-content">Task 3: Download the AllFiles Content</h4>
+<ol>
+<li><p>On the Start screen, click the <strong>Internet Explorer</strong> tile.</p>
+</li>
+<li><p>If you are prompted to set up Internet Explorer 11, perform the following steps:</p>
+<p>a. Select <strong>Use recommended security, privacy and compatibility settings</strong>.</p>
+<p>b. Click <strong>OK</strong>.</p>
+</li>
+<li><p>Go to (<a href="https://github.com/MicrosoftLearning/20532-DevelopingMicrosoftAzureSolutions/releases/latest">https://github.com/MicrosoftLearning/20532-DevelopingMicrosoftAzureSolutions/releases/latest</a>).</p>
+</li>
+<li><p>Scroll down the screen until you find the <strong>allfiles</strong> download link.</p>
+</li>
+<li><p>Click the link to download the AllFiles compressed folder.</p>
+</li>
+<li><p>In the <strong>Internet Explorer</strong> download dialog box, click <strong>Save</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> The download of the AllFiles executable typically takes around five minutes.</p>
+</blockquote>
+</li>
+<li><p>Click the <strong>Windows File Explorer</strong> icon in your Taskbar.</p>
+</li>
+<li><p>On the left navigation bar, expand the <strong>This PC</strong> node and click the <strong>Downloads</strong> node:</p>
+</li>
+<li><p>Right-click the <strong>allfiles</strong> compressed folder and select the <strong>Properties</strong> option.</p>
+</li>
+<li><p>In the <strong>allfiles Properties</strong> dialog box, do the following:</p>
+<p>a. Click <strong>Unblock</strong> if present.</p>
+<p>b. Click <strong>OK</strong>.</p>
+</li>
+<li><p>Right-click the <strong>allfiles</strong> compressed folder and select the <strong>Extract all</strong> option.</p>
+</li>
+<li><p>In the <strong>Extract Compressed (Zipped) Folders</strong> dialog box, do the following:</p>
+<p>a. In the <strong>Files will be extracted to this folder:</strong> dialog, provide the value <strong>F:\</strong>.</p>
+<p>b. Ensure that the <strong>Show extracted files when complete</strong> checkbox is not selected.</p>
+<p>c. Click <strong>Extract</strong>.</p>
+</li>
+<li><p>Wait for the extraction process to complete.</p>
+</li>
+</ol>
+<h4 id="task-4-add-your-azure-subscription-to-visual-studio">Task 4: Add your Azure subscription to Visual Studio</h4>
+<ol>
+<li><p>On the Start screen, locate and click the <strong>Visual Studio 2015</strong> tile.</p>
+<blockquote>
+<p><strong>Note:</strong> You might have to use the down arrow to locate the Visual Studio 2015 tile on your Start screen.</p>
+</blockquote>
+</li>
+<li><p>You will be prompted to sign-in using a <strong>Microsoft Account</strong>. Perform the following steps:</p>
+<p> a. Click the <strong>Sign in</strong> button.</p>
+<p> b. Enter the email address of your Microsoft account. Click <strong>Continue</strong>.</p>
+<p> c. Ensure that the <strong>Keep me signed in</strong> option is selected.</p>
+<p> d. Enter the password for your Microsoft account.</p>
+<p> e. Click <strong>Sign In</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> You may be prompted by Internet Explorer to remember this password. You can safely close and ignore this dialog.</p>
+</blockquote>
+</li>
+<li><p>If you have never used <strong>Visual Studio</strong> in the past, you will be prompted to configure your Microsoft Account. Perform the following steps:</p>
+<p> a.  Select your <strong>country\region</strong> from the provided list.</p>
+<p> b.  Leave the remaining fields set to their default values.</p>
+<p> c.  Click the <strong>Continue</strong> button.</p>
+</li>
+<li><p>If you have never used <strong>Visual Studio</strong> in the past, you will also be prompted to configure the apperance of your IDE. Perform the following steps:</p>
+<p> a.  Leave all fields set to their default values.</p>
+<p> b.  click the <strong>Start Visual Studio</strong> button.</p>
+</li>
+<li><p>Wait for <em>Visual Studio</em> to finish <strong>preparing for first use</strong>.</p>
+<blockquote>
+<p><strong>Note:</strong> This process typically takes between 2 to 5 minutes.</p>
+</blockquote>
+</li>
+<li><p>Validate that you can see the Visual Studio <strong>Start Page</strong>.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Results:</strong> After completing this exercise, your development virtual machine will have your lab files installed. Your virtual machine will also have Visual Studio, Azure PowerShell, and the Azure SDK installed.</p>
+</blockquote>
+<p>©2016 Microsoft Corporation. All rights reserved.  The text in this document is available under the <a href="https://creativecommons.org/licenses/by/3.0/legalcode" title="Creative Commons Attribution 3.0 License">Creative Commons Attribution 3.0 License</a>, additional terms may apply.  All other content contained in this document (including, without limitation, trademarks, logos, images, etc.) are <strong>not</strong> included within the Creative Commons license grant.  This document does not provide you with any legal rights to any intellectual property in any Microsoft product. You may copy and use this document for your internal, reference purposes.<br>This document is provided &quot;as-is.&quot; Information and views expressed in this document, including URL and other Internet Web site references, may change without notice. You bear the risk of using it. Some examples are for illustration only and are fictitious. No real association is intended or inferred. Microsoft makes no warranties, express or implied, with respect to the information provided here.</p>
