@@ -1,1 +1,1 @@
-# Instructions for edX Course
+# HTML Instructions
